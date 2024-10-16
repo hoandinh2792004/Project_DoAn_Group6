@@ -194,3 +194,5 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
         addToCart(productName, productPrice, productImg);
     });
 });
+
+
