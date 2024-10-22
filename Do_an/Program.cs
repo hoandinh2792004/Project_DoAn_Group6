@@ -1,5 +1,9 @@
-using Do_an.Data;
+﻿using Do_an.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 
 namespace Do_an
 {
@@ -11,11 +15,34 @@ namespace Do_an
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            //Connect db
+
+            // Connect to database
             builder.Services.AddDbContext<DoAnContext>(options =>
-            {
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Garden"));
-            });
+                options.UseSqlServer(builder.Configuration.GetConnectionString("GardenConnectionString")));
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
+                    };
+                });
+
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
+
+         
+            
 
             var app = builder.Build();
 
@@ -23,7 +50,6 @@ namespace Do_an
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -32,11 +58,17 @@ namespace Do_an
 
             app.UseRouting();
 
+            // Enable CORS
+            app.UseCors("AllowAllOrigins");
+
+            // Authentication and Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            // Default route to HomeController and HomePage action
             app.MapControllerRoute(
-                name: "areas",
-                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                 name: "areas",
+                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
