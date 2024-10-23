@@ -1,4 +1,4 @@
-﻿namespace Do_an.DTOs
+﻿namespace Do_an.Areas.Admin.Dtos
 {
     public class ProductDto
     {

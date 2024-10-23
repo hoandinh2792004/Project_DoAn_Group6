@@ -9,5 +9,11 @@ namespace Do_an.Areas.Admin.Controllers
         {
             return View();
         }
+
+        // Action cho trang Products
+        public IActionResult Products()
+        {
+            return View();
+        }
     }
 }

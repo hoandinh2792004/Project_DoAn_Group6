@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Areas\Admin\js\" />
     <Folder Include="Data\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
