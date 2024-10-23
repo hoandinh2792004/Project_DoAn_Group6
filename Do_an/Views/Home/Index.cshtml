@@ -36,6 +36,9 @@
     <!-- Template Stylesheet -->
     <link href="~/User/css/style.css" rel="stylesheet">
     <link href="~/User/css/navbar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/modal.css">
+    
+
 </head>
 
 <body>
@@ -65,6 +68,7 @@
         </div>
     </div> -->
     <!-- Topbar End -->
+
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
         <div class="main-logo">
@@ -77,8 +81,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="index.html" class="nav-item nav-link active">Trang chủ</a>
-                <!-- <a href="about.html" class="nav-item nav-link">Về chúng tôi </a> -->
+                <a asp-action="Index" asp-controller="Home"class="nav-item nav-link active">Trang chủ</a>
                 <a href="service.html" class="nav-item nav-link">Services</a>
                 <a href="product.html" class="nav-item nav-link">Sản phẩm</a>
                 <div class="nav-item dropdown">
@@ -103,7 +106,9 @@
                 </button>
             </div>
             <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0" id="user-icon"><a href="login.html"><i class="fa-regular fa-user"></i></a></button>
+                <a asp-action="Login" asp-controller="Login" class="btn btn-sm p-0" id="user-icon">
+                    <i class="fa-regular fa-user"></i>
+                </a>
             </div>
         </div>
     </nav>
@@ -120,12 +125,13 @@
                     <span id="cart-count">0</span>
                 </div>
             </div>
-            <div class="cart-items">
+            <div class="cart-items" id="cart-display">
+                <!-- Thêm ID cho phần giỏ hàng -->
                 <div class="prod">
                     <div class="product-cart">
                         <ol style="list-style: none;">
                             <li class="d-flex">
-
+                                <!-- Thêm sản phẩm vào đây -->
                             </li>
                         </ol>
                     </div>
@@ -137,9 +143,20 @@
                     <span class="total-price float-right" id="total-price">$0.00</span>
                 </div>
                 <div class="cart-actions">
-                    <a asp-action="Payment" asp-controller="Home" class="button-checkout">Check Out</a>
+                    <a href="#" class="button-checkout" onclick="showCheckoutPrompt()">Check Out</a> <!-- Gọi hàm showCheckoutPrompt() -->
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- Modal yêu cầu đăng nhập -->
+    <div id="loginPromptModal" class="modal" style="display:none;">
+        <!-- Đảm bảo mặc định là ẩn -->
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Yêu cầu Đăng nhập</h2>
+            <p>Vui lòng đăng nhập để thực hiện thanh toán.</p>
+            <a asp-action="Login" asp-controller="Login" class="button">Đăng nhập</a> <!-- Thay đổi đường dẫn đến trang đăng nhập -->
+            <a href="#" class="button" onclick="closeModal()">Hủy</a>
         </div>
     </div>
     <!-- View Cart End -->
@@ -390,7 +407,14 @@
                             <img class="img-fluid" src="~/User/img/Caycanh/image1.png" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart" data-name="Cây lưỡi hổ xanh để bàn mini" data-price="90.000đ" data-img="/User/img/Caycanh/image1.png"><i class="bi bi-cart"></i></a>
+                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                   data-name="Cây lưỡi hổ xanh để bàn mini"
+                                   data-price="90.000đ"
+                                   data-img="/User/img/Caycanh/image1.png"
+                                   onclick="showLoginPrompt()">
+                                    <!-- Gọi hàm showLoginPrompt() -->
+                                    <i class="bi bi-cart"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="text-center p-4">
@@ -406,7 +430,14 @@
                             <img class="img-fluid" src="~/User/img/Caycanh/image2.png" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart" data-name="Cây vạn lộc son" data-price="150.000đ" data-img="/User/img/Caycanh/image2.png"><i class="bi bi-cart"></i></a>
+                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                   data-name="Cây vạn lộc son"
+                                   data-price="190.000đ"
+                                   data-img="/User/img/Caycanh/image2.png"
+                                   onclick="showLoginPrompt()">
+                                    <!-- Gọi hàm showLoginPrompt() -->
+                                    <i class="bi bi-cart"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="text-center p-4">
@@ -422,7 +453,14 @@
                             <img class="img-fluid" src="~/User/img/Caycanh/image4.png" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart" data-name="Terrarium Famimy & Home" data-price="150.000đ" data-img="/User/img/Caycanh/image4.png"><i class="bi bi-cart"></i></a>
+                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                   data-name="Terrarium Famimy & Home"
+                                   data-price="150.000đ"
+                                   data-img="/User/img/Caycanh/image4.png"
+                                   onclick="showLoginPrompt()">
+                                    <!-- Gọi hàm showLoginPrompt() -->
+                                    <i class="bi bi-cart"></i>
+                                    </a>
                             </div>
                         </div>
                         <div class="text-center p-4">
@@ -438,7 +476,14 @@
                             <img class="img-fluid" src="~/User/img/Caycanh/image5.png" alt="">
                             <div class="product-overlay">
                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart" data-name="Chậu Sen Đá" data-price="25.000đ" data-img="/User/img/Caycanh/image5.png"><i class="bi bi-cart"></i></a>
+                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                   data-name="Chậu Sen Đá"
+                                   data-price="25.000đ"
+                                   data-img="/User/img/Caycanh/image5.png"
+                                   onclick="showLoginPrompt()">
+                                    <!-- Gọi hàm showLoginPrompt() -->
+                                    <i class="bi bi-cart"></i>
+                                    </a>
                             </div>
                         </div>
                         <div class="text-center p-4">
@@ -685,7 +730,7 @@
     <script src="~/User/lib/parallax/parallax.min.js"></script>
     <script src="~/User/lib/lightbox/js/lightbox.min.js"></script>
     <script src="~/js/navbar.js"></script>
-    <script src="~/js/cart.js"></script>
+    <script src="~/js/modal.js"></script>
 
     <!-- Template Javascript -->
     <script src="~/User/js/main.js"></script>

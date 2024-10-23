@@ -5,7 +5,7 @@ namespace Do_an.Data;
 
 public partial class Customer
 {
-    public int CustomerId { get; set; }
+    public int UserId { get; set; }
 
     public string FullName { get; set; } = null!;
 
@@ -19,6 +19,11 @@ public partial class Customer
 
     public DateTime? UpdatedAt { get; set; }
 
+    // Add Username and Password properties
+    public string Username { get; set; } = null!;
+
+    public string Password { get; set; } = null!;
+
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
@@ -26,4 +31,6 @@ public partial class Customer
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual ICollection<WasteExchange> WasteExchanges { get; set; } = new List<WasteExchange>();
+
+
 }
