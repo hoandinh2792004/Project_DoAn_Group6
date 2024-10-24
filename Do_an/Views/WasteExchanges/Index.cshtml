@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Do_an.Data.WasteExchange>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.WasteAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExchangeDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CollectionPoint)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.WasteAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExchangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CollectionPoint.CollectionPointId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ExchangeId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ExchangeId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ExchangeId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
