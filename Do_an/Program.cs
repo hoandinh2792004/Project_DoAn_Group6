@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Stripe; // Thêm dòng này để sử dụng Stripe
+using Stripe;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace Do_an
 {
@@ -42,6 +44,8 @@ namespace Do_an
                 {
                     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
                 });
+
+
 
             // Cấu hình Stripe
             var stripeSettings = builder.Configuration.GetSection("Stripe");

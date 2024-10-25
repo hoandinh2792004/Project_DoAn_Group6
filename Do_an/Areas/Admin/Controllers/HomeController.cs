@@ -11,7 +11,7 @@ namespace Do_an.Areas.Admin.Controllers
         }
 
         // Action cho trang Products
-        public IActionResult Products()
+        public IActionResult ProductsManager()
         {
             return View();
         }

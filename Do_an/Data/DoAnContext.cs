@@ -122,7 +122,6 @@ namespace Do_an.Data
             {
                 entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED68993502");
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
-                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("(getdate())")
                     .HasColumnType("datetime");
@@ -136,7 +135,6 @@ namespace Do_an.Data
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Category).WithMany(p => p.Products)
-                    .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK__Products__Catego__3B75D760");
 
                 entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.Products)
