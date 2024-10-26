@@ -15,8 +15,6 @@ public partial class Product
 
     public int Quantity { get; set; }
 
-    public int? CategoryId { get; set; }
-
     public string? ImageUrl { get; set; }
 
     public DateTime? CreatedAt { get; set; }
@@ -24,6 +22,8 @@ public partial class Product
     public DateTime? UpdatedAt { get; set; }
 
     public int? ModifiedBy { get; set; }
+
+    public string? CategoryName { get; set; } // Thêm thuộc tính CategoryName
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

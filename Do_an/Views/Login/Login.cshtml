@@ -92,7 +92,8 @@
 
     <script>
     var userDashboardUrl = '@Url.Action("UserDashboard", "User")';
-    var adminUrl = '@Url.Action("Admin", "Authentication")';
+    var adminDashboardUrl = '@Url.Action("Index", "Home", new { area = "Admin" })';
+    var loginUrl ='@Url.Action("Login","Login")'
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="~/js/login.js"></script>

@@ -7,6 +7,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="~/User/css/payment.css">
+    <link rel="stylesheet" href="~/css/Stripe Element.css">
     <style>
         /* Bạn có thể thêm các quy tắc CSS ở đây nếu cần */
     </style>
@@ -16,7 +17,7 @@
         <div class="container" style="max-width: 1920px;">
             <div class="row align-items-center">
                 <div class="col-md-2">
-                    <a asp-action="Index" asp-controller="Home">
+                    <a asp-action="UserDashboard" asp-controller="User">
                         <img src="~/User/img/logo_doan.png" alt="logo" class="img-fluid" style="height:auto; width: 150%; max-width: 100%;">
                     </a>
                 </div>
@@ -34,7 +35,6 @@
             </div>
         </div>
     </header>
-
 
     <div class="container wrapper">
         <div class="row cart-body">
@@ -82,61 +82,41 @@
                     <!-- SHIPPING METHOD END -->
                     <!-- CREDIT CARD PAYMENT -->
                     <div class="panel panel-info">
-                        <div class="panel-heading"><span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment</div>
+                        <div class="panel-heading">
+                            <span><i class="glyphicon glyphicon-lock"></i></span> Secure Payment
+                        </div>
                         <div class="panel-body">
                             <div class="form-group">
-                                <label class="col-md-12">Card Type:</label>
+                                <label for="card-element" class="col-md-12">Card Information:</label>
                                 <div class="col-md-12">
-                                    <select id="CreditCardType" name="CreditCardType" class="form-control">
-                                        <option value="5">Visa</option>
-                                        <option value="6">MasterCard</option>
-                                        <option value="7">American Express</option>
-                                        <option value="8">Discover</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-12">Card Number:</label>
-                                <div class="col-md-12"><input type="text" name="card_number" class="form-control" /></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-12">Card Expiry:</label>
-                                <div class="col-md-12"><input type="text" name="card_expiry" class="form-control" placeholder="MM/YYYY" /></div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-12">Card Verification:</label>
-                                <div class="col-md-12"><input type="text" name="card_verification" class="form-control" placeholder="CVC" /></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12"><input type="checkbox" name="save_card" /> <span>Save my card information for future purchases</span></div>
+                                    <!-- Phần chứa thông tin thanh toán -->
+                                    <div id="payment-form">
+                                        <!-- Stripe's Card Element will be inserted here -->
+                                        <div id="card-element" class="form-control" style="padding: 10px; border-radius: 5px; border: 1px solid #ced4da;"></div>
+
+                                        <!-- Error message will be shown here -->
+                                        <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
+                                    </div>                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- CREDIT CARD PAYMENT END -->
                 </div>
-
                 <div class="col-md-6">
                     <!-- REVIEW ORDER -->
                     <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Review Order
-                        </div>
+                        <div class="panel-heading">Review Order</div>
                         <div class="panel-body" id="review-order-body">
                             <!-- Dynamic product items will be inserted here from the script -->
                         </div>
                     </div>
-                    <!-- REVIEW ORDER END -->
-                </div>
-
-
-
-                <div class="col-md-12 text-center">
-                    <button type="submit" class="btn btn-success">Complete Purchase</button>
-                </div>
+                    <!-- REVIEW ORDER END -->             
             </form>
         </div>
     </div>
 
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
     <script src="~/js/payment.js"></script>

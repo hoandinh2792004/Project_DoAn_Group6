@@ -107,12 +107,12 @@ namespace Do_an.Migrations
 
             modelBuilder.Entity("Do_an.Data.Customer", b =>
                 {
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("CustomerID");
+                        .HasColumnName("UserId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(255)
@@ -133,6 +133,10 @@ namespace Do_an.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -142,7 +146,11 @@ namespace Do_an.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.HasKey("CustomerId")
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId")
                         .HasName("PK__Customer__A4AE64B8B079EA0F");
 
                     b.ToTable("Customers");
@@ -157,9 +165,11 @@ namespace Do_an.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerID");
+                    b.Property<int?>("AdminId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CustomerUserId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("OrderDate")
                         .ValueGeneratedOnAdd()
@@ -179,9 +189,9 @@ namespace Do_an.Migrations
                     b.HasKey("OrderId")
                         .HasName("PK__Orders__C3905BAF5E28BB23");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("AdminId");
 
-                    b.HasIndex("ProcessedBy");
+                    b.HasIndex("CustomerUserId");
 
                     b.ToTable("Orders");
                 });
@@ -205,6 +215,9 @@ namespace Do_an.Migrations
                     b.Property<int?>("ProductId")
                         .HasColumnType("int")
                         .HasColumnName("ProductID");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -234,8 +247,10 @@ namespace Do_an.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
                     b.Property<int?>("CategoryId")
-                        .HasColumnType("int")
-                        .HasColumnName("CategoryID");
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -340,6 +355,9 @@ namespace Do_an.Migrations
                     b.Property<int?>("CreatedBy")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CreatedByNavigationAdminId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LocationName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -356,7 +374,7 @@ namespace Do_an.Migrations
                     b.HasKey("CollectionPointId")
                         .HasName("PK__WasteCol__E8EFF6FEBEFDBEEC");
 
-                    b.HasIndex("CreatedBy");
+                    b.HasIndex("CreatedByNavigationAdminId");
 
                     b.ToTable("WasteCollectionPoints");
                 });
@@ -371,27 +389,22 @@ namespace Do_an.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExchangeId"));
 
                     b.Property<int?>("CollectionPointId")
-                        .HasColumnType("int")
-                        .HasColumnName("CollectionPointID");
+                        .HasColumnType("int");
 
                     b.Property<int?>("CustomerId")
-                        .HasColumnType("int")
-                        .HasColumnName("CustomerID");
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("ExchangeDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime")
-                        .HasDefaultValueSql("(getdate())");
+                        .HasColumnType("datetime");
 
                     b.Property<int?>("ProductId")
-                        .HasColumnType("int")
-                        .HasColumnName("ProductID");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("WasteAmount")
-                        .HasColumnType("decimal(10, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ExchangeId")
-                        .HasName("PK__WasteExc__72E600AB320C80F1");
+                        .HasName("PK__WasteExc__35C06BF0F14DB14E");
 
                     b.HasIndex("CollectionPointId");
 
@@ -400,6 +413,78 @@ namespace Do_an.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("WasteExchanges");
+                });
+
+            modelBuilder.Entity("Role", b =>
+                {
+                    b.Property<int>("RolesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("RoleID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RolesId"));
+
+                    b.Property<string>("RolesName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("RolesId")
+                        .HasName("PK__Roles__B03200E3F5E848B2");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FullName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("UserId")
+                        .HasName("PK__Users__F7F2B247A9B14D7D");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("UserRole", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int")
+                        .HasColumnName("RoleID");
+
+                    b.HasKey("UserId", "RolesId")
+                        .HasName("PK__UserRole__5C1B90C6D43DBE27");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Do_an.Data.Cart", b =>
@@ -421,19 +506,13 @@ namespace Do_an.Migrations
 
             modelBuilder.Entity("Do_an.Data.Order", b =>
                 {
-                    b.HasOne("Do_an.Data.Customer", "Customer")
+                    b.HasOne("Do_an.Data.Admin", null)
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .HasConstraintName("FK__Orders__Customer__44FF419A");
+                        .HasForeignKey("AdminId");
 
-                    b.HasOne("Do_an.Data.Admin", "ProcessedByNavigation")
+                    b.HasOne("Do_an.Data.Customer", null)
                         .WithMany("Orders")
-                        .HasForeignKey("ProcessedBy")
-                        .HasConstraintName("FK__Orders__Processe__46E78A0C");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("ProcessedByNavigation");
+                        .HasForeignKey("CustomerUserId");
                 });
 
             modelBuilder.Entity("Do_an.Data.OrderDetail", b =>
@@ -491,8 +570,7 @@ namespace Do_an.Migrations
                 {
                     b.HasOne("Do_an.Data.Admin", "CreatedByNavigation")
                         .WithMany("WasteCollectionPoints")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("FK__WasteColl__Creat__4D94879B");
+                        .HasForeignKey("CreatedByNavigationAdminId");
 
                     b.Navigation("CreatedByNavigation");
                 });
@@ -501,24 +579,42 @@ namespace Do_an.Migrations
                 {
                     b.HasOne("Do_an.Data.WasteCollectionPoint", "CollectionPoint")
                         .WithMany("WasteExchanges")
-                        .HasForeignKey("CollectionPointId")
-                        .HasConstraintName("FK__WasteExch__Colle__5165187F");
+                        .HasForeignKey("CollectionPointId");
 
                     b.HasOne("Do_an.Data.Customer", "Customer")
                         .WithMany("WasteExchanges")
-                        .HasForeignKey("CustomerId")
-                        .HasConstraintName("FK__WasteExch__Custo__5070F446");
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("Do_an.Data.Product", "Product")
                         .WithMany("WasteExchanges")
-                        .HasForeignKey("ProductId")
-                        .HasConstraintName("FK__WasteExch__Produ__52593CB8");
+                        .HasForeignKey("ProductId");
 
                     b.Navigation("CollectionPoint");
 
                     b.Navigation("Customer");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("UserRole", b =>
+                {
+                    b.HasOne("Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__UserRole__RoleID__6B24B6D2");
+
+                    b.HasOne("User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK__UserRole__UserID__6A30C643");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Do_an.Data.Admin", b =>
@@ -565,6 +661,16 @@ namespace Do_an.Migrations
             modelBuilder.Entity("Do_an.Data.WasteCollectionPoint", b =>
                 {
                     b.Navigation("WasteExchanges");
+                });
+
+            modelBuilder.Entity("Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

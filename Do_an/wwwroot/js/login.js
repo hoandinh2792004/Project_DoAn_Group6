@@ -11,35 +11,69 @@ loginBtn.addEventListener('click', () => {
 });
 
 // Get form elements
-var signUpForm = document.getElementById('signup-form');
-var signInForm = document.querySelector('.sign-in form');
+const signUpForm = document.getElementById('signup-form');
+const signInForm = document.querySelector('.sign-in form');
 
-// Define admin credentials
-const adminCredentials = {
-    username: "admin",
-    email: "admin@gmail.com",
-    password: "admin123" // Change this to a secure password
-};
+// Clear previous messages
+function clearMessages() {
+    const existingMessages = document.querySelectorAll('.error-message, .success-message');
+    existingMessages.forEach((message) => message.remove());
+}
 
-// Add event listeners for form submissions
+// Show error message
+function showError(inputElement, errorMessage) {
+    clearMessages();
+    const errorElement = document.createElement('p');
+    errorElement.className = 'error-message';
+    errorElement.textContent = errorMessage;
+
+    const containerElement = inputElement.parentElement;
+    containerElement.appendChild(errorElement);
+}
+
+// Show success message
+function showSuccess(inputElement, successMessage) {
+    clearMessages();
+    const successElement = document.createElement('p');
+    successElement.className = 'success-message';
+    successElement.textContent = successMessage;
+
+    const containerElement = inputElement.parentElement;
+    containerElement.appendChild(successElement);
+}
+
+// Validate inputs
+function validateName(name) {
+    return name.length >= 2;
+}
+
+function validateEmail(email) {
+    const pattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
+    return pattern.test(email);
+}
+
+function validatePassword(password) {
+    return password.length >= 8;
+}
+
+// Sign Up Form Submission
 signUpForm.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent form submission
 
-    var nameInput = document.getElementById('name');
-    var emailInput = document.getElementById('email');
-    var passwordInput = document.getElementById('password');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
 
     // Validate inputs
-    var isNameValid = validateName(nameInput.value);
-    var isEmailValid = validateEmail(emailInput.value);
-    var isPasswordValid = validatePassword(passwordInput.value);
+    const isNameValid = validateName(nameInput.value);
+    const isEmailValid = validateEmail(emailInput.value);
+    const isPasswordValid = validatePassword(passwordInput.value);
 
     // Show error messages and prevent form submission if any input is invalid
     if (!isNameValid) {
         showError(nameInput, 'Name must be at least 2 characters long.');
         return;
     }
-
     if (!isEmailValid) {
         showError(emailInput, 'Invalid email address.');
         return;
@@ -50,48 +84,18 @@ signUpForm.addEventListener('submit', function (event) {
         return;
     }
 
-    // Check for admin credentials
-    if (nameInput.value === adminCredentials.username && emailInput.value === adminCredentials.email && passwordInput.value === adminCredentials.password) {
-        showError(nameInput, 'This admin account already exists.');
-        return;
-    }
-
-    // All inputs are valid, proceed with form submission
-    signUpForm.submit();
-});
-
-signInForm.addEventListener('submit', function (event) {
-    event.preventDefault(); // Ngăn gửi biểu mẫu mặc định
-
-    var emailInput = document.getElementById('emails');
-    var passwordInput = document.getElementById('passwords');
-
-    // Kiểm tra tính hợp lệ của email và mật khẩu
-    var isEmailValid = validateEmail(emailInput.value);
-    var isPasswordValid = validatePassword(passwordInput.value);
-
-    if (!isEmailValid) {
-        showError(emailInput, 'Địa chỉ email không hợp lệ.');
-        return;
-    }
-
-    if (!isPasswordValid) {
-        showError(passwordInput, 'Mật khẩu phải có ít nhất 8 ký tự.');
-        return;
-    }
-
-    // Kiểm tra thông tin đăng nhập admin
-    if (emailInput.value === adminCredentials.email && passwordInput.value === adminCredentials.password) {
-        // Chuyển hướng đến trang admin
-        window.location.href = adminUrl; // Sử dụng biến adminUrl
-        return;
-    }
-
-    // Fetch user data to check for existence
-    fetch("https://659a6480652b843dea538305.mockapi.io/users")
+    // All inputs are valid, proceed with API call
+    axios.post("http://localhost:5135/api/Auth/register", {
+        username: nameInput.value,
+        email: emailInput.value,
+        password: passwordInput.value
+    })
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data");
+            if (response.status === 200 || response.status === 201) {
+                showSuccess(emailInput, "Account created successfully!");
+                setTimeout(() => {
+                    window.location.href = loginUrl;
+                }, 3000);
             }
             return response.json();
         })
@@ -110,108 +114,52 @@ signInForm.addEventListener('submit', function (event) {
             window.location.href = userDashboardUrl; // Sử dụng biến userDashboardUrl
         })
         .catch(error => {
-            console.error("Có vấn đề trong việc đăng nhập:", error);
+            console.error("There was a problem creating the user:", error);
+            showError(emailInput, error.response.data.Errors ? error.response.data.Errors.join(", ") : "Registration failed. Please try again.");
         });
 });
 
-// Function to validate name
-function validateName(name) {
-    return name.length >= 2;
-}
+// Sign In Form Submission (Updated)
+signInForm.addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent form submission
 
-// Function to validate email
-function validateEmail(email) {
-    var pattern = /^[\w\.-]+@[\w\.-]+\.\w+$/;
-    return pattern.test(email);
-}
+    const emailInput = document.getElementById("emails");
+    const passwordInput = document.getElementById("passwords");
 
-// Function to validate password
-function validatePassword(password) {
-    return password.length >= 8;
-}
+    // Validate inputs
+    const isEmailValid = validateEmail(emailInput.value);
+    const isPasswordValid = validatePassword(passwordInput.value);
 
-// Function to show error message
-function showError(inputElement, errorMessage) {
-    clearMessages();
-
-    var errorElement = document.createElement('p');
-    errorElement.className = 'error-message';
-    errorElement.textContent = errorMessage;
-
-    var containerElement = inputElement.parentElement;
-    containerElement.appendChild(errorElement);
-}
-
-// Clear error messages when input value changes
-var inputElements = document.querySelectorAll('input');
-inputElements.forEach(function (inputElement) {
-    inputElement.addEventListener('input', function () {
-        var containerElement = inputElement.parentElement;
-        var errorElement = containerElement.querySelector('.error-message');
-        if (errorElement) {
-            containerElement.removeChild(errorElement);
-        }
-    });
-});
-
-document.getElementById("signup-form").addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const username = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    // Check for existing admin account
-    if (username === adminCredentials.username && email === adminCredentials.email) {
-        showError(document.getElementById("email"), "Admin account already exists.");
+    // Show error messages and prevent form submission if any input is invalid
+    if (!isEmailValid) {
+        showError(emailInput, 'Invalid email address.');
+        return;
+    }
+    if (!isPasswordValid) {
+        showError(passwordInput, 'Password must be at least 8 characters long.');
         return;
     }
 
-    // Validation checks
-    if (password.length < 8) {
-        return;
-    }
-
-    if (username.length < 2) {
-        return;
-    }
-
-    if (!email.endsWith("@gmail.com") && !email.endsWith("@hotmail.com")) {
-        return;
-    }
-
-    fetch("https://659a6480652b843dea538305.mockapi.io/users")
+    axios.post("http://localhost:5135/api/Auth/login", {
+        email: emailInput.value,
+        password: passwordInput.value
+    })
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data");
-            }
-            return response.json();
-        })
-        .then(users => {
-            const userExists = users.some(user => user.username === username || user.email === email);
-            if (userExists) {
-                showError(document.getElementById("email"), "Username or email already exists.");
-                return;
-            }
+            const token = response.data.token;
+            const role = response.data.role; // Sửa lại tên trường cho đúng với dữ liệu trả về
 
-            const userData = {
-                username: username,
-                email: email,
-                password: password
-            };
+            console.log("Role returned from API:", role); // Kiểm tra giá trị role
+            console.log("Token received:", token); // Kiểm tra token
 
-            return fetch("https://659a6480652b843dea538305.mockapi.io/users", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(userData)
-            });
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
+            setCookie('authToken', token);
+
+            // Kiểm tra điều kiện vai trò
+            if (role && role === "1") { // So sánh với chuỗi "1"
+                console.log("Redirecting to admin dashboard");
+                window.location.href = adminDashboardUrl;  // Admin dashboard
+            } else {
+                console.log("Redirecting to user dashboard");
+                window.location.href = userDashboardUrl;  // User dashboard
             }
             return response.json();
         })
@@ -219,24 +167,28 @@ document.getElementById("signup-form").addEventListener("submit", function (even
             showSuccess(document.getElementById("email"), "Account created successfully!");
         })
         .catch(error => {
-            console.error("There was a problem creating the user:", error);
+            if (error.response && error.response.status === 403) {
+                document.getElementById("wrongpassword").innerText = "Bạn không có quyền truy cập vào tài nguyên này.";
+            } else {
+                console.error("Login error:", error);
+                document.getElementById("wrongpassword").innerText = "Wrong email or password.";
+            }
         });
+
+
+
 });
 
-function showSuccess(inputElement, successMessage) {
-    clearMessages();
-
-    var successElement = document.createElement('p');
-    successElement.className = 'success-message';
-    successElement.textContent = successMessage;
-
-    var containerElement = inputElement.parentElement;
-    containerElement.appendChild(successElement);
+// Cookie function
+function setCookie(name, value) {
+    document.cookie = name + "=" + value + "; path=/";
 }
 
-function clearMessages() {
-    var existingMessages = document.querySelectorAll('.error-message, .success-message');
-    existingMessages.forEach(function (message) {
-        message.remove();
+// Clear error messages when input value changes
+const inputElements = document.querySelectorAll('input');
+inputElements.forEach((inputElement) => {
+    inputElement.addEventListener('input', () => {
+        clearMessages();
     });
+});
 }

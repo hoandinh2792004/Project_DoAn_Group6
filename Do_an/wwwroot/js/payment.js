@@ -1,95 +1,96 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     const reviewOrderBody = document.getElementById('review-order-body');
+    let elements;
+    let stripe;
+    let clientSecret;
 
-    // Function to retrieve cart from sessionStorage
     function loadCartFromStorage() {
         const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
         return cart;
     }
 
-    // Function to update the cart in sessionStorage
     function updateCartInStorage(cart) {
         sessionStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Function to generate and display the cart items
+    function calculateTotalAmount() {
+        let total = 0;
+        const cartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
+        cartItems.forEach(item => {
+            total += item.price * item.qty;
+        });
+        return total;
+    }
+
     function displayCartItems() {
-        const cart = loadCartFromStorage(); // Get cart items from sessionStorage
+        const cart = loadCartFromStorage();
 
         let subtotal = 0;
         let orderTotal = 0;
         let cartHtml = '';
 
-        // Check if the cart is empty
         if (cart.length === 0) {
-            reviewOrderBody.innerHTML = '<p>No items in your cart.</p>';
-            return; // Exit if there are no items
+            reviewOrderBody.innerHTML = '<p>Không có sản phẩm nào trong giỏ hàng của bạn.</p>';
+            return;
         }
 
-        // Loop through each cart item
-        cart.forEach(item => {
-            const { name: productName, price: productPrice, img: productImg, qty: productQty } = item;
+            cart.forEach(item => {
+                const { name: productName, price: productPrice, img: productImg, qty: productQty } = item;
+                const itemTotal = productPrice * productQty;
+                subtotal += itemTotal;
 
-            // Calculate the total price for the current item
-            const itemTotal = productPrice * productQty;
-            subtotal += itemTotal;
-
-            // Create the HTML for each product with quantity controls and delete button
-            cartHtml += `
-                <div class="product-item">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            <img class="img-responsive" src="${productImg}" alt="${productName}" />
-                        </div>
-                        <div class="col-sm-6">
-                            <div>${productName}</div>
-                            <div class="product-quantity">
-                                <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, -1)">-</button>
-                                <span class="qty-value">${productQty}</span>
-                                <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 text-right">
-                            <h6><span>$</span><span class="item-total">${itemTotal.toFixed(2)}</span></h6>
-                            <button class="delete-btn" onclick="deleteItem('${productName}')">
-                                <i class="fa-solid fa-trash"></i> <!-- Trash can icon -->
-                            </button>
+                cartHtml += `
+            <div class="product-item">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <img class="img-responsive" src="${productImg}" alt="${productName}" />
+                    </div>
+                    <div class="col-sm-6">
+                        <div>${productName}</div>
+                        <div class="product-quantity">
+                            <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, -1)">-</button>
+                            <span class="qty-value">${productQty}</span>
+                            <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, 1)">+</button>
                         </div>
                     </div>
-                    <hr />
+                    <div class="col-sm-3 text-right">
+                        <h6><span class="item-total">${itemTotal.toLocaleString()} đ</span></h6>
+                        <button class="delete-btn" onclick="deleteItem('${productName}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
-            `;
-        });
-
-        // Calculate the total
-        orderTotal = subtotal; // You can add shipping and other fees here
-
-        // Append subtotal and order total
-        cartHtml += `
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <strong>Subtotal</strong>
-                    <div class="pull-right"><span>$</span><span>${subtotal.toFixed(2)}</span></div>
-                </div>
-                <div class="col-xs-12">
-                    <small>Shipping</small>
-                    <div class="pull-right"><span>-</span></div>
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <strong>Order Total</strong>
-                    <div class="pull-right"><span>$</span><span class="order-total">${orderTotal.toFixed(2)}</span></div>
-                </div>
+                <hr />
             </div>
         `;
+            });
 
-        // Insert the generated HTML into the DOM
+            orderTotal = subtotal +25000;
+
+            cartHtml += `
+        <div class="form-group">
+            <div class="col-xs-12">
+                <strong>Tổng phụ</strong>
+                <div class="pull-right"><span>25.000</span><span>đ</span></div>
+            </div>
+            <div class="col-xs-12">
+                <small>Phí vận chuyển</small>
+                <div class="pull-right"><span>-</span></div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-xs-12">
+                <strong>Tổng đơn hàng</strong>
+                <div class="pull-right"><span class="order-total">${orderTotal.toLocaleString()}</span><span>đ</span></div>
+            </div>
+        </div>
+    `;
+
+
         reviewOrderBody.innerHTML = cartHtml;
     }
 
-    // Function to update quantity
     window.updateQuantity = function (productName, productPrice, change) {
         let cart = loadCartFromStorage();
         const itemIndex = cart.findIndex(item => item.name === productName);
@@ -98,33 +99,155 @@
             const newQty = cart[itemIndex].qty + change;
 
             if (newQty < 1) {
-                // Remove item if quantity is less than 1
                 cart.splice(itemIndex, 1);
             } else {
-                // Update the quantity
                 cart[itemIndex].qty = newQty;
             }
 
-            // Update the sessionStorage
             updateCartInStorage(cart);
-            // Refresh the display
             displayCartItems();
         }
     };
 
-    // Function to delete an item from the cart
     window.deleteItem = function (productName) {
         let cart = loadCartFromStorage();
-        cart = cart.filter(item => item.name !== productName); // Remove item from cart
-        updateCartInStorage(cart); // Update sessionStorage
-        displayCartItems(); // Refresh the display
-        syncCart(); // Synchronize with any other cart display
+        cart = cart.filter(item => item.name !== productName);
+        updateCartInStorage(cart);
+        displayCartItems();
     };
 
-    // Call the function to display the cart items when the page loads
-    displayCartItems();
+    async function initializeStripe() {
+        const stripe = Stripe('pk_test_51QBtx3GCdl3dzztXq6dbzGmUufunk1FIialSltyAEh9Q7pSxzfu96yGKZVrTkefon58bXwfuLwYIsjSRfaf9OpPq00mQAFG6FE');
+        const elements = stripe.elements();
 
-    // Ensure synchronization with add to cart page
+        const style = {
+            base: {
+                color: "#32325d",
+                fontFamily: 'Arial, sans-serif',
+                fontSize: "16px",
+                "::placeholder": {
+                    color: "#aab7c4",
+                },
+            },
+            invalid: {
+                color: "#fa755a",
+                iconColor: "#fa755a",
+            },
+        };
+
+        const card = elements.create('card', { style });
+        card.mount('#card-element');
+
+        const confirmButton = document.createElement('button');
+        confirmButton.id = 'confirm-payment';
+        confirmButton.classList.add('btn', 'btn-success');
+        confirmButton.textContent = 'Thanh toán';
+        confirmButton.disabled = true;
+        confirmButton.onclick = confirmPayment;
+
+        document.getElementById('payment-form').appendChild(confirmButton);
+
+        card.on('change', function (event) {
+            if (event.complete) {
+                confirmButton.disabled = false;
+            } else {
+                confirmButton.disabled = true;
+            }
+
+            if (event.error) {
+                document.getElementById('card-errors').textContent = event.error.message;
+            } else {
+                document.getElementById('card-errors').textContent = '';
+            }
+        });
+
+        async function confirmPayment(event) {
+            event.preventDefault();
+
+            const totalAmount = calculateTotalAmount();
+            if (totalAmount <= 0) {
+                alert("Số tiền phải lớn hơn 0 để thực hiện thanh toán.");
+                return;
+            }
+
+            // Lấy dữ liệu giỏ hàng trước khi tạo phiên thanh toán
+            const cartItems = getCartItems();
+            if (cartItems.length === 0) {
+                alert("Giỏ hàng của bạn hiện đang trống.");
+                return;
+            }
+
+            // Tạo checkout session
+            const response = await fetch('http://localhost:5135/api/payment/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ PaymentAmount: totalAmount }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                document.getElementById('card-errors').textContent = errorData.error || "Đã xảy ra lỗi khi tạo checkout session.";
+                return;
+            }
+
+            const { sessionId } = await response.json();
+
+            try {
+                const uploadResponse = await fetch('http://localhost:5135/api/cart/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cartItems),
+                });
+
+                if (!uploadResponse.ok) {
+                    const uploadError = await uploadResponse.text();
+                    console.error("Lỗi khi tải dữ liệu giỏ hàng:", uploadError);
+                    alert("Đã xảy ra lỗi khi tải dữ liệu giỏ hàng lên: " + uploadError);
+                } else {
+                    alert('Thanh toán thành công! Dữ liệu giỏ hàng đã được tải lên cơ sở dữ liệu.');
+                    clearCart();
+                     window.location.href = '/User/UserDashboard';
+                }
+            } catch (error) {
+                console.error("Lỗi khi tải dữ liệu giỏ hàng lên: ", error);
+                alert("Đã xảy ra lỗi khi tải dữ liệu giỏ hàng lên: " + error.message);
+            }
+        }
+    }
+
+    function getCartItems() {
+        const cart = [];
+        const storedItems = JSON.parse(sessionStorage.getItem('cart')) || [];
+
+        storedItems.forEach(item => {
+            cart.push({ // Thay đổi từ cartItems.push sang cart.push
+                Name: item.name,
+                Price: item.price,
+                Quantity: item.qty, // Sử dụng qty thay vì quantity
+            });
+        });
+
+        return cart;
+    }
+
+   
+
+    // Gọi hàm khởi tạo Stripe khi tài liệu sẵn sàng
+    document.addEventListener("DOMContentLoaded", initializeStripe);
+
+
+    // Không gọi hàm clearCart để giữ lại giỏ hàng sau khi thanh toán cho việc thử nghiệm
+    function clearCart() {
+        sessionStorage.removeItem('cart');
+    }
+
+    displayCartItems();
+    initializeStripe();
+
     window.syncCart = function () {
         displayCartItems();
     };
