@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đăng Ký Đóng Góp với Ảnh</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1200px;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-form {
+            width: 65%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #2e7d32; 
+            color: #ffffff; 
+            border-radius: 8px 0 0 8px; 
+        }
+
+        h2 {
+            text-align: center;
+            color: #ffffff;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #218838;
+            }
+
+        .image-container {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0; 
+        }
+
+            .image-container img {
+                max-width: 100%;
+                max-height: 650px;
+                border-radius: 0 8px 8px 0; 
+                display: block; 
+            }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+            .popup h3 {
+                margin-bottom: 10px;
+            }
+
+            .popup button {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+                .popup button:hover {
+                    background-color: #0056b3;
+                }
+
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="registration-form">
+            <h2>Đăng Ký Đóng Góp</h2>
+            <form id="registrationForm">
+                <div id="error-message" class="error-message"></div>
+                <label for="fullname">Họ và Tên:</label>
+                <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email" required>
+
+                <label for="address">Địa chỉ:</label>
+                <input type="text" id="address" name="address" placeholder="Nhập địa chỉ" required>
+
+                <label for="product">Sản phẩm thu gom:</label>
+                <select id="product" name="product" required>
+                    <option value="">--Chọn sản phẩm--</option>
+                    <option value="bìa cứng">Bìa cứng</option>
+                    <option value="nhựa">Nhựa</option>
+                    <option value="linh kiện điện tử">Linh kiện điện tử</option>
+                    <option value="thùng xốp">Thùng xốp</option>
+                </select>
+
+                <label for="contribution-date">Ngày đến đóng góp:</label>
+                <input type="date" id="contribution-date" name="contribution-date" required>
+
+                <label for="contribution-time">Giờ đến đóng góp:</label>
+                <input type="time" id="contribution-time" name="contribution-time" required>
+
+                <button type="submit">Đăng Ký</button>
+            </form>
+        </div>
+
+        <div class="image-container">
+            <img src="https://anhdepfree.com/wp-content/uploads/2020/04/anh-dep-full-hd-lam-hinh-nen-dien-thoai.jpg" alt="Ảnh minh họa">
+        </div>
+    </div>
+
+    
+    <div class="overlay" id="overlay"></div>
+
+    
+    <div class="popup" id="thankYouPopup">
+        <h3>Cảm ơn bạn!</h3>
+        <p id="thankYouMessage"></p>
+        <button onclick="closePopup()">Đóng</button>
+    </div>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function (event) {
+            event.preventDefault(); 
+
+            
+            const fullname = document.getElementById("fullname").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const product = document.getElementById("product").value;
+            const contributionDate = document.getElementById("contribution-date").value;
+            const contributionTime = document.getElementById("contribution-time").value;
+
+           
+            if (!fullname || !email || !address || !product || !contributionDate || !contributionTime) {
+                document.getElementById("error-message").innerText = "Vui lòng điền đầy đủ thông tin.";
+                return; 
+            }
+
+           
+            document.getElementById("error-message").innerText = "";
+
+            
+            const thankYouMessage = `Cảm ơn ${fullname} đã đăng ký đóng góp!`;
+            document.getElementById("thankYouMessage").innerText = thankYouMessage;
+            document.getElementById("thankYouPopup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+
+           
+            document.getElementById("registrationForm").reset();
+        });
+
+       
+        function closePopup() {
+            document.getElementById("thankYouPopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

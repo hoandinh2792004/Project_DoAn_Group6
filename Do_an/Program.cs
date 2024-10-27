@@ -1,4 +1,5 @@
 using Do_an.Data;
+using Do_an.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Do_an
@@ -44,5 +45,11 @@ namespace Do_an
 
             app.Run();
         }
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddControllersWithViews();
+            services.AddScoped<EmailService>(); 
+        }
+
     }
 }
