@@ -70,8 +70,13 @@ namespace Do_an.Areas.Admin.Controllers
         [HttpPost("AddProduct")]
         public async Task<ActionResult<ProductDto>> CreateProduct([FromForm] CreateProductDto createProductDto)
         {
+            // Kiểm tra tính hợp lệ của ModelState
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+                    .ToList();
+                _logger.LogError("Model validation errors: {Errors}", string.Join(", ", errors));
                 return BadRequest(ModelState);
             }
 
@@ -80,17 +85,33 @@ namespace Do_an.Areas.Admin.Controllers
             if (createProductDto.ImageFile != null && createProductDto.ImageFile.Length > 0)
             {
                 var fileName = Path.GetFileName(createProductDto.ImageFile.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+                var imageDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
 
-                // Lưu tệp hình ảnh vào thư mục
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                // Tạo thư mục nếu chưa tồn tại
+                if (!Directory.Exists(imageDirectory))
                 {
-                    await createProductDto.ImageFile.CopyToAsync(stream);
+                    Directory.CreateDirectory(imageDirectory);
                 }
 
-                imageUrl = $"/images/{fileName}"; // Đường dẫn tới hình ảnh
+                var filePath = Path.Combine(imageDirectory, fileName);
+
+                // Lưu tệp hình ảnh vào thư mục
+                try
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await createProductDto.ImageFile.CopyToAsync(stream);
+                    }
+                    imageUrl = $"/images/{fileName}"; // Đường dẫn tới hình ảnh
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Lỗi khi lưu tệp hình ảnh.");
+                    return StatusCode(500, new { message = "Không thể lưu tệp hình ảnh. Vui lòng thử lại." });
+                }
             }
 
+            // Tạo đối tượng sản phẩm mới
             var product = new Product
             {
                 Name = createProductDto.Name,
@@ -103,6 +124,7 @@ namespace Do_an.Areas.Admin.Controllers
                 CategoryName = createProductDto.CategoryName
             };
 
+            // Thêm sản phẩm vào cơ sở dữ liệu
             try
             {
                 _context.Products.Add(product);
@@ -123,14 +145,19 @@ namespace Do_an.Areas.Admin.Controllers
 
                 return CreatedAtAction(nameof(GetProducts), new { id = product.ProductId }, productDto);
             }
+            catch (DbUpdateException dbEx)
+            {
+                _logger.LogError(dbEx, "Lỗi khi lưu sản phẩm vào cơ sở dữ liệu.");
+                return StatusCode(500, new { message = "Đã xảy ra lỗi khi tạo sản phẩm. Vui lòng kiểm tra lại thông tin." });
+            }
             catch (Exception ex)
             {
                 // Ghi log lỗi để xem chi tiết
-                _logger.LogError(ex, "Đã xảy ra lỗi khi tạo sản phẩm."); // Ghi log
-
+                _logger.LogError(ex, "Đã xảy ra lỗi khi tạo sản phẩm.");
                 return StatusCode(500, new { message = "Đã xảy ra lỗi khi tạo sản phẩm. Vui lòng thử lại." });
             }
         }
+
 
         [HttpPut("UpdateProduct/{id}")]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] UpdateProductDto updateProductDto)

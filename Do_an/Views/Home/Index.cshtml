@@ -2,167 +2,52 @@
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>Heart & Garden</title>
-    <meta content="width=device-width, initial-scale =1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-
-    <!-- Favicon -->
-    <link href="~/User/img/hinhlogo.png" rel="icon">
-
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Libraries Stylesheet -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="~/User/lib/animate/animate.min.css" rel="stylesheet">
-    <link href="~/User/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="~/User/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="~/User/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Template Stylesheet -->
-    <link href="~/User/css/style.css" rel="stylesheet">
-    <link href="~/User/css/navbar.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="~/css/modal.css">
-    
-
-</head>
-
-<body>
-    <!-- Spinner Start -->
-    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-    </div>
-    <!-- Spinner End -->
-    <!-- Topbar Start -->
-    <!-- <div class="container-fluid bg-dark px-0">
-        <div class="row g-0 d-none d-lg-flex">
-            <div class="col-lg-6 ps-5 text-start">
-                <div class="h-100 d-inline-flex align-items-center text-light">
-                    <span>Follow Us:</span>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-linkedin-in"></i></a>
-                    <a class="btn btn-link text-light" href=""><i class="fab fa-instagram"></i></a>
-                </div>
+<!-- View Cart Start -->
+<div id="backdrop" class="backdrop"></div>
+<div class="side-cart-container">
+    <div id="sidecart" class="sidecart">
+        <div class="cart-header">
+            <span id="close-btn">&times;</span>
+            <h3 class="cart-title">Shopping Cart</h3>
+            <div class="cart-count">
+                <span id="cart-count">0</span>
             </div>
-            <div class="col-lg-6 text-end">
-                <div class="h-100 bg-secondary d-inline-flex align-items-center text-dark py-2 px-4">
-                    <span class="me-2 fw-semi-bold"><i class="fa fa-phone-alt me-2"></i>Email:</span>
-                    <span>HeartSeed</span>
+        </div>
+        <div class="cart-items" id="cart-display">
+            <!-- Thêm ID cho phần giỏ hàng -->
+            <div class="prod">
+                <div class="product-cart">
+                    <ol style="list-style: none;">
+                        <li class="d-flex">
+                            <!-- Thêm sản phẩm vào đây -->
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
-    </div> -->
-    <!-- Topbar End -->
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
-        <div class="main-logo">
-            <a asp-action="Index" asp-controller="Home">
-                <img src="~/User/img/logo_doan.png" alt="logo" class="img-fluid" style="height:auto;">
-            </a>
-        </div>
-        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a asp-action="Index" asp-controller="Home"class="nav-item nav-link active">Trang chủ</a>
-                <a href="service.html" class="nav-item nav-link">Services</a>
-                <a href="product.html" class="nav-item nav-link">Sản phẩm</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Về chúng tôi</a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a href="gallery.html" class="dropdown-item">Gallery</a>
-                        <a href="feature.html" class="dropdown-item">Features</a>
-                        <a href="team.html" class="dropdown-item">Our Team</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="404.html" class="dropdown-item">404 Page</a>
-                    </div>
-                </div>
-                <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+        <div class="side-cart-bottom">
+            <div class="sub-total">
+                <span class="total-title float-left">Total:</span>
+                <span class="total-price float-right" id="total-price">$0.00</span>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
-            </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
-                </button>
-            </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <a asp-action="Login" asp-controller="Login" class="btn btn-sm p-0" id="user-icon">
-                    <i class="fa-regular fa-user"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
-    <!-- Navbar End -->
-
- 
-
-    <!-- View Cart Start -->
-    <div id="backdrop" class="backdrop"></div>
-    <div class="side-cart-container">
-        <div id="sidecart" class="sidecart">
-            <div class="cart-header">
-                <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
-                <div class="cart-count">
-                    <span id="cart-count">0</span>
-                </div>
-            </div>
-            <div class="cart-items" id="cart-display">
-                <!-- Thêm ID cho phần giỏ hàng -->
-                <div class="prod">
-                    <div class="product-cart">
-                        <ol style="list-style: none;">
-                            <li class="d-flex">
-                                <!-- Thêm sản phẩm vào đây -->
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-            </div>
-            <div class="side-cart-bottom">
-                <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
-                    <span class="total-price float-right" id="total-price">$0.00</span>
-                </div>
-                <div class="cart-actions">
-                    <a href="#" class="button-checkout" onclick="showCheckoutPrompt()">Check Out</a> <!-- Gọi hàm showCheckoutPrompt() -->
-                </div>
+            <div class="cart-actions">
+                <a href="#" class="button-checkout" onclick="showCheckoutPrompt()">Check Out</a> <!-- Gọi hàm showCheckoutPrompt() -->
             </div>
         </div>
     </div>
-    <!-- Modal yêu cầu đăng nhập -->
-    <div id="loginPromptModal" class="modal" style="display:none;">
-        <!-- Đảm bảo mặc định là ẩn -->
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">&times;</span>
-            <h2>Yêu cầu Đăng nhập</h2>
-            <p>Vui lòng đăng nhập để thực hiện thanh toán.</p>
-            <a asp-action="Login" asp-controller="Login" class="button">Đăng nhập</a> <!-- Thay đổi đường dẫn đến trang đăng nhập -->
-            <a href="#" class="button" onclick="closeModal()">Hủy</a>
-        </div>
+</div>
+
+<!-- Modal yêu cầu đăng nhập -->
+<div id="loginPromptModal" class="modal" style="display:none;">
+    <!-- Đảm bảo mặc định là ẩn -->
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h2>Yêu cầu Đăng nhập</h2>
+        <p>Vui lòng đăng nhập để thực hiện thanh toán.</p>
+        <a asp-action="Login" asp-controller="Login" class="button">Đăng nhập</a> <!-- Thay đổi đường dẫn đến trang đăng nhập -->
+        <a href="#" class="button" onclick="closeModal()">Hủy</a>
     </div>
-    <!-- View Cart End -->
+</div>
 
     <!-- Carousel Start -->
     <div class="container-fluid px-0 mb-5">
@@ -211,7 +96,7 @@
     </div>
     <!-- Carousel End -->
     <!-- About Start -->
-    <!-- <div class="container-xxl py-5">
+     <div class="container-xxl py-5">
         <div class="container">
             <div class="row g-5 align-items-end">
                 <div class="col-lg-6">
@@ -223,13 +108,13 @@
                             </div>
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
-                            <img class="img-fluid rounded" src="img/service-1.jpg">
+                        <img class="img-fluid rounded" src="~/User/img/Caycanh/image1.png">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
-                            <img class="img-fluid rounded" src="img/service-2.jpg">
+                        <img class="img-fluid rounded" src="~/User/img/Caycanh/image2.png">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.5s">
-                            <img class="img-fluid rounded" src="img/service-3.jpg">
+                        <img class="img-fluid rounded" src="~/User/img/Caycanh/image3.png">
                         </div>
                     </div>
                 </div>
@@ -239,12 +124,12 @@
                     <p class="mb-4">chuyên cung các sản phẩm cây cảnh </p>
                     <div class="row g-5 pt-2 mb-5">
                         <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="img/service.png" alt="">
+                        <img class="img-fluid mb-4" src="~/User/img/service.png" alt="">
                             <h5 class="mb-3">Dedicated Services</h5>
                             <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
                         </div>
                         <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="img/product.png" alt="">
+                        <img class="img-fluid mb-4" src="~/User/img/product.png" alt="">
                             <h5 class="mb-3">Organic Products</h5>
                             <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
                         </div>
@@ -253,91 +138,10 @@
                 </div>
             </div>
         </div>
-    </div> -->
+    </div> 
     <!-- About End -->
-    <!-- Features Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="section-title bg-white text-start text-primary pe-3">Why Us!</p>
-                    <h1 class="mb-4">Few Reasons Why People Choosing Us!</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Justo magna erat amet</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Clita erat ipsum et lorem et sit</p>
-                    <a class="btn btn-secondary rounded-pill py-3 px-5 mt-3" href="">Explore More</a>
-                </div>
-                <div class="col-lg-6">
-                    <div class="rounded overflow-hidden">
-                        <div class="row g-0">
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
-                                <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/experience.png" alt="">
-                                    <h1 class="display-6 text-white" data-toggle="counter-up">25</h1>
-                                    <span class="fs-5 fw-semi-bold text-secondary">Years Experience</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
-                                <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/award.png" alt="">
-                                    <h1 class="display-6" data-toggle="counter-up">183</h1>
-                                    <span class="fs-5 fw-semi-bold text-primary">Award Winning</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
-                                <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/animal.png" alt="">
-                                    <h1 class="display-6" data-toggle="counter-up">2619</h1>
-                                    <span class="fs-5 fw-semi-bold text-primary">Total Animals</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.7s">
-                                <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/client.png" alt="">
-                                    <h1 class="display-6 text-white" data-toggle="counter-up">51940</h1>
-                                    <span class="fs-5 fw-semi-bold text-secondary">Happy Clients</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Features End -->
-    <!-- Banner Start -->
-    <!-- <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="img/banner.jpg">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="img/banner-1.jpg" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Sell Best Dairy Products</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="img/banner-2.jpg" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Deliver Fresh Mild Worldwide</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Banner End -->
+
+ 
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -356,7 +160,7 @@
                                 <img class="img-fluid rounded-circle" src="~/User/img/Caycanh/logoservice1.png" alt="">
                             </div>
                             <h5 class="mb-3">
-                                Cây cảnh mini</h4>
+                                Cây cảnh mini</h5>
                                 <p class="mb-4">Heart & Garden ra đời mong muốn là điểm nối của mỗi người với thiên nhiên bằng những sản phẩm chất lượng, sáng tạo, thuần Việt. </p>
                                 <a class="btn btn-square rounded-circle" href=""><i class="bi bi-chevron-double-right"></i></a>
                         </div>
@@ -409,12 +213,11 @@
                         <div class="position-relative">
                             <img class="img-fluid" src="~/User/img/Caycanh/image1.png" alt="">
                             <div class="product-overlay">
-                                <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
                                 <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
                                    data-name="Cây lưỡi hổ xanh để bàn mini"
                                    data-price="90.000đ"
                                    data-img="/User/img/Caycanh/image1.png"
-                                   onclick="showLoginPrompt()">
+                                    onclick="showLoginPrompt()">
                                     <!-- Gọi hàm showLoginPrompt() -->
                                     <i class="bi bi-cart"></i>
                                 </a>
@@ -432,8 +235,8 @@
                         <div class="position-relative">
                             <img class="img-fluid" src="~/User/img/Caycanh/image2.png" alt="">
                             <div class="product-overlay">
-                                <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+@*                                  <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
+ *@                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
                                    data-name="Cây vạn lộc son"
                                    data-price="190.000đ"
                                    data-img="/User/img/Caycanh/image2.png"
@@ -455,8 +258,8 @@
                         <div class="position-relative">
                             <img class="img-fluid" src="~/User/img/Caycanh/image4.png" alt="">
                             <div class="product-overlay">
-                                <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+@*                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
+ *@                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
                                    data-name="Terrarium Famimy & Home"
                                    data-price="150.000đ"
                                    data-img="/User/img/Caycanh/image4.png"
@@ -478,8 +281,8 @@
                         <div class="position-relative">
                             <img class="img-fluid" src="~/User/img/Caycanh/image5.png" alt="">
                             <div class="product-overlay">
-                                <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
-                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+@*                                 <a class="btn btn-square btn-secondary rounded-circle m-1" href=""><i class="bi bi-link"></i></a>
+ *@                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
                                    data-name="Chậu Sen Đá"
                                    data-price="25.000đ"
                                    data-img="/User/img/Caycanh/image5.png"
@@ -500,54 +303,7 @@
         </div>
     </div>
     <!-- Product End -->
-    <!-- Team Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <p class="section-title bg-white text-center text-primary px-3">Our Team</p>
-                <h1 class="mb-5">Experienced Team Members</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="img/team-1.jpg" alt="">
-                        <h5>Adam Crew</h5>
-                        <p class="text-primary">Founder</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="img/team-2.jpg" alt="">
-                        <h5>Doris Jordan</h5>
-                        <p class="text-primary">Veterinarian</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="img/team-3.jpg" alt="">
-                        <h5>Jack Dawson</h5>
-                        <p class="text-primary">Farmer</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Team End -->
+ 
     <!-- Testimonial Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -596,7 +352,7 @@
         </div>
     </div>
     <!-- Testimonial End -->
-    <!-- Gallery Start -->
+    <!-- Gallery Start -->z
     <div class="container-xxl py-5 px-0">
         <div class="row g-0">
             <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
@@ -661,19 +417,4 @@
    
 
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/User/lib/wow/wow.min.js"></script>
-    <script src="~/User/lib/easing/easing.min.js"></script>
-    <script src="~/User/lib/waypoints/waypoints.min.js"></script>
-    <script src="~/User/lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="~/User/lib/counterup/counterup.min.js"></script>
-    <script src="~/User/lib/parallax/parallax.min.js"></script>
-    <script src="~/User/lib/lightbox/js/lightbox.min.js"></script>
-    <script src="~/js/navbar.js"></script>
-    <script src="~/js/modal.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="~/User/js/main.js"></script>
 

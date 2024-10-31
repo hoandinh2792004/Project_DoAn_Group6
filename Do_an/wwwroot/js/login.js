@@ -78,7 +78,6 @@ signUpForm.addEventListener('submit', function (event) {
         showError(emailInput, 'Invalid email address.');
         return;
     }
-
     if (!isPasswordValid) {
         showError(passwordInput, 'Password must be at least 8 characters long.');
         return;
@@ -97,21 +96,6 @@ signUpForm.addEventListener('submit', function (event) {
                     window.location.href = loginUrl;
                 }, 3000);
             }
-            return response.json();
-        })
-        .then(users => {
-            const user = users.find(user => user.email === emailInput.value);
-            if (!user) {
-                showError(emailInput, "Tài khoản không tồn tại.");
-                return;
-            }
-            if (user.password !== passwordInput.value) {
-                showError(passwordInput, "Email hoặc mật khẩu không đúng.");
-                return;
-            }
-
-            // Nếu người dùng tồn tại và mật khẩu đúng, chuyển hướng đến User Dashboard
-            window.location.href = userDashboardUrl; // Sử dụng biến userDashboardUrl
         })
         .catch(error => {
             console.error("There was a problem creating the user:", error);
@@ -161,10 +145,6 @@ signInForm.addEventListener('submit', function (event) {
                 console.log("Redirecting to user dashboard");
                 window.location.href = userDashboardUrl;  // User dashboard
             }
-            return response.json();
-        })
-        .then(data => {
-            showSuccess(document.getElementById("email"), "Account created successfully!");
         })
         .catch(error => {
             if (error.response && error.response.status === 403) {
@@ -191,4 +171,3 @@ inputElements.forEach((inputElement) => {
         clearMessages();
     });
 });
-}

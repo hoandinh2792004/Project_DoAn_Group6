@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -69,7 +69,7 @@
                 <span>or use your email password</span>
                 <input type="email" id="emails" placeholder="Email" required>
                 <input type="password" id="passwords" placeholder="Password" required>
-                <a href="resetpassword.html">Forget Your Password?</a>
+                <a href="resetpassword">Forget Your Password?</a>
                 <button id="sign-in-button">Sign In</button>
                 <p id="wrongpassword"></p>
             </form>
@@ -91,9 +91,9 @@
     </div>
 
     <script>
-    var userDashboardUrl = '@Url.Action("UserDashboard", "User")';
-    var adminDashboardUrl = '@Url.Action("Index", "Home", new { area = "Admin" })';
-    var loginUrl ='@Url.Action("Login","Login")'
+        var userDashboardUrl = '@Url.Action("UserDashboard", "User")';
+        var adminDashboardUrl = '@Url.Action("Index", "Home", new { area = "Admin" })';
+        var loginUrl = '@Url.Action("Login", "Login")'
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="~/js/login.js"></script>

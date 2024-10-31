@@ -9,7 +9,7 @@ function openAddProductModal() {
 // Hàm xử lý lưu sản phẩm
 async function saveProduct() {
     const form = document.getElementById('productForm');
-    const formData = new FormData(form); // Tạo FormData từ form
+    const formData = new FormData(form);
     const imageFile = document.getElementById('imageFile').files[0];
 
     // Kiểm tra nếu không có file hình
@@ -18,30 +18,35 @@ async function saveProduct() {
         return;
     }
 
+    // Thêm các trường dữ liệu vào FormData
     formData.append('name', document.getElementById('name').value);
     formData.append('description', document.getElementById('description').value);
     formData.append('price', parseFloat(document.getElementById('price').value));
     formData.append('quantity', parseInt(document.getElementById('quantity').value));
     formData.append('categoryName', document.getElementById('categoryName').value);
-    formData.append('imageFile', imageFile); // Thêm file hình
+    formData.append('imageFile', imageFile);
 
     try {
         const response = await fetch('http://localhost:5135/api/Product/AddProduct', {
             method: 'POST',
-            body: formData // Gửi FormData
+            body: formData
         });
 
         if (response.ok) {
             const data = await response.json();
             showMessage('Sản phẩm đã được thêm thành công!', 'success');
-            $('#productModal').modal('hide'); // Đóng modal sau khi thêm thành công
-            loadProducts(); // Tải lại danh sách sản phẩm
+            $('#productModal').modal('hide');
+            loadProducts(); // Reload product list
         } else {
+            // Handle validation errors
             const errorData = await response.json();
-            showMessage(errorData.errors.ImageFile ? errorData.errors.ImageFile.join(', ') : 'Không thể thêm sản phẩm.', 'danger');
+            const errorMessage = errorData.errors?.ImageFile ? errorData.errors.ImageFile.join(', ') : 'Không thể thêm sản phẩm.';
+            showMessage(errorMessage, 'danger');
         }
     } catch (error) {
-        showMessage(error.message, 'danger');
+        // Handle network or unexpected errors
+        showMessage('Lỗi kết nối hoặc lỗi không xác định xảy ra.', 'danger');
+        console.error("Error saving product:", error);
     }
 }
 
@@ -49,12 +54,23 @@ async function saveProduct() {
 function showMessage(message, type) {
     const messageDiv = document.getElementById('message');
     messageDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+    setTimeout(() => messageDiv.innerHTML = '', 5000); // Clear the message after 5 seconds
 }
+
+
 
 // Hàm tải danh sách sản phẩm từ API
 async function loadProducts() {
     try {
         const response = await fetch('http://localhost:5135/api/Product/GetProducts');
+
+        // Kiểm tra mã phản hồi từ server
+        if (!response.ok) {
+            console.error("Lỗi phản hồi từ server:", response.status, response.statusText);
+            document.getElementById('productTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Đã xảy ra lỗi từ server.</td></tr>';
+            return;
+        }
+
         const result = await response.json();
 
         if (result && Array.isArray(result.$values)) {
@@ -96,6 +112,7 @@ async function loadProducts() {
         document.getElementById('productTableBody').innerHTML = '<tr><td colspan="8" class="text-center">Đã xảy ra lỗi khi tải sản phẩm.</td></tr>';
     }
 }
+
 
 // Gọi hàm loadProducts khi trang được tải
 document.addEventListener('DOMContentLoaded', loadProducts);

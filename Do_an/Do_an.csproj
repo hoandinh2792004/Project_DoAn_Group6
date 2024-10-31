@@ -40,6 +40,7 @@
     <Folder Include="Areas\Admin\js\" />
     <Folder Include="Data\" />
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\image\" />
   </ItemGroup>
 
 </Project>

@@ -5,12 +5,13 @@ function showLoginPrompt() {
 }
 
 // Hàm ẩn giỏ hàng
-function hideCart() {
-    const cartDisplayElement = document.getElementById('cart-display'); // Giả sử có phần tử hiển thị giỏ hàng
-    if (cartDisplayElement) {
-        cartDisplayElement.style.display = 'none'; // Ẩn giỏ hàng
-    }
+// Hàm thêm sản phẩm vào giỏ hàng mà không yêu cầu đăng nhập
+function addToCart(productName, productPrice, productImg) {
+    // Logic to add sản phẩm vào giỏ hàng (giả lập bằng console log)
+    console.log(`Đã thêm vào giỏ: ${productName} - ${productPrice} - ${productImg}`);
+    alert(`Đã thêm sản phẩm vào giỏ hàng: ${productName}`);
 }
+
 
 // Hàm đóng modal
 function closeModal() {
