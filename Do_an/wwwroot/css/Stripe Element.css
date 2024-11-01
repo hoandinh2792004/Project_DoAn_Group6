@@ -1,0 +1,87 @@
+﻿/* Đảm bảo các ô nhập liệu có chiều rộng nhất quán */
+#expiration,
+#cvc {
+    width: 100%; /* Đảm bảo chiều rộng 100% cho các ô nhập liệu */
+    max-width: 120px; /* Giới hạn chiều rộng tối đa để không quá dài */
+}
+
+/* Đặt một khoảng cách giữa các ô nhập liệu ngày hết hạn và CVC */
+.d-flex > div {
+    flex: 1; /* Để các ô có chiều rộng đồng đều */
+}
+
+/* Tùy chỉnh các thông báo lỗi */
+#card-errors {
+    margin-top: 10px; /* Khoảng cách trên */
+    color: #fa755a; /* Màu chữ đỏ cho thông báo lỗi */
+    font-size: 14px; /* Kích thước chữ */
+}
+
+/* Card element container */
+#card-element {
+    border: 1px solid #ced4da !important; /* Light border color */
+    border-radius: 5px !important; /* Rounded corners */
+    padding: 10px !important; /* Padding for a better layout */
+    font-size: 16px !important; /* Consistent font size */
+    transition: border-color 150ms ease !important; /* Smooth transition for focus */
+    margin-bottom: 10px !important; /* Space below the card element */
+    background-color: #f8f9fa !important; /* Light background color */
+}
+
+/* Styling for the inner private Stripe element */
+.__PrivateStripeElement {
+    margin: 0 !important; /* No margin */
+    padding: 0 !important; /* No padding */
+    border: none !important; /* No border */
+    display: block !important; /* Display block */
+    background: transparent !important; /* Transparent background */
+    position: relative !important; /* Relative positioning */
+    opacity: 1 !important; /* Full opacity */
+}
+
+    /* Styling for the iframe */
+    .__PrivateStripeElement iframe {
+        border: none !important; /* No border */
+        width: 100% !important; /* Full width */
+        min-width: 100% !important; /* Min width for responsiveness */
+        background: transparent !important; /* Transparent background */
+        height: 40px !important; /* Set a fixed height for better appearance */
+    }
+
+/* Placeholder text styling */
+.__PrivateStripeElement-input {
+    font-size: 16px !important; /* Font size for input */
+    padding: 10px !important; /* Padding for input */
+    color: #495057 !important; /* Darker text color */
+    opacity: 1 !important; /* Fully opaque */
+    background: transparent !important; /* Transparent background */
+}
+
+/* On focus state */
+#card-element:focus {
+    border-color: #007bff !important; /* Blue border on focus */
+    outline: none !important; /* Remove default outline */
+}
+
+/* Error message styling */
+#card-errors {
+    margin-top: 10px !important; /* Space above the error message */
+    color: #fa755a !important; /* Red color for error messages */
+    font-size: 14px !important; /* Size of error messages */
+}
+
+/* Specific styles for invalid state */
+.stripe-card--invalid {
+    border-color: #fa755a !important; /* Red border for invalid input */
+}
+
+/* Input focus styling */
+.__PrivateStripeElement-input:focus {
+    outline: none !important; /* Remove default outline */
+    border: none !important; /* No border */
+}
+
+/* Transition effects for better user experience */
+#__PrivateStripeElement {
+    transition: all 0.3s ease !important; /* Transition for smoother interactions */
+}

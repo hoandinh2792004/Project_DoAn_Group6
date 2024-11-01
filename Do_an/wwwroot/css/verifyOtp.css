@@ -1,0 +1,38 @@
+.verify-h4 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.verify-form input {
+    height: 85px;
+    width: 82px;
+    border-radius: 6px;
+    outline: none;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 35px;
+}
+
+.verify-form {
+    height: 55% !important;
+}
+
+    .verify-form .input-field {
+        flex-direction: row;
+        column-gap: 10px;
+    }
+
+    .verify-form input::-webkit-inner-spin-button,
+    .verify-form input::-webkit-outer-spin-button {
+        display: none;
+    }
+
+    .verify-form a {
+        font-size: 15px;
+    }
+
+        .verify-form a:hover {
+            text-decoration: underline;
+        }
