@@ -74,17 +74,24 @@ namespace Do_an.Data
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(e => e.UserId).HasName("PK__Customer__A4AE64B8B079EA0F");
+
                 entity.Property(e => e.UserId).HasColumnName("UserId");
+                entity.Property(e => e.FullName).HasMaxLength(100);
+                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.PhoneNumber).HasMaxLength(20);
                 entity.Property(e => e.Address).HasMaxLength(255);
                 entity.Property(e => e.CreatedAt)
-                    .HasDefaultValueSql("(getdate())")
-                    .HasColumnType("datetime");
-                entity.Property(e => e.Email).HasMaxLength(100);
-                entity.Property(e => e.FullName).HasMaxLength(100);
-                entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+                      .HasDefaultValueSql("(getdate())")
+                      .HasColumnType("datetime");
                 entity.Property(e => e.UpdatedAt)
-                    .HasDefaultValueSql("(getdate())")
-                    .HasColumnType("datetime");
+                      .HasDefaultValueSql("(getdate())")
+                      .HasColumnType("datetime");
+
+                entity.HasOne(d => d.User)
+                      .WithMany(p => p.Customers)
+                      .HasForeignKey(d => d.UserId) // Specify the foreign key
+                      .OnDelete(DeleteBehavior.ClientSetNull) // Optional: specify delete behavior
+                      .HasConstraintName("FK_Customers_Users_UserId");
             });
 
             modelBuilder.Entity<Order>(entity =>

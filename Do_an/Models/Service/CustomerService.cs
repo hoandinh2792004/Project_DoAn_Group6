@@ -21,4 +21,5 @@ public class CustomerService
                        .Include(c => c.WasteExchanges)
                        .FirstOrDefault(c => c.UserId == userId);
     }
+
 }

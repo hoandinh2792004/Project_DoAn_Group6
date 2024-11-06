@@ -7,6 +7,7 @@ using System.Text;
 using Stripe;
 using Do_an.Services;
 using Serilog;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Do_an
 {
@@ -74,9 +75,10 @@ namespace Do_an
                 {
                     options.AddPolicy("AllowAllOrigins", builder =>
                     {
-                        builder.AllowAnyOrigin()
+                        builder.WithOrigins("http://localhost:5135")  // Chỉ định domain frontend
                                .AllowAnyMethod()
-                               .AllowAnyHeader();
+                               .AllowAnyHeader()
+                               .AllowCredentials();
                     });
                 });
 
@@ -142,13 +144,16 @@ namespace Do_an
                     app.UseHsts();
                 }
 
+                // Đăng ký middleware tùy chỉnh để kiểm tra quyền truy cập và bảo vệ các route
+                app.UseMiddleware<AuthenticationMiddleware>();  // Đảm bảo người dùng đã đăng nhập
+
                 app.UseHttpsRedirection();
                 app.UseStaticFiles();
 
                 app.UseRouting();
 
                 // Enable CORS
-                app.UseCors("AllowAll");
+                app.UseCors("AllowAllOrigins");
 
                 // Enable session middleware
                 app.UseSession();

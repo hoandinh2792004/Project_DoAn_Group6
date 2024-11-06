@@ -102,8 +102,7 @@ signUpForm.addEventListener('submit', function (event) {
             showError(emailInput, error.response.data.Errors ? error.response.data.Errors.join(", ") : "Registration failed. Please try again.");
         });
 });
-
-// Sign In Form Submission (Updated)
+// Sign In Form Submission
 signInForm.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent form submission
 
@@ -114,33 +113,37 @@ signInForm.addEventListener('submit', function (event) {
     const isEmailValid = validateEmail(emailInput.value);
     const isPasswordValid = validatePassword(passwordInput.value);
 
-    // Show error messages and prevent form submission if any input is invalid
     if (!isEmailValid) {
         showError(emailInput, 'Invalid email address.');
+        console.log("Invalid email address entered:", emailInput.value); // Log invalid email
         return;
     }
     if (!isPasswordValid) {
         showError(passwordInput, 'Password must be at least 8 characters long.');
+        console.log("Invalid password entered:", passwordInput.value); // Log invalid password
         return;
     }
 
+    // Attempt to log in using axios
     axios.post("http://localhost:5135/api/Auth/login", {
         email: emailInput.value,
         password: passwordInput.value
+    }, {
+        withCredentials: true  // Ensure cookies are sent with the request
     })
         .then(response => {
             const token = response.data.token;
-            const role = response.data.role; // Ensure this matches your API response structure
+            const role = response.data.role;
 
             console.log("Role returned from API:", role); // Check role value
             console.log("Token received:", token); // Check token
 
             setCookie('authToken', token); // Store the token in a cookie
+            console.log("Cookie Set:", document.cookie); // Log the cookies
 
-            // Clear the cart after successful login
-            clearCart(); // Gọi hàm xóa giỏ hàng
+            clearCart(); // Call function to clear the cart
+            console.log("Cart cleared."); // Log cart clearing
 
-            // Check role and redirect accordingly
             if (role && role === "1") { // Assuming role '1' is for Admin
                 console.log("Redirecting to admin dashboard");
                 window.location.href = adminDashboardUrl;  // Redirect to Admin dashboard
@@ -151,13 +154,15 @@ signInForm.addEventListener('submit', function (event) {
         })
         .catch(error => {
             if (error.response && error.response.status === 403) {
+                console.log("Access denied: 403 error");
                 document.getElementById("wrongpassword").innerText = "Bạn không có quyền truy cập vào tài nguyên này.";
             } else {
-                console.error("Login error:", error);
+                console.error("Login error:", error); // Log the full error for debugging
                 document.getElementById("wrongpassword").innerText = "Wrong email or password.";
             }
         });
 });
+
 
 // Định nghĩa hàm clearCart
 function clearCart() {

@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using Do_an.DTOs;
 using Do_an.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Do_an.Controllers
 {
     [Route("api/payment")]
     [ApiController]
+    [Authorize]
     public class PaymentController : ControllerBase
 
     {

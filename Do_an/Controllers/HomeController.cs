@@ -19,6 +19,8 @@ namespace Do_an.Controllers
 
         public IActionResult Index(int page = 1, int pageSize = 4)
         {
+            HttpContext.Response.Cookies.Delete("authToken");
+
             var products = _context.Products.ToList();
             var uniqueProducts = products.GroupBy(p => p.ProductId)
                                           .Select(g => g.First())

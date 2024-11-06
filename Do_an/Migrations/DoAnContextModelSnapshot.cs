@@ -108,11 +108,8 @@ namespace Do_an.Migrations
             modelBuilder.Entity("Do_an.Data.Customer", b =>
                 {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("UserId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Address")
                         .HasMaxLength(255)
@@ -133,10 +130,6 @@ namespace Do_an.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
@@ -147,7 +140,6 @@ namespace Do_an.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId")
@@ -255,6 +247,7 @@ namespace Do_an.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
@@ -501,6 +494,17 @@ namespace Do_an.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Do_an.Data.Customer", b =>
+                {
+                    b.HasOne("User", "User")
+                        .WithMany("Customers")
+                        .HasForeignKey("UserId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Customers_Users_UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Do_an.Data.Order", b =>
                 {
                     b.HasOne("Do_an.Data.Admin", null)
@@ -667,6 +671,8 @@ namespace Do_an.Migrations
 
             modelBuilder.Entity("User", b =>
                 {
+                    b.Navigation("Customers");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

@@ -11,10 +11,12 @@ using Do_an.DTOs;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
+
 namespace Auth.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class AuthController : ControllerBase
     {
         private readonly DoAnContext _context;
@@ -119,13 +121,13 @@ namespace Auth.Controllers
 
             // Tạo các claims cho JWT
             var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid", user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+        new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid", user.UserId.ToString()),
+        new Claim(ClaimTypes.Email, user.Email)
+    };
 
             // Thêm các vai trò vào claims
             foreach (var role in roles)
@@ -137,17 +139,17 @@ namespace Auth.Controllers
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            // Tạo token
+            // Tạo token mà không có thời gian hết hạn
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30),
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
 
         [HttpPost("SendOtp")]
         public async Task<IActionResult> SendOtp([FromBody] SendOtpRequestDto request)

@@ -6,158 +6,182 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Do_an.Services;
 using Auth.Controllers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System.Linq;
 
 namespace Do_an.Controllers
 {
-
+    
     public class UserController : Controller
-
     {
         private readonly ILogger<UserController> _logger;
         private readonly DoAnContext _context;
         private readonly CustomerService _customerService;
 
-
-        public UserController(ILogger<UserController> logger,DoAnContext context, CustomerService customerService)
+        public UserController(ILogger<UserController> logger, DoAnContext context, CustomerService customerService)
         {
             _logger = logger;
             _context = context;
             _customerService = customerService;
-
         }
 
         public IActionResult UserDashboard(int page = 1, int pageSize = 4)
         {
-            // Lấy token JWT từ header Authorization
-            var token = HttpContext.Request.Cookies["authToken"];
-
-            // Kiểm tra token có tồn tại không
-            if (string.IsNullOrEmpty(token))
+            try
             {
-                ViewBag.ErrorMessage = "Vui lòng đăng nhập để tiếp tục.";
-                 return RedirectToAction("/User/Login");
+                // Kiểm tra xem người dùng có đăng nhập hay không thông qua cookie
+                var userIdCookie = HttpContext.Request.Cookies["authToken"];
+                if (string.IsNullOrEmpty(userIdCookie))
+                {
+                    ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
+                    return RedirectToAction("Login", "Login");
+                }
+
+                // Chuyển đổi UserId từ cookie (giả sử giá trị lưu trong cookie là số nguyên)
+                if (!int.TryParse(userIdCookie, out int userId))
+                {
+                    _logger.LogWarning("Invalid UserId from cookie.");
+                    ViewBag.ErrorMessage = "Không thể lấy thông tin người dùng.";
+                    return View();
+                }
+
+                // Lấy thông tin khách hàng từ dịch vụ customer
+                var customer = _customerService.GetCustomerByUserId(userId);
+                if (customer == null)
+                {
+                    _logger.LogWarning($"Customer not found for UserId: {userId}");
+                    ViewBag.ErrorMessage = "Khách hàng không tồn tại.";
+                    return View();
+                }
+
+                // Lấy danh sách sản phẩm, loại bỏ các sản phẩm trùng lặp
+                var products = _context.Products.ToList();
+                var uniqueProducts = products.GroupBy(p => p.ProductId).Select(g => g.First()).ToList();
+                var totalPages = (int)Math.Ceiling((double)uniqueProducts.Count / pageSize);
+                var pagedProducts = uniqueProducts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                // Tạo mô hình cho dashboard
+                var model = new Do_an.Models.DashboardViewModel
+                {
+                    Products = pagedProducts,
+                    Page = page,
+                    TotalPages = totalPages,
+                    Customer = customer
+                };
+
+                return View(model);
             }
-
-            // Xác thực và giải mã token
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-
-            // Ghi lại token và claims vào log để kiểm tra
-            _logger.LogInformation("Token: {Token}", token);
-            _logger.LogInformation("Claims:");
-            foreach (var claim in jwtToken.Claims)
+            catch (Exception ex)
             {
-                _logger.LogInformation(" - {Type}: {Value}", claim.Type, claim.Value);
+                _logger.LogError(ex, "Error occurred while processing UserDashboard.");
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi tải trang. Vui lòng thử lại sau.";
+                return View();
             }
-
-            // Trích xuất claim UserId từ token
-            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid");
-            if (userIdClaim == null)
-            {
-                ViewBag.ErrorMessage = "Claim người dùng không tồn tại.";
-                return View(); // Trả về View mặc định
-            }
-
-            // Phân tích UserId từ claim
-            if (!int.TryParse(userIdClaim.Value, out int userId))
-            {
-                ViewBag.ErrorMessage = "Không thể phân tích UserId.";
-                return View(); // Trả về View mặc định
-            }
-
-            // Lấy thông tin khách hàng bằng UserId
-            var customer = _customerService.GetCustomerByUserId(userId);
-            if (customer == null)
-            {
-                ViewBag.ErrorMessage = "Khách hàng không tồn tại.";
-                return View(); // Trả về View mặc định
-            }
-
-            var products = _context.Products.ToList();
-            var uniqueProducts = products.GroupBy(p => p.ProductId).Select(g => g.First()).ToList();
-            var totalPages = (int)Math.Ceiling((double)uniqueProducts.Count / pageSize);
-            var pagedProducts = uniqueProducts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            var model = new Do_an.Models.DashboardViewModel
-            {
-                Products = pagedProducts,
-                Page = page,
-                TotalPages = totalPages,
-                Customer = customer
-            };
-
-            return View(model);
         }
 
-        public IActionResult Payment() 
+
+        public IActionResult Payment()
         {
-            return View(); 
+            return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
         }
+
+        // Action để hiển thị thông tin người dùng trên trang Profile
         public IActionResult Profile()
         {
-            // Lấy token từ cookie
-            var token = HttpContext.Request.Cookies["authToken"]; // Lấy token từ cookie có tên là authToken
-
-            if (string.IsNullOrEmpty(token))
-            {
-                // Không có token, trả về trang đăng nhập hoặc thông báo lỗi
-                ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
-                return View(); // Hoặc trả về View thông báo lỗi
-            }
-
-            var handler = new JwtSecurityTokenHandler();
             try
             {
-                var jwtToken = handler.ReadJwtToken(token);
+                // Lấy JWT từ cookie
+                var authToken = HttpContext.Request.Cookies["authtoken"];
+                if (string.IsNullOrEmpty(authToken))
+                {
+                    ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
+                    return RedirectToAction("Login", "User");
+                }
 
-                // Lấy thông tin tên và email từ claims
-                var username = jwtToken.Claims.First(claim => claim.Type == JwtRegisteredClaimNames.Sub).Value;
-                var email = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
+                // Giải mã JWT và lấy thông tin UserId
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(authToken) as JwtSecurityToken;
+                if (jsonToken == null)
+                {
+                    _logger.LogWarning("Invalid JWT token.");
+                    ViewBag.ErrorMessage = "Token không hợp lệ.";
+                    return View();
+                }
 
-                // Truyền thông tin vào ViewBag để hiển thị trong View
-                ViewBag.Username = username;
-                ViewBag.Email = email;
+                // Trích xuất UserId từ claims trong token
+                var userIdClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    _logger.LogWarning("UserId claim not found or invalid in token.");
+                    ViewBag.ErrorMessage = "Không thể lấy thông tin người dùng.";
+                    return View();
+                }
 
-                return View(); // Trả về View với thông tin người dùng
+                // Lấy thông tin khách hàng từ dịch vụ customer
+                var customer = _customerService.GetCustomerByUserId(userId);
+                if (customer == null)
+                {
+                    ViewBag.ErrorMessage = "Khách hàng không tồn tại.";
+                    return View();
+                }
+
+                // Lưu thông tin vào ViewBag để hiển thị trên giao diện
+                ViewBag.Username = customer.Username;
+                ViewBag.Email = customer.Email;
+                ViewBag.PhoneNumber = customer.PhoneNumber;
+                ViewBag.Address = customer.Address;
+                ViewBag.FullName = customer.FullName;
+
+                // Lưu UserId vào ViewBag để sử dụng trong JavaScript
+                ViewBag.UserId = userId;
+
+                return View();
             }
             catch (Exception ex)
             {
-                // Ghi lại lỗi để kiểm tra
-                _logger.LogError(ex, "Lỗi khi xác thực token trong Profile.");
-                ViewBag.ErrorMessage = "Có lỗi xảy ra khi xác thực. Vui lòng thử lại.";
-                return View(); // Trả về View thông báo lỗi
+                _logger.LogError(ex, "Error occurred while processing Profile.");
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi tải trang. Vui lòng thử lại sau.";
+                return View();
             }
         }
 
-
         public IActionResult Shop(int page = 1, int pageSize = 12)
         {
-            var products = _context.Products.ToList();
-            var uniqueProducts = products.GroupBy(p => p.ProductId)
-                                          .Select(g => g.First())
-                                          .ToList();
-
-            var totalProducts = uniqueProducts.Count();
-            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
-
-            var pagedProducts = uniqueProducts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            var model = new ProductViewModel
+            try
             {
-                Products = pagedProducts,
-                Page = page,
-                TotalPages = totalPages
-            };
+                var products = _context.Products.ToList();
+                var uniqueProducts = products.GroupBy(p => p.ProductId)
+                                              .Select(g => g.First())
+                                              .ToList();
 
-            ViewBag.PageSize = pageSize; 
-            return View(model);
+                var totalProducts = uniqueProducts.Count();
+                var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+
+                var pagedProducts = uniqueProducts.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                var model = new ProductViewModel
+                {
+                    Products = pagedProducts,
+                    Page = page,
+                    TotalPages = totalPages
+                };
+
+                ViewBag.PageSize = pageSize;
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while processing Shop.");
+                ViewBag.ErrorMessage = "Đã xảy ra lỗi khi tải trang. Vui lòng thử lại sau.";
+                return View();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -166,5 +190,4 @@ namespace Do_an.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-
 }

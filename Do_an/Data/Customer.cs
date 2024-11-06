@@ -19,10 +19,8 @@ public partial class Customer
 
     public DateTime? UpdatedAt { get; set; }
 
-    // Add Username and Password properties
-    public string Username { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
+    public string? Username { get; set; }
+    public virtual User User { get; set; } = null!;
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
