@@ -1,4 +1,4 @@
-﻿// Function to initialize the cart count and total price
+// Function to initialize the cart count and total price
 function initializeCart() {
     const cartDisplayElement = document.getElementById('cart-display');
     const cartCountElement = document.getElementById('cart-item-count');
@@ -26,7 +26,7 @@ function addToCart(productName, productPrice, productImg, productQty = 1) {
     const existingItem = cart.find(item => item.name === productName);
 
     if (existingItem) {
-        alert(`The product "${productName}" is already in your cart.`);
+        alert(`Sản phẩm "${productName}" đã có trong giỏ hàng.`);
         existingItem.qty += productQty;
 
         // Update displayed quantity in the cart
@@ -157,6 +157,7 @@ function updateQuantity(element, productPrice, change) {
     updateCartCount(change);
     updateTotalPrice(productPrice * change);
 
+    // Call to update the cart in sessionStorage
     updateCartItemInStorage(element, productPrice, newQty);
 }
 
@@ -165,26 +166,65 @@ function updateCartItemInStorage(element, productPrice, newQty) {
     let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
     const productName = element.closest('.product-detail-cart').querySelector('.product-name-mini span').textContent;
 
-    const itemIndex = cart.findIndex(item => item.name === productName);
+    // Kiểm tra kiểu dữ liệu của productName và item.name
+    const itemIndex = cart.findIndex(item => {
+        // Nếu productName là số, chúng ta so sánh với kiểu số
+        if (!isNaN(productName) && !isNaN(item.name)) {
+            return parseInt(item.name) === parseInt(productName);
+        } else {
+            // Nếu productName là chuỗi, chúng ta so sánh trực tiếp
+            return item.name === productName;
+        }
+    });
+
     if (itemIndex !== -1) {
+        // Update the quantity in the cart item
         cart[itemIndex].qty = newQty;
+
+        // Update the sessionStorage with the new cart data
         sessionStorage.setItem('cart', JSON.stringify(cart));
+        console.log("Cart updated in sessionStorage:", cart); // Log the updated cart for debugging
+    } else {
+        console.warn('Product not found in sessionStorage.');
     }
 }
 
+
+//Function delete Item
 function deleteItem(element, productPrice, quantity) {
     const itemElement = element.closest('li');
     const productName = itemElement.querySelector('.product-name-mini span').textContent;
 
     let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-    cart = cart.filter(item => item.name !== productName);
-    sessionStorage.setItem('cart', JSON.stringify(cart));
 
+    // Kiểm tra kiểu dữ liệu của productName và item.name
+    const itemIndex = cart.findIndex(item => {
+        // Nếu productName là số, chúng ta so sánh với kiểu số
+        if (!isNaN(productName) && !isNaN(item.name)) {
+            return parseInt(item.name) === parseInt(productName);
+        } else {
+            // Nếu productName là chuỗi, chúng ta so sánh trực tiếp
+            return item.name === productName;
+        }
+    });
+
+    if (itemIndex !== -1) {
+        cart.splice(itemIndex, 1); // Xóa sản phẩm khỏi giỏ hàng
+        sessionStorage.setItem('cart', JSON.stringify(cart)); // Cập nhật lại sessionStorage
+        console.log("Cart after item removed:", cart); // Log giỏ hàng sau khi xóa sản phẩm
+    } else {
+        console.warn('Product not found in sessionStorage.');
+    }
+
+    // Cập nhật số lượng và tổng giá trị
     updateCartCount(-quantity);
     updateTotalPrice(-productPrice * quantity);
 
+    // Xóa phần tử sản phẩm trong giao diện người dùng
     itemElement.remove();
 }
+
+
 
 // Function to update cart count
 function updateCartCount(change) {
@@ -262,6 +302,14 @@ async function handleCheckout() {
         alert("There was an error processing your payment. Please try again.");
     }
 }
+
+// Lắng nghe sự kiện thay đổi trên sessionStorage để cập nhật giỏ hàng
+window.addEventListener('storage', function (event) {
+    if (event.key === 'cart') {
+        loadCartItems(); // Gọi hàm để load lại các sản phẩm trong giỏ
+        initializeCart(); // Cập nhật lại tổng số lượng và giá tiền
+    }
+})
 
 // Load cart items on page load
 document.addEventListener('DOMContentLoaded', () => {
