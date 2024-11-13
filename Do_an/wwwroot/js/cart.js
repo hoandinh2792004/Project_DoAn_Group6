@@ -1,4 +1,4 @@
-﻿// Function to initialize the cart count and total price
+// Function to initialize the cart count and total price
 function initializeCart() {
     const cartDisplayElement = document.getElementById('cart-display');
     const cartCountElement = document.getElementById('cart-item-count');

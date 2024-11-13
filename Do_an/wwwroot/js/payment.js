@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const reviewOrderBody = document.getElementById('review-order-body');
     let elements;
     let stripe;
@@ -23,44 +23,9 @@
         return total;
     }
 
-    // Hàm để tính toán tổng tiền bao gồm cả phí vận chuyển
-    function calculateOrderTotal(subtotal) {
-        return subtotal + shippingFee;
-    }
-
-    function updateOrderTotal() {
-        const cartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
-        let subtotal = cartItems.reduce((total, item) => total + (item.price * item.qty), 0);
-        let orderTotal = calculateOrderTotal(subtotal);
-
-        const orderTotalElement = document.querySelector('.order-total');
-        if (orderTotalElement) {
-            orderTotalElement.textContent = `${orderTotal.toLocaleString()} đ`;
-        }
-    }
-
-    // Hàm để xử lý khi chọn phương thức vận chuyển
-    window.handleShippingMethodSelection = function (method, fee, element) {
-        // Cập nhật phí vận chuyển và chuyển sang dạng số
-        shippingFee = parseInt(fee);
-
-        // Cập nhật lại tổng đơn hàng
-        updateOrderTotal();
-
-        // Loại bỏ lớp 'selected' khỏi tất cả các phương thức vận chuyển
-        document.querySelectorAll('.ship-method').forEach(el => {
-            el.classList.remove('selected');
-        });
-
-        // Thêm lớp 'selected' vào phương thức đang chọn
-        element.closest('.ship-method').classList.add('selected');
-    };
-
-
-
-    // Hàm hiển thị giỏ hàng và cập nhật tổng ban đầu
     function displayCartItems() {
-        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const cart = loadCartFromStorage();
+
         let subtotal = 0;
         let cartHtml = '';
 
@@ -74,65 +39,55 @@
             const itemTotal = productPrice * productQty;
             subtotal += itemTotal;
 
-            cartHtml += `
-                <div class="product-item">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            <img class="img-responsive" src="${productImg}" alt="${productName}" />
-                        </div>
-                        <div class="col-sm-6">
-                            <div>${productName}</div>
-                            <div class="product-quantity">
-                                <button class="qty-btn decrease" data-product-name="${productName}" data-product-price="${productPrice}">-</button>
-                                <span class="qty-value">${productQty}</span>
-                                <button class="qty-btn increase" data-product-name="${productName}" data-product-price="${productPrice}">+</button>
-                            </div>
-                        </div>
-                        <div class="col-sm-3 text-right">
-                            <h6><span class="item-total">${itemTotal.toLocaleString()} đ</span></h6>
-                            <button class="delete-btn" data-product-name="${productName}">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                cartHtml += `
+            <div class="product-item">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <img class="img-responsive" src="${productImg}" alt="${productName}" />
+                    </div>
+                    <div class="col-sm-6">
+                        <div>${productName}</div>
+                        <div class="product-quantity">
+                            <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, -1)">-</button>
+                            <span class="qty-value">${productQty}</span>
+                            <button class="qty-btn" onclick="updateQuantity('${productName}', ${productPrice}, 1)">+</button>
                         </div>
                     </div>
-                    <hr />
+                    <div class="col-sm-3 text-right">
+                        <h6><span class="item-total">${itemTotal.toLocaleString()} đ</span></h6>
+                        <button class="delete-btn" onclick="deleteItem('${productName}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
                 </div>
-            `;
-        });
-
-        let orderTotal = calculateOrderTotal(subtotal);
-        cartHtml += `
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <strong>Đơn hàng</strong>
-                    <div class="pull-right"><span>${subtotal.toLocaleString()}</span><span>đ</span></div>
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <div class="col-xs-12">
-                    <strong>Tổng đơn hàng</strong>
-                    <div class="pull-right"><span class="order-total">${orderTotal.toLocaleString()}</span><span>đ</span></div>
-                </div>
+                <hr />
             </div>
         `;
+            });
+
+            orderTotal = subtotal +25000;
+
+            cartHtml += `
+        <div class="form-group">
+            <div class="col-xs-12">
+                <strong>Tổng phụ</strong>
+                <div class="pull-right"><span>25.000</span><span>đ</span></div>
+            </div>
+            <div class="col-xs-12">
+                <small>Phí vận chuyển</small>
+                <div class="pull-right"><span>-</span></div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group">
+            <div class="col-xs-12">
+                <strong>Tổng đơn hàng</strong>
+                <div class="pull-right"><span class="order-total">${orderTotal.toLocaleString()}</span><span>đ</span></div>
+            </div>
+        </div>
+    `;
 
         reviewOrderBody.innerHTML = cartHtml;
-    
-
-        // Thêm sự kiện cho các nút tăng/giảm
-        reviewOrderBody.querySelectorAll('.qty-btn.decrease').forEach(button => {
-            button.addEventListener('click', (event) => updateQuantity(event, button.dataset.productName, parseInt(button.dataset.productPrice), -1));
-        });
-
-        reviewOrderBody.querySelectorAll('.qty-btn.increase').forEach(button => {
-            button.addEventListener('click', (event) => updateQuantity(event, button.dataset.productName, parseInt(button.dataset.productPrice), 1));
-        });
-
-        // Thêm sự kiện xóa
-        reviewOrderBody.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', (event) => deleteItem(event, button.dataset.productName));
-        });
     }
 
 
@@ -268,22 +223,19 @@
                 return;
             }
 
-            // Get cart items
-            const cartItems = getCartItems();
+            const cartItems = getCartItems(); // Đảm bảo `cartItems` có cấu trúc đúng
             if (cartItems.length === 0) {
                 alert("Giỏ hàng của bạn hiện đang trống.");
                 return;
             }
 
-            try {
-                // Create a checkout session with the payment amount
-                const response = await fetch('http://localhost:5135/api/payment/create-checkout-session', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ PaymentAmount: totalAmount }),
-                });
+            const response = await fetch('http://localhost:5135/api/payment/create-checkout-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ PaymentAmount: totalAmount }),
+            });
 
                 if (!response.ok) {
                     const errorData = await response.json();
