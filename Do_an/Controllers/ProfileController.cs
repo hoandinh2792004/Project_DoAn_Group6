@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace Do_an.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     public class ProfileController : Controller
     {
@@ -139,7 +139,7 @@ namespace Do_an.Controllers
 
 
         [HttpGet("CheckCustomerInfo")]
-        [Authorize]
+        
         public IActionResult CheckCustomerInfo(int userId)
         {
             var customer = _context.Customers.SingleOrDefault(c => c.UserId == userId);

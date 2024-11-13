@@ -73,10 +73,12 @@
                 <div class="col-md-8">
                     <div class="card mb-3">
                         <div class="card-body">
+                            <!-- Nút "Chỉnh sửa thông tin" nằm ngoài modal -->
                             <div class="text-right">
-                                <button id="editProfileButton" class="btn btn-primary">Chỉnh sửa</button>
+                                <button id="editInfoButton" class="btn btn-primary" style="display: none;">Chỉnh sửa thông tin</button>
                             </div>
-                            <!-- Modal chỉnh sửa thông tin -->
+
+                            <!-- Modal Chỉnh sửa thông tin -->
                             <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -86,9 +88,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <form id="editProfileForm">
-                                                <!-- Đặt AntiForgeryToken ngoài form nếu cần -->
                                                 @Html.AntiForgeryToken()
-
                                                 <div class="form-group">
                                                     <label for="FullName">Tên:</label>
                                                     <input type="text" class="form-control" id="FullName" name="FullName" value="@ViewBag.Fullname" required>
@@ -112,7 +112,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Modal để thêm thông tin khách hàng -->
+
+                            <!-- Nút "Thêm thông tin" nằm ngoài modal -->
+                            <div class="text-right">
+                                <button id="addInfoButton" class="btn btn-primary" style="display: none;">Thêm thông tin</button>
+                            </div>
+
+                            <!-- Modal Thêm thông tin khách hàng -->
                             <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">

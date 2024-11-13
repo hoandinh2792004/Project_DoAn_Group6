@@ -13,7 +13,6 @@ using System.Linq;
 
 namespace Do_an.Controllers
 {
-    
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
@@ -27,19 +26,29 @@ namespace Do_an.Controllers
             _customerService = customerService;
         }
 
+        // Phương thức kiểm tra JWT trong cookie
+        private IActionResult CheckAuthToken()
+        {
+            // Lấy JWT từ cookie
+            var authToken = HttpContext.Request.Cookies["authtoken"];
+            if (string.IsNullOrEmpty(authToken))
+            {
+                ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
+                return RedirectToAction("Login", "Login");
+            }
+
+            return null; // Trả về null nếu token hợp lệ
+        }
+
         public IActionResult UserDashboard(int page = 1, int pageSize = 4)
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult; // Nếu token không hợp lệ, trả về RedirectToAction
+
             try
             {
-                // Kiểm tra xem người dùng có đăng nhập hay không thông qua cookie
+                // Lấy thông tin người dùng từ cookie
                 var userIdCookie = HttpContext.Request.Cookies["authToken"];
-                if (string.IsNullOrEmpty(userIdCookie))
-                {
-                    ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
-                    return RedirectToAction("Login", "Login");
-                }
-
-                // Chuyển đổi UserId từ cookie (giả sử giá trị lưu trong cookie là số nguyên)
                 if (!int.TryParse(userIdCookie, out int userId))
                 {
                     _logger.LogWarning("Invalid UserId from cookie.");
@@ -81,32 +90,32 @@ namespace Do_an.Controllers
             }
         }
 
-
+        [Authorize]
         public IActionResult Payment()
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
             return View();
         }
 
-        // Action để hiển thị thông tin người dùng trên trang Profile
         public IActionResult Profile()
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
+
             try
             {
-                // Lấy JWT từ cookie
-                var authToken = HttpContext.Request.Cookies["authtoken"];
-                if (string.IsNullOrEmpty(authToken))
-                {
-                    ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
-                    return RedirectToAction("Login", "User");
-                }
-
                 // Giải mã JWT và lấy thông tin UserId
                 var handler = new JwtSecurityTokenHandler();
+                var authToken = HttpContext.Request.Cookies["authtoken"];
                 var jsonToken = handler.ReadToken(authToken) as JwtSecurityToken;
                 if (jsonToken == null)
                 {
@@ -115,7 +124,6 @@ namespace Do_an.Controllers
                     return View();
                 }
 
-                // Trích xuất UserId từ claims trong token
                 var userIdClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid");
                 if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
                 {
@@ -124,7 +132,6 @@ namespace Do_an.Controllers
                     return View();
                 }
 
-                // Lấy thông tin khách hàng từ dịch vụ customer
                 var customer = _customerService.GetCustomerByUserId(userId);
                 if (customer == null)
                 {
@@ -132,14 +139,12 @@ namespace Do_an.Controllers
                     return View();
                 }
 
-                // Lưu thông tin vào ViewBag để hiển thị trên giao diện
                 ViewBag.Username = customer.Username;
                 ViewBag.Email = customer.Email;
                 ViewBag.PhoneNumber = customer.PhoneNumber;
                 ViewBag.Address = customer.Address;
                 ViewBag.FullName = customer.FullName;
 
-                // Lưu UserId vào ViewBag để sử dụng trong JavaScript
                 ViewBag.UserId = userId;
 
                 return View();
@@ -154,12 +159,13 @@ namespace Do_an.Controllers
 
         public IActionResult Shop(int page = 1, int pageSize = 12)
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
+
             try
             {
                 var products = _context.Products.ToList();
-                var uniqueProducts = products.GroupBy(p => p.ProductId)
-                                              .Select(g => g.First())
-                                              .ToList();
+                var uniqueProducts = products.GroupBy(p => p.ProductId).Select(g => g.First()).ToList();
 
                 var totalProducts = uniqueProducts.Count();
                 var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
@@ -189,8 +195,18 @@ namespace Do_an.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
         public IActionResult ProductDetail()
         {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
             return View();
         }
     }

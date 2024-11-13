@@ -47,19 +47,75 @@ function checkCustomerInfo(userId) {
     })
         .then(response => {
             console.log('Phản hồi từ API kiểm tra thông tin khách hàng:', response.data);
-            const editProfileButton = document.getElementById('editProfileButton');
-            editProfileButton.innerText = response.data.hasCustomerInfo ? 'Chỉnh sửa' : 'Cập nhật thông tin';
-            if (!response.data.hasCustomerInfo) {
-                const addCustomerModal = new bootstrap.Modal(document.getElementById('addCustomerModal'));
-                addCustomerModal.show();
+
+            // Kiểm tra giá trị của hasCustomerInfo
+            const hasCustomerInfo = response.data.hasCustomerInfo;
+            console.log('hasCustomerInfo:', hasCustomerInfo);
+
+            // Lấy các phần tử modal và nút từ DOM
+            const addInfoButton = document.getElementById('addInfoButton');
+            const editInfoButton = document.getElementById('editInfoButton');
+            console.log('addInfoButton:', addInfoButton); // Kiểm tra nút có tồn tại không
+            console.log('editInfoButton:', editInfoButton); // Kiểm tra nút có tồn tại không
+
+            const addCustomerModalElement = document.getElementById('addCustomerModal');
+            const editProfileModalElement = document.getElementById('editProfileModal');
+
+            // Kiểm tra sự tồn tại của các phần tử modal
+            if (!addCustomerModalElement || !editProfileModalElement) {
+                console.error('Không tìm thấy modal.');
+                return;
+            }
+
+            // Khởi tạo modal bằng bootstrap.Modal
+            const addCustomerModal = new bootstrap.Modal(addCustomerModalElement);
+            const editProfileModal = new bootstrap.Modal(editProfileModalElement);
+
+            // Kiểm tra và thay đổi nút khi không có thông tin khách hàng
+            if (!hasCustomerInfo) {
+                console.log('Thay đổi nút: Cập nhật thông tin');
+                if (addInfoButton) {
+                    // Thay thế nút Thêm thông tin bằng một nút mới
+                    const newButton = document.createElement('button');
+                    newButton.innerText = 'Cập nhật thông tin';
+                    newButton.classList.add('btn', 'btn-primary');  // Thêm các class Bootstrap nếu cần
+                    newButton.id = 'addInfoButton';  // Đảm bảo ID là duy nhất để thay thế đúng
+                    newButton.onclick = () => {
+                        // Mở modal thêm thông tin khi nút được nhấn
+                        addCustomerModal.show();
+                        console.log('Nút Cập nhật thông tin được nhấn và mở modal thêm thông tin.');
+                    };
+                    addInfoButton.replaceWith(newButton);  // Thay thế nút cũ bằng nút mới
+                    console.log('Nút đã được thay đổi.');
+                } else {
+                    console.error('Không tìm thấy nút "addInfoButton".');
+                }
+            } else {
+                console.log('Thay đổi nút: Chỉnh sửa');
+                if (editInfoButton) {
+                    // Thay thế nút Chỉnh sửa bằng một nút mới
+                    const newButton = document.createElement('button');
+                    newButton.innerText = 'Chỉnh sửa';
+                    newButton.classList.add('btn', 'btn-primary');  // Thêm các class Bootstrap nếu cần
+                    newButton.id = 'editInfoButton';  // Đảm bảo ID là duy nhất để thay thế đúng
+                    newButton.onclick = () => {
+                        // Mở modal chỉnh sửa thông tin khi nút được nhấn
+                        editProfileModal.show();
+                        console.log('Nút Chỉnh sửa được nhấn và mở modal chỉnh sửa thông tin.');
+                    };
+                    editInfoButton.replaceWith(newButton);  // Thay thế nút cũ bằng nút mới
+                    console.log('Nút đã được thay đổi.');
+                } else {
+                    console.error('Không tìm thấy nút "editInfoButton".');
+                }
             }
         })
         .catch(error => {
-            console.log(error)
             console.error('Lỗi kiểm tra thông tin khách hàng:', error);
-            
         });
 }
+
+
 
 document.getElementById('addCustomerModal').addEventListener('shown.bs.modal', function () {
     // Add the form submit listener here
@@ -119,21 +175,25 @@ document.getElementById('addCustomerModal').addEventListener('shown.bs.modal', f
 
         axios.post('http://localhost:5135/api/Profile/Addcustomer', customerData, {
             headers: {
-                'Content-Type': 'application/json', // Use JSON for submission
-                'RequestVerificationToken': csrfToken,
+                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
         })
             .then(response => {
                 alert('Thông tin đã được cập nhật thành công!');
-                console.log('Response from API when adding information:', response);
-                const addCustomerModal = bootstrap.Modal.getInstance(document.getElementById('addCustomerModal'));
-                addCustomerModal.hide();
                 location.reload();
             })
             .catch(error => {
-                console.error('Error adding information:', error);
-                alert('An error occurred while adding information.');
+                if (error.response) {
+                    // Khi có phản hồi lỗi từ API
+                    console.error('Lỗi từ API:', error.response.data);
+                    alert('Lỗi từ API: ' + error.response.data.message);
+                } else if (error.request) {
+                    // Khi không có phản hồi từ API
+                    console.error('Không có phản hồi từ API:', error.request);
+                } else {
+                    console.error('Lỗi khi gửi yêu cầu:', error.message);
+                }
             });
     });
 });
