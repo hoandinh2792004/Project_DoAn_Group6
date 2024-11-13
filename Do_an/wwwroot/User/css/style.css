@@ -191,7 +191,7 @@
 }
 
 .page-header {
-    background: url(../img/banner.jpg) center center no-repeat;
+    background: url('/User/img/Slide1.png') center center no-repeat;
     background-size: cover;
 }
 

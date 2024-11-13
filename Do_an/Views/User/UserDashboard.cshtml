@@ -81,16 +81,7 @@
                 <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link active">Trang chủ</a>
                 <a href="service.html" class="nav-item nav-link">Services</a>
                 <a asp-action="Shop" asp-controller="User" class="nav-item nav-link">Sản phẩm</a>
-                <div class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Về chúng tôi</a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a href="gallery.html" class="dropdown-item">Gallery</a>
-                        <a href="feature.html" class="dropdown-item">Features</a>
-                        <a href="team.html" class="dropdown-item">Our Team</a>
-                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        <a href="404.html" class="dropdown-item">404 Page</a>
-                    </div>
-                </div>
+                <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link">Về chúng tôi</a>
                 <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
             </div>
             <div class="border-start ps-4 d-none d-lg-block">
@@ -198,134 +189,7 @@
         </div>
     </div>
     <!-- Carousel End -->
-    <!-- About Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-end">
-                <div class="col-lg-6">
-                    <div class="row g-2">
-                        <div class="col-6 position-relative wow fadeIn" data-wow-delay="0.7s">
-                            <div class="about-experience bg-secondary rounded">
-                                <h1 class="display-1 mb-0">25</h1>
-                                <small class="fs-5 fw-bold">Years Experience</small>
-                            </div>
-                        </div>
-                        <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
-                            <img class="img-fluid rounded" src="img/service-1.jpg">
-                        </div>
-                        <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
-                            <img class="img-fluid rounded" src="img/service-2.jpg">
-                        </div>
-                        <div class="col-6 wow fadeIn" data-wow-delay="0.5s">
-                            <img class="img-fluid rounded" src="img/service-3.jpg">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
-                    <h1 class="mb-4">Know About Our Dairy Farm & Our History</h1>
-                    <p class="mb-4">chuyên cung các sản phẩm cây cảnh </p>
-                    <div class="row g-5 pt-2 mb-5">
-                        <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="img/service.png" alt="">
-                            <h5 class="mb-3">Dedicated Services</h5>
-                            <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
-                        </div>
-                        <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="img/product.png" alt="">
-                            <h5 class="mb-3">Organic Products</h5>
-                            <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
-                        </div>
-                    </div>
-                    <a class="btn btn-secondary rounded-pill py-3 px-5" href="">Explore More</a>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- About End -->
-    <!-- Features Start -->
-    <!-- <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5 align-items-center">
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <p class="section-title bg-white text-start text-primary pe-3">Why Us!</p>
-                    <h1 class="mb-4">Few Reasons Why People Choosing Us!</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Justo magna erat amet</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Aliqu diam amet diam et eos</p>
-                    <p><i class="fa fa-check text-primary me-3"></i>Clita erat ipsum et lorem et sit</p>
-                    <a class="btn btn-secondary rounded-pill py-3 px-5 mt-3" href="">Explore More</a>
-                </div>
-                <div class="col-lg-6">
-                    <div class="rounded overflow-hidden">
-                        <div class="row g-0">
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
-                                <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/experience.png" alt="">
-                                    <h1 class="display-6 text-white" data-toggle="counter-up">25</h1>
-                                    <span class="fs-5 fw-semi-bold text-secondary">Years Experience</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
-                                <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/award.png" alt="">
-                                    <h1 class="display-6" data-toggle="counter-up">183</h1>
-                                    <span class="fs-5 fw-semi-bold text-primary">Award Winning</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.5s">
-                                <div class="text-center bg-secondary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/animal.png" alt="">
-                                    <h1 class="display-6" data-toggle="counter-up">2619</h1>
-                                    <span class="fs-5 fw-semi-bold text-primary">Total Animals</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 wow fadeIn" data-wow-delay="0.7s">
-                                <div class="text-center bg-primary py-5 px-4">
-                                    <img class="img-fluid mb-4" src="img/client.png" alt="">
-                                    <h1 class="display-6 text-white" data-toggle="counter-up">51940</h1>
-                                    <span class="fs-5 fw-semi-bold text-secondary">Happy Clients</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Features End -->
-    <!-- Banner Start -->
-    <!-- <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="img/banner.jpg">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="img/banner-1.jpg" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Sell Best Dairy Products</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="img/banner-2.jpg" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Deliver Fresh Mild Worldwide</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Banner End -->
+  
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -398,7 +262,7 @@
         </div>
     </div>
     <!-- Product End -->
-    <!-- Product End -->
+
     <!-- Team Start -->
     <!-- <div class="container-xxl py-5">
         <div class="container">

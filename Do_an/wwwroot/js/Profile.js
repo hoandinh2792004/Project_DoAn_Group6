@@ -57,7 +57,7 @@ function checkCustomerInfo(userId) {
         .catch(error => {
             console.log(error)
             console.error('Lỗi kiểm tra thông tin khách hàng:', error);
-            alert('Có lỗi xảy ra khi kiểm tra thông tin khách hàng.');
+            
         });
 }
 

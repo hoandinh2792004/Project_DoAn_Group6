@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    let itemsPerPage = parseInt($('#pageSize').val()) || 4; // Lấy giá trị pageSize từ HTML hoặc mặc định là 8
+    let itemsPerPage = parseInt($('#pageSize').val()) || 4; 
     let currentPage = 1;
     let products = [];
 
@@ -17,7 +17,8 @@
             console.log(response); // Ghi lại phản hồi để xem cấu trúc
             products = response.$values; // Trích xuất mảng sản phẩm từ phản hồi
             if (Array.isArray(products)) {
-                renderProductsUser(); // Hiển thị danh sách sản phẩm cho người dùng
+                renderProductsUser();// Hiển thị danh sách sản phẩm cho người dùng
+                renderProducts();// Hiển thị danh sách sản phẩm 
                 setupPagination(); // Thiết lập phân trang
             } else {
                 console.error("Dự kiến rằng products là một mảng, nhưng nhận được:", products);
@@ -28,7 +29,7 @@
         }
     });
 
-    
+
     function renderProductsUser() {
         $('#product-list-user').empty();
         const start = (currentPage - 1) * itemsPerPage;
@@ -47,10 +48,49 @@
                     <div class="position-relative">
                         <img class="img-fluid" src="${imageUrl}" alt="${product.name}">
                         <div class="product-overlay">
-                            <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="single-product.html?id=${product.productId}">
+                            <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="ProductDetail?id=${product.productId}">
                                 <i class="bi bi-link"></i>
                             </a>
                             <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                data-name="${product.name}"
+                                data-price="${product.price}" 
+                                data-img="${imageUrl}">
+                                <i class="bi bi-cart"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center p-4">
+                        <a class="d-block h5" href="single-product.html?id=${product.productId}">${product.name}</a>
+                        <span class="text-primary me-1">${product.price}$</span>
+                    </div>
+                </div>
+            </div>
+        `);
+        });
+    }
+
+    // Hàm renderProductsAdmin tương tự renderProductsUser nhưng hiển thị cho admin
+    function renderProducts() {
+        $('#product-list').empty();
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const currentProducts = products.slice(start, end);
+
+        currentProducts.forEach(function (product) {
+            const imageUrl = product.imageUrl
+                ? `http://localhost:5135/images/${product.imageUrl.split('/').pop()}`
+                : 'http://localhost:5135/images/default.png';
+
+            $('#product-list').append(`
+            <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="product-item">
+                    <div class="position-relative">
+                        <img class="img-fluid" src="${imageUrl}" alt="${product.name}">
+                        <div class="product-overlay">
+                            <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="Home/ProductDetail?id=${product.productId}">
+                                <i class="bi bi-link"></i>
+                            </a>
+                             <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
                                 data-name="${product.name}"
                                 data-price="${product.price}" 
                                 data-img="${imageUrl}">

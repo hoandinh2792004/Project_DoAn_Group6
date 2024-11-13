@@ -13,7 +13,7 @@ namespace Do_an.Controllers
 {
     [Route("api/payment")]
     [ApiController]
-    [Authorize]
+    
     public class PaymentController : ControllerBase
 
     {

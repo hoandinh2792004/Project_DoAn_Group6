@@ -64,5 +64,13 @@ namespace Do_an.Controllers
             ViewBag.PageSize = pageSize; // Truyền pageSize đến View
             return View(model);
         }
+        public IActionResult ProductDetail()
+        {
+            return View();
+        }
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
     }
 }

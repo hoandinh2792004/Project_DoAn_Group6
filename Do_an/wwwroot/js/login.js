@@ -71,15 +71,15 @@ signUpForm.addEventListener('submit', function (event) {
 
     // Show error messages and prevent form submission if any input is invalid
     if (!isNameValid) {
-        showError(nameInput, 'Name must be at least 2 characters long.');
+        showError(nameInput, 'Tên người dùng phải có ít nhất 2 chữ');
         return;
     }
     if (!isEmailValid) {
-        showError(emailInput, 'Invalid email address.');
+        showError(emailInput, 'Địa chỉ email sai');
         return;
     }
     if (!isPasswordValid) {
-        showError(passwordInput, 'Password must be at least 8 characters long.');
+        showError(passwordInput, 'Mật khẩu phải có ít nhất 8 chữ');
         return;
     }
 
@@ -91,15 +91,15 @@ signUpForm.addEventListener('submit', function (event) {
     })
         .then(response => {
             if (response.status === 200 || response.status === 201) {
-                showSuccess(emailInput, "Account created successfully!");
+                showSuccess(emailInput, "Tài khoản đã được đăng ký thành công!");
                 setTimeout(() => {
                     window.location.href = loginUrl;
                 }, 3000);
             }
         })
         .catch(error => {
-            console.error("There was a problem creating the user:", error);
-            showError(emailInput, error.response.data.Errors ? error.response.data.Errors.join(", ") : "Registration failed. Please try again.");
+            console.error("Đã có lỗi xảy ra khi đăng ký :", error);
+            showError(emailInput, error.response.data.Errors ? error.response.data.Errors.join(", ") : "Đăng ký thất bại,vui lòng thử lại.");
         });
 });
 // Sign In Form Submission
@@ -114,12 +114,12 @@ signInForm.addEventListener('submit', function (event) {
     const isPasswordValid = validatePassword(passwordInput.value);
 
     if (!isEmailValid) {
-        showError(emailInput, 'Invalid email address.');
+        showError(emailInput, 'Địa chỉ email sai');
         console.log("Invalid email address entered:", emailInput.value); // Log invalid email
         return;
     }
     if (!isPasswordValid) {
-        showError(passwordInput, 'Password must be at least 8 characters long.');
+        showError(passwordInput, 'Mật khẩu phải có ít nhất 8 chữ');
         console.log("Invalid password entered:", passwordInput.value); // Log invalid password
         return;
     }
@@ -158,7 +158,7 @@ signInForm.addEventListener('submit', function (event) {
                 document.getElementById("wrongpassword").innerText = "Bạn không có quyền truy cập vào tài nguyên này.";
             } else {
                 console.error("Login error:", error); // Log the full error for debugging
-                document.getElementById("wrongpassword").innerText = "Wrong email or password.";
+                document.getElementById("wrongpassword").innerText = "Mật khẩu hoặc email sai";
             }
         });
 });

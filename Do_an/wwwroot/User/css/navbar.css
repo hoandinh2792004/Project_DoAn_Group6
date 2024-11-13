@@ -1,4 +1,4 @@
-header {
+﻿header {
     transition: background-color .5s ease 0s,padding .5s ease 0s;
     padding: 20px 0;
 }
@@ -1045,4 +1045,9 @@ header {
 
 .qty-btn:hover {
     background-color: #ccc;
+}
+/* Dropdown styling to align it to the right */
+.dropdown-menu-end {
+    right: 0; /* Căn menu về bên phải */
+    left: auto; /* Tránh xung đột với căn chỉnh bên trái */
 }

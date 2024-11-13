@@ -1,32 +1,198 @@
 ﻿/* Tổng thể cơ bản */
 body {
-    font-family: 'Inter', sans-serif; /* Đặt phông chữ cho toàn bộ trang */
-    background-color: #f4f4f4; /* Nền sáng nhẹ */
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
 
+/* Container max width */
+.container {
+    max-width: 1920px;
+}
+
+/* Cart body layout */
+.cart-body {
+    display: flex;
+    gap: 20px;
+}
+
+/* Address and payment section */
+.address-payment-section {
+    flex: 1;
+}
+
+/* Review order section */
+.review-order-section {
+    flex: 0.6;
+    max-height: auto; /* Adjust height to fit content */
+    height: fit-content; /* Ensures the height only fits the content */
+    overflow-y: auto; /* Vertical scrolling if the content exceeds the height */
+    border: 1px solid #ced4da; /* Border to enclose the review-order section */
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #ffffff; /* Background color for the panel */
+    margin-bottom: 20px;
+}
+
+/* Shipping Method Section Styling */
+.ship-method-container {
+    margin-top: 20px; /* Push it down below the review order section */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between shipping methods */
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    background-color: #ffffff;
+    position: relative; /* Relative positioning to keep it in the flow */
+    flex-basis: 0; /* Ensures the section doesn't take up extra space if it's not needed */
+    width: 100%; /* Ensure it takes full width */
+    margin-top: 20px;
+}
+
+/* Phương thức vận chuyển */
+.ship-method {
+    display: block; /* Always show the shipping methods */
+    cursor: pointer;
+}
+
+/* Phần tử ship-box */
+.ship-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+/* Hiệu ứng khi phương thức vận chuyển được chọn */
+.ship-method.selected .ship-box {
+    border: 2px solid black; /* Viền đậm */
+    background-color: #f0f0f0; /* Nền màu nhạt để nổi bật */
+    font-weight: bold; /* Chữ in đậm */
+    box-shadow: 0px 0px 5px rgba(76, 175, 80, 0.5); /* Đổ bóng nhẹ */
+}
+
+
+/* Tên phương thức, thời gian và giá */
+.ship-name {
+    font-weight: bold;
+}
+
+.ship-day {
+    font-size: 14px;
+    color: #888;
+}
+/* Khi hover vào phương thức vận chuyển */
+.ship-box:hover {
+    background-color: #f0f0f0;
+    border: 1px solid black;
+}
+
+/* Ẩn khi không được chọn */
+.ship-method button {
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+/* Panel and panel-body styling */
+.panel {
+    border: 1px solid #ced4da; /* Add border to the panel */
+    border-radius: 5px; /* Border radius for rounded corners */
+    background-color: #ffffff; /* Background color for the panel */
+    padding: 15px; /* Padding inside the panel */
+}
+
+.panel-body {
+    padding: 15px; /* Padding inside the panel body */
+}
+
+/* Panel heading */
+.panel-heading {
+    font-weight: bold;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.payment-detail {
+    display: none; /* Ẩn tất cả các chi tiết thanh toán khi trang tải */
+}
+
+/* Payment method selection */
+.payment-method {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Phong cách cơ bản cho khung phương thức thanh toán */
+.payment-option {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc; /* Viền nhạt ban đầu */
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+    .payment-option img {
+        max-width: 100%;
+        border-radius: 5px;
+    }
+
+    /* Hiệu ứng khi di chuột qua phương thức thanh toán */
+    .payment-option:hover {
+        border-color: black;
+    }
+
+    /* Hiệu ứng khi phương thức được chọn */
+    .payment-option.selected {
+        border: 2px solid black; /* Viền đậm */
+        font-weight: bold; /* Chữ in đậm */
+        box-shadow: 0px 0px 5px rgba(76, 175, 80, 0.5); /* Đổ bóng để nhấn mạnh */
+    }
+
+        /* Hiệu ứng cho từng phương thức thanh toán khi chọn */
+        .payment-option.selected img {
+            transform: scale(1.05); 
+            transition: transform 0.3s ease; 
+        }
 /* Progress bar styles */
 .progress-container .line-process {
     content: "";
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, #2ea3b7 0%, #4caf50 100%); /* Màu xanh lá cây cho thanh tiến trình */
+    background: linear-gradient(to right, #2ea3b7 0%, #4caf50 100%);
 }
 
 /* Shipper selection styles */
 .choose-shipper {
-    color: #4caf50; /* Màu chữ xanh lá cây */
-    font-family: 'Inter', sans-serif; /* Thêm 'sans-serif' làm phông chữ dự phòng */
-    font-size: 24px; /* Tăng kích thước phông chữ */
-    font-weight: 700; /* Làm đậm chữ */
+    color: #4caf50;
+    font-size: 24px;
+    font-weight: 700;
     margin-bottom: 20px;
 }
 
 /* Content selection styles */
+.choose-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
 .choose-content {
-    display: inline-flex;
-    margin-bottom: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 /* Button styles in choose box */
@@ -34,73 +200,94 @@ body {
     max-width: 200px;
     height: 200px;
     border-radius: 5px;
-    margin-right: 39px;
     background: #FFF;
     transition: all 0.3s ease;
     cursor: pointer;
-    opacity: 0.8; /* Tăng độ mờ cho nút */
-    border: 2px solid #4caf50; /* Đường viền màu xanh lá cây */
+    opacity: 0.5;
+    border: 1px solid #CCC;
 }
 
-    /* Hover effect cho button */
-    .choose-box button:hover {
-        background-color: #4caf50; /* Màu nền khi hover */
-        color: #FFF; /* Đổi màu chữ khi hover */
+    .choose-box button.selectedPayment {
+        border: 2px solid #000;
+        opacity: 1;
     }
 
-/* Input field styles */
-.card-name, .card-number, .card-expire {
-    position: relative;
-    margin-bottom: 30px; /* Thay đổi để hợp nhất khoảng cách */
+/* Expiration date styles */
+.card-expire {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
-    .card-name input,
-    .card-number input,
     .card-expire input {
         width: 100%;
-        border-radius: 5px; /* Bo tròn góc */
+        border-radius: 3px;
         border: 1px solid #CCC;
         background: #FFF;
         height: 45px;
         padding-left: 10px;
     }
 
-/* Expiration date styles */
-.card-expire {
-    display: inline-flex;
+    .card-expire label {
+        font-size: 16px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+
+/* Payment method container */
+.payment-method-container {
+    margin-top: 20px;
 }
 
-    .card-expire label {
-        font-size: 20px;
-        margin: 5px 10px 0;
+/* Payment method styles */
+.creditcard-method, .paypal-method, .momo-method {
+    display: none;
+}
+
+.showPayment {
+    display: block;
+}
+
+/* Input field styles */
+.card-name, .card-number {
+    position: relative;
+}
+
+    .card-name input, .card-number input {
+        width: 100%;
+        border-radius: 3px;
+        border: 1px solid #CCC;
+        background: #FFF;
+        height: 45px;
+        padding-left: 10px;
+        margin-bottom: 30px;
     }
 
 /* Payment button styles */
 .pay-paypal input {
     width: 100%;
     height: 35px;
-    background: #4caf50; /* Màu nền xanh lá cây */
+    background: #4caf50;
     color: #FFF;
-    border-radius: 5px; /* Bo tròn góc */
+    border-radius: 5px;
     border: none;
     cursor: pointer;
     margin-bottom: 15px;
-    transition: background 0.3s; /* Hiệu ứng chuyển đổi nền */
+    transition: background 0.3s;
 }
 
-    /* Hiệu ứng hover cho nút thanh toán */
     .pay-paypal input:hover {
-        background: #45a049; /* Màu nền khi hover */
+        background: #45a049;
     }
 
 /* Payment link styles */
 .have-pay a {
-    color: #4caf50; /* Màu xanh lá cây */
+    color: #4caf50;
     text-decoration: underline;
 }
 
     .have-pay a:hover {
-        color: #000; /* Có thể thêm hiệu ứng khác nếu muốn */
+        color: #000;
     }
 
 /* QR payment styles */
@@ -112,21 +299,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Payment method styles */
-.creditcard-method, .paypal-method, .momo-method {
-    display: none;
-}
-
-.showPayment {
-    display: block; /* Thêm kiểu hiển thị cho phương thức thanh toán được chọn */
-}
-
-/* Selected payment button styles */
-.choose-box button.selectedPayment {
-    border: 2px solid #000;
-    opacity: 1; /* Bỏ opacity cho nút được chọn */
-}
-
 /* Missing info message styles */
 #Misssing-info {
     margin-top: 15px;
@@ -134,41 +306,71 @@ body {
 }
 
 /* Header styles */
-/* Header styles */
 #header {
-    background-color: #f8f9fa; /* Nền sáng */
-    padding: 40px 0; /* Tăng khoảng cách trên và dưới lên gấp đôi */
-    border-bottom: 1px solid #dee2e6; /* Đường viền dưới */
+    background-color: #f8f9fa;
+    padding: 40px 0;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .header-logos {
-    font-size: 64px; /* Tăng kích thước phông chữ lên gấp đôi */
-    font-weight: bold; /* Làm đậm chữ */
-    color: #4caf50; /* Màu xanh lá cây */
-    text-decoration: none; /* Bỏ gạch chân */
+    font-size: 64px;
+    font-weight: bold;
+    color: #4caf50;
+    text-decoration: none;
 }
 
 .icon-box .nav-icon a,
 .icon-box .profile a {
-    color: #4caf50; /* Màu xanh lá cây */
-    font-size: 48px; /* Tăng kích thước phông chữ lên gấp đôi */
+    color: #4caf50;
+    font-size: 48px;
 }
-
 
 .icon-box {
     margin: 0;
     padding: 0;
 }
 
-
-
 .profile img {
     border-radius: 50%;
-    width: 50px; /* Tăng kích thước hình ảnh người dùng */
+    width: 50px;
     height: 50px;
 }
 
 .icon-box .nav-icon a:hover,
 .icon-box .profile a:hover {
-    color: #2ea3b7; /* Màu khi hover */
+    color: #2ea3b7;
 }
+
+/* Expiration date and CVV styling */
+.form-group.row .col-xs-3,
+.form-group.row .col-xs-4,
+.form-group.row .col-xs-1 {
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+
+.creditcard-method label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Payment input styling */
+#card .pay input {
+    width: 100%;
+    height: 40px;
+    background: #4caf50;
+    color: #FFF;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#card .continue input:hover {
+    background: #333;
+}
+

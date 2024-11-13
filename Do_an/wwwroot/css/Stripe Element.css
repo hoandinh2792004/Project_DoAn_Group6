@@ -1,87 +1,57 @@
-﻿/* Đảm bảo các ô nhập liệu có chiều rộng nhất quán */
-#expiration,
-#cvc {
-    width: 100%; /* Đảm bảo chiều rộng 100% cho các ô nhập liệu */
-    max-width: 120px; /* Giới hạn chiều rộng tối đa để không quá dài */
+﻿<style >
+/* Card form styles */
+.payment-detail label {
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
-/* Đặt một khoảng cách giữa các ô nhập liệu ngày hết hạn và CVC */
-.d-flex > div {
-    flex: 1; /* Để các ô có chiều rộng đồng đều */
+.payment-detail .form-control {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    margin-bottom: 20px;
 }
 
-/* Tùy chỉnh các thông báo lỗi */
-#card-errors {
-    margin-top: 10px; /* Khoảng cách trên */
-    color: #fa755a; /* Màu chữ đỏ cho thông báo lỗi */
-    font-size: 14px; /* Kích thước chữ */
-}
-
-/* Card element container */
-#card-element {
-    border: 1px solid #ced4da !important; /* Light border color */
-    border-radius: 5px !important; /* Rounded corners */
-    padding: 10px !important; /* Padding for a better layout */
-    font-size: 16px !important; /* Consistent font size */
-    transition: border-color 150ms ease !important; /* Smooth transition for focus */
-    margin-bottom: 10px !important; /* Space below the card element */
-    background-color: #f8f9fa !important; /* Light background color */
-}
-
-/* Styling for the inner private Stripe element */
-.__PrivateStripeElement {
-    margin: 0 !important; /* No margin */
-    padding: 0 !important; /* No padding */
-    border: none !important; /* No border */
-    display: block !important; /* Display block */
-    background: transparent !important; /* Transparent background */
-    position: relative !important; /* Relative positioning */
-    opacity: 1 !important; /* Full opacity */
-}
-
-    /* Styling for the iframe */
-    .__PrivateStripeElement iframe {
-        border: none !important; /* No border */
-        width: 100% !important; /* Full width */
-        min-width: 100% !important; /* Min width for responsiveness */
-        background: transparent !important; /* Transparent background */
-        height: 40px !important; /* Set a fixed height for better appearance */
+    .payment-detail .form-control:focus {
+        border-color: #2ea3b7; /* Highlight color on focus */
+        box-shadow: 0 0 5px rgba(46, 163, 183, 0.5);
     }
 
-/* Placeholder text styling */
-.__PrivateStripeElement-input {
-    font-size: 16px !important; /* Font size for input */
-    padding: 10px !important; /* Padding for input */
-    color: #495057 !important; /* Darker text color */
-    opacity: 1 !important; /* Fully opaque */
-    background: transparent !important; /* Transparent background */
+.payment-detail .row {
+    margin-bottom: 20px;
 }
 
-/* On focus state */
-#card-element:focus {
-    border-color: #007bff !important; /* Blue border on focus */
-    outline: none !important; /* Remove default outline */
-}
+    .payment-detail .row .col-xs-6 {
+        padding-right: 10px;
+    }
 
-/* Error message styling */
+/* Custom styling for error message */
 #card-errors {
-    margin-top: 10px !important; /* Space above the error message */
-    color: #fa755a !important; /* Red color for error messages */
-    font-size: 14px !important; /* Size of error messages */
+    color: red;
+    margin-top: 10px;
 }
 
-/* Specific styles for invalid state */
-.stripe-card--invalid {
-    border-color: #fa755a !important; /* Red border for invalid input */
+/* Button styling */
+.payment-detail button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-/* Input focus styling */
-.__PrivateStripeElement-input:focus {
-    outline: none !important; /* Remove default outline */
-    border: none !important; /* No border */
+    .payment-detail button:hover {
+        background-color: #45a049;
+    }
+#confirm-payment:disabled {
+    background-color: #d3d3d3; /* Gray background */
+    color: #808080; /* Gray text */
+    cursor: not-allowed; /* Change cursor to indicate it's disabled */
 }
 
-/* Transition effects for better user experience */
-#__PrivateStripeElement {
-    transition: all 0.3s ease !important; /* Transition for smoother interactions */
-}
+
+</style >
