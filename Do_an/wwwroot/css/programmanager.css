@@ -1,4 +1,4 @@
-body {
+﻿body {
     margin-top: 20px;
     font-family: Arial, sans-serif;
 }
@@ -27,13 +27,26 @@ h2 {
         text-align: center;
     }
 
-.btn-primary {
-    background-color: #007bff;
-    border: none;
+/* Nút Thêm Sản Phẩm Mới (Màu xanh) */
+.btn-add-product {
+    background-color: #007bff; /* Màu xanh */
+    border-color: #007bff;
+    color: #ffffff;
 }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
+    .btn-add-product:hover {
+        background-color: #0056b3; /* Màu xanh đậm khi hover */
+    }
+
+/* Nút Chỉnh Sửa (Màu vàng) */
+.btn-edit-product {
+    background-color: #ffc107; /* Màu vàng */
+    border-color: #ffc107;
+    color: #ffffff;
+}
+
+    .btn-edit-product:hover {
+        background-color: #e0a800; /* Màu vàng đậm khi hover */
     }
 
 .modal-header {

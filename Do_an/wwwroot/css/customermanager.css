@@ -1,0 +1,117 @@
+﻿/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container styling */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+h2.text-center {
+    color: #343a40;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* Table styling */
+.table {
+    margin-bottom: 0;
+    background-color: #ffffff;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tbody td {
+    vertical-align: middle;
+}
+
+/* Button styling */
+.btn {
+    margin-right: 5px;
+}
+
+.btn-primary {
+    background-color: #ffc107; 
+    border-color: #ffc107; 
+    color: #ffffff; 
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffff;
+}
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+/* Modal styling */
+.modal-header {
+    background-color: #343a40;
+    color: #ffffff;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+    .modal-footer .btn-primary {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+        .modal-footer .btn-primary:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+/* Form styling in modal */
+#editCustomerForm .form-group label {
+    font-weight: 500;
+    color: #495057;
+}
+
+#editCustomerForm .form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+    #editCustomerForm .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }

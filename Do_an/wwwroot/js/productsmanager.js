@@ -86,7 +86,7 @@ async function loadProducts() {
                         <td><img src="${imageUrl}" alt="Hình ảnh sản phẩm" width="50"></td>
                         <td>${product.categoryName}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="editProduct(${product.productId})">Chỉnh sửa</button>
+                            <button class="btn btn-sm btn-edit-product" onclick="editProduct(${product.productId})">Chỉnh sửa</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.productId})">Xóa</button>
                         </td>
                     </tr>
