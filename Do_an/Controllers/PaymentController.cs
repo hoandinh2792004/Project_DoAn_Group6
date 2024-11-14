@@ -102,7 +102,6 @@ namespace Do_an.Controllers
             }
         }
 
-        // API method for creating Checkout Session
         [HttpPost("create-checkout-session")]
         public async Task<IActionResult> CreateCheckoutSession([FromBody] CreatePaymentDto paymentDto)
         {
@@ -114,34 +113,20 @@ namespace Do_an.Controllers
             try
             {
                 var domain = "http://localhost:5135"; // Replace with your actual domain
-                var sessionOptions = new SessionCreateOptions
+
+                // Create PaymentIntent with the amount received from the client
+                var paymentIntentOptions = new PaymentIntentCreateOptions
                 {
+                    Amount = (long)(paymentDto.PaymentAmount * 100), // Amount in cents
+                    Currency = "usd",
                     PaymentMethodTypes = new List<string> { "card" },
-                    LineItems = new List<SessionLineItemOptions>
-                    {
-                        new SessionLineItemOptions
-                        {
-                            PriceData = new SessionLineItemPriceDataOptions
-                            {
-                                Currency = "usd",
-                                ProductData = new SessionLineItemPriceDataProductDataOptions
-                                {
-                                    Name = "Auction Item",
-                                },
-                                UnitAmount = (long)(paymentDto.PaymentAmount * 100), // Amount in cents
-                            },
-                            Quantity = 1,
-                        },
-                    },
-                    Mode = "payment",
-                    SuccessUrl = $"{domain}/auctionwebsite/#/user/order-success?session_id={{CHECKOUT_SESSION_ID}}",
-                    CancelUrl = $"{domain}/auctionwebsite/#/user/payment",
                 };
 
-                var sessionService = new SessionService();
-                var session = await sessionService.CreateAsync(sessionOptions);
+                var paymentIntentService = new PaymentIntentService();
+                var paymentIntent = await paymentIntentService.CreateAsync(paymentIntentOptions);
 
-                return Ok(new { sessionId = session.Id });
+                // Return the client secret of the PaymentIntent to the frontend
+                return Ok(new { clientSecret = paymentIntent.ClientSecret, sessionId = paymentIntent.Id });
             }
             catch (StripeException ex)
             {

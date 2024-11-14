@@ -254,26 +254,21 @@ async function handleCheckout() {
         return;
     }
 
-    // Calculate total amount in cents
     const totalAmount = cart.reduce((sum, item) => {
-        const priceInNumber = parseFloat(item.price) || 0; // Convert to number, return 0 if invalid
-        return sum + (priceInNumber * item.qty); // Multiply by quantity
+        const priceInNumber = parseFloat(item.price) || 0;
+        return sum + (priceInNumber * item.qty);
     }, 0);
 
-    // Check if total amount exceeds Stripe's limit
     if (totalAmount > 99999999) {
         alert("Total amount exceeds the limit for payment processing.");
         return;
     }
 
-    // Prepare payload for the backend
     const paymentRequest = {
         PaymentAmount: totalAmount,
-        AuctionID: 123,  // Replace with actual AuctionID
-        UserID: 456      // Replace with actual UserID
+        AuctionID: 123,
+        UserID: 456
     };
-
-    console.log("Sending payment request:", paymentRequest); // Log request details
 
     try {
         const response = await fetch('http://localhost:5135/api/payment/create-intent', {
@@ -284,24 +279,27 @@ async function handleCheckout() {
             body: JSON.stringify(paymentRequest)
         });
 
-        console.log("Backend response status:", response.status);
-
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("Response error text:", errorText);
             throw new Error("Failed to create payment intent");
         }
 
         const paymentData = await response.json();
-        console.log("Payment data received:", paymentData);
 
-        // Redirect to the payment page with sessionId
-        window.location.href = `/User/Payment?sessionId=${paymentData.id}`;
+        // Check if clientSecret is present in the response
+        if (!paymentData.clientSecret) {
+            console.error("Missing client_secret in the response");
+            alert("There was an error processing your payment. Please contact support.");
+            return;
+        }
+
+        window.location.href = `/User/Payment?clientSecret=${paymentData.clientSecret}`;
     } catch (error) {
         console.error("Error during checkout:", error);
         alert("There was an error processing your payment. Please try again.");
     }
 }
+
 
 // Lắng nghe sự kiện thay đổi trên sessionStorage để cập nhật giỏ hàng
 window.addEventListener('storage', function (event) {
