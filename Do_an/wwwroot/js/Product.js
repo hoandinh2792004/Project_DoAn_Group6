@@ -42,6 +42,9 @@
                 ? `http://localhost:5135/images/${product.imageUrl.split('/').pop()}` // Điều chỉnh để lấy tên file
                 : 'http://localhost:5135/images/default.png'; // Hình ảnh mặc định nếu không có
 
+            // Định dạng giá sản phẩm với dấu chấm ngăn cách hàng nghìn
+            const formattedPrice = product.price.toLocaleString('vi-VN'); // 'vi-VN' cho định dạng Việt Nam
+
             $('#product-list-user').append(`
             <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="product-item">
@@ -61,13 +64,14 @@
                     </div>
                     <div class="text-center p-4">
                         <a class="d-block h5" href="single-product.html?id=${product.productId}">${product.name}</a>
-                        <span class="text-primary me-1">${product.price}$</span>
+                        <span class="text-primary me-1">${formattedPrice}₫</span> 
                     </div>
                 </div>
             </div>
         `);
         });
     }
+
 
     // Hàm renderProductsAdmin tương tự renderProductsUser nhưng hiển thị cho admin
     function renderProducts() {
@@ -80,6 +84,8 @@
             const imageUrl = product.imageUrl
                 ? `http://localhost:5135/images/${product.imageUrl.split('/').pop()}`
                 : 'http://localhost:5135/images/default.png';
+
+            const formattedPrice = product.price.toLocaleString('vi-VN');
 
             $('#product-list').append(`
             <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
@@ -100,7 +106,7 @@
                     </div>
                     <div class="text-center p-4">
                         <a class="d-block h5" href="single-product.html?id=${product.productId}">${product.name}</a>
-                        <span class="text-primary me-1">${product.price}$</span>
+                         <span class="text-primary me-1">${formattedPrice}₫</span> 
                     </div>
                 </div>
             </div>

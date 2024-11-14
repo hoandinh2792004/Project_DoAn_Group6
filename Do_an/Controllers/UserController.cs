@@ -90,7 +90,7 @@ namespace Do_an.Controllers
             }
         }
 
-        [Authorize]
+        
         public IActionResult Payment()
         {
             var authResult = CheckAuthToken();
@@ -98,7 +98,7 @@ namespace Do_an.Controllers
             return View();
         }
 
-        [Authorize]
+        
         public IActionResult Privacy()
         {
             var authResult = CheckAuthToken();
