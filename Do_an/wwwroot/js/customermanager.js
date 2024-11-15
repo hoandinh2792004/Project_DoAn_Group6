@@ -24,8 +24,8 @@ async function loadCustomers() {
                         <td>${customer.userId}</td>
                         <td>${customer.fullName}</td>
                         <td>${customer.email}</td>
-                        <td>${customer.phoneNumber || ''}</td> <!-- Hiển thị số điện thoại nếu có -->
-                        <td>${customer.address || ''}</td> <!-- Hiển thị địa chỉ nếu có -->
+                        <td>${customer.phoneNumber || ''}
+                        <td>${customer.address || ''}
                         <td>${customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : ''}</td>
                         <td>
                             <button class="btn btn-sm btn-primary" onclick="openEditCustomerModal(${customer.userId})">Chỉnh sửa</button>

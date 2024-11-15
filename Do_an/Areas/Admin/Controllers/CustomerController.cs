@@ -75,7 +75,7 @@ public class CustomerController : ControllerBase
             return StatusCode(500, "Đã xảy ra lỗi trong quá trình xóa người dùng."); // Trả về lỗi server
         }
     }
-    // GET: api/Customer/GetCustomer/{id}
+    
     // GET: api/Customer/GetCustomer/{id}
     [HttpGet("GetCustomer/{id}")]
     public async Task<ActionResult<CustomerDto>> GetCustomer(int id)

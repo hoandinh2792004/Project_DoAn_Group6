@@ -77,5 +77,12 @@ namespace Do_an.Areas.Admin.Controllers
 
             return View();
         }
+        public IActionResult OrderManager()
+        {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult; // Kiểm tra token trước khi tiếp tục
+
+            return View();
+        }
     }
 }

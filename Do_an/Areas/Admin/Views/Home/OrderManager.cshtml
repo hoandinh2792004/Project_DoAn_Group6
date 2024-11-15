@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đơn Hàng</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/ordermanager.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Quản Lý Đơn Hàng</h2>
+
+        <!-- Table to Display Order Details -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã Đơn Hàng</th>
+                    <th>Sản Phẩm</th>
+                    <th>Số Lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng Cộng</th>
+                    <th>Ngày Đặt Hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+
+            <tbody id="orderTableBody">
+                <!-- Order details will be loaded here with JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edit Order Modal -->
+    <div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOrderModalLabel">Chỉnh sửa Đơn Hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editOrderDetailId" />
+                        <div class="form-group">
+                            <label for="editOrderId">Mã Đơn Hàng</label>
+                            <input type="text" class="form-control" id="editOrderId" readonly />
+                        </div>
+                        <div class="form-group">
+                            <label for="editProductName">Sản Phẩm</label>
+                            <input type="text" class="form-control" id="editProductName"  />
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantity">Số Lượng</label>
+                            <input type="number" class="form-control" id="editQuantity" />
+                        </div>
+                        <div class="form-group">
+                            <label for="editPrice">Giá</label>
+                            <input type="number" step="0.01" class="form-control" id="editPrice" />
+                        </div>
+                        <div class="form-group">
+                            <label for="editTotal">Tổng Cộng</label>
+                            <input type="number" step="0.01" class="form-control" id="editTotal" readonly />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="editOrderDetail()">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/js/ordermanager.js"></script>
+</body>
+</html>
