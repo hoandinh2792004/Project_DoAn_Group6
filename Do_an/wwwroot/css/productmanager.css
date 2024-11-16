@@ -1,22 +1,22 @@
-﻿/* CSS for the Customer Manager page */
+﻿/* CSS for the Product Manager page */
 
 /* General styling for the table */
-.customermanager table {
+.productmanager table {
     width: 100%;
     border-collapse: collapse;
     border: 2px solid #000; /* Đặt viền cho bảng với màu đen */
 }
 
-    /* Styling for table headers */
-    .customermanager table th, .customermanager table td {
-        text-align: center;
-        vertical-align: middle;
-        border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
-        padding: 10px; /* Thêm khoảng cách cho các ô */
-    }
+/* Styling for table headers */
+.productmanager table th, .productmanager table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
+    padding: 10px; /* Thêm khoảng cách cho các ô */
+}
 
 /* Styling for the Edit button */
-.customermanager button.btn-edit {
+.productmanager button.btn-edit {
     background-color: #ffc107; /* Màu vàng */
     color: #fff; /* Màu chữ trắng */
     border: none;
@@ -27,35 +27,45 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-    .customermanager button.btn-edit:hover {
-        background-color: #e0a800; /* Vàng đậm hơn khi hover */
-        transform: scale(1.1); /* Phóng to nhẹ khi hover */
-    }
+.productmanager button.btn-edit:hover {
+    background-color: #e0a800; /* Vàng đậm hơn khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
 
 /* Styling for other buttons (secondary or primary actions) */
-.customermanager button.btn-secondary {
+.productmanager button.btn-secondary {
     background-color: #6c757d; /* Màu xám */
     color: #fff;
 }
 
-.customermanager button.btn-primary {
+.productmanager button.btn-primary {
     background-color: #007bff; /* Màu xanh dương */
     color: #fff;
 }
 
 /* Modal footer buttons alignment */
-.customermanager .modal-footer {
+.productmanager .modal-footer {
     justify-content: space-between;
 }
 
-.customermanager .table thead th {
+.productmanager .table thead th {
     background-color: #007bff;
     color: #ffffff;
     font-weight: 600;
 }
+/* Nút Thêm Sản Phẩm Mới (Màu xanh) */
+.productmanager .btn-add-product {
+    background-color: #007bff; /* Màu xanh */
+    border-color: #007bff;
+    color: #ffffff;
+}
+
+    .productmanager .btn-add-product:hover {
+        background-color: #0056b3; /* Màu xanh đậm khi hover */
+    }
 
 /* Đảm bảo màu chữ trắng cho btn-warning */
-.customermanager .btn-warning {
+.productmanager .btn-warning {
     --bs-btn-color: #fff; /* Đặt màu chữ là trắng */
     --bs-btn-bg: #ffc107;
     --bs-btn-border-color: #ffc107;

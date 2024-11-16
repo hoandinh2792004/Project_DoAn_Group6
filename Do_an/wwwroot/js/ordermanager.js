@@ -92,6 +92,8 @@ async function openEditOrderModal(orderId) {
 
             // Hiển thị modal chỉnh sửa
             $('#editOrderModal').modal('show');
+            $('.modal-backdrop').remove(); // Loại bỏ backdrop cũ (nếu có)
+            $('body').removeClass('modal-open'); // Xóa lớp modal-open khỏi body
         } else {
             console.error("Không có chi tiết đơn hàng cho Order ID:", orderId);
             alert("Không có chi tiết đơn hàng để chỉnh sửa.");
@@ -187,7 +189,9 @@ async function deleteOrder(orderId) {
         alert('Đã xảy ra lỗi, vui lòng thử lại.');
     }
 }
-
+document.querySelector('#editOrderModal .btn-secondary[data-dismiss="modal"]').addEventListener('click', function () {
+    $('#editOrderModal').modal('hide');
+});
 
 // Load customers on page load
 $(document).ready(function () {

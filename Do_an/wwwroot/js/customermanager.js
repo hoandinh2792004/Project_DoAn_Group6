@@ -28,7 +28,7 @@ async function loadCustomers() {
                         <td>${customer.address || ''}
                         <td>${customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : ''}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="openEditCustomerModal(${customer.userId})">Chỉnh sửa</button>
+                            <button class="btn btn-sm btn-warning" onclick="openEditCustomerModal(${customer.userId})">Chỉnh sửa</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteCustomer(${customer.userId})">Xóa</button>
                         </td>
                     </tr>
@@ -63,6 +63,8 @@ function openEditCustomerModal(id) {
 
             // Mở modal chỉnh sửa
             $("#editCustomerModal").modal("show");
+            $('.modal-backdrop').remove(); // Loại bỏ backdrop cũ (nếu có)
+            $('body').removeClass('modal-open'); // Xóa lớp modal-open khỏi body
         },
         error: function () {
             alert("Lỗi khi tải thông tin người dùng.");
@@ -129,7 +131,9 @@ function deleteCustomer(id) {
     }
 }
 
-
+document.querySelector('#editCustomerModal .btn-secondary[data-dismiss="modal"]').addEventListener('click', function () {
+    $('#editCustomerModal').modal('hide');
+});
 
 // Load customers on page load
 $(document).ready(function () {

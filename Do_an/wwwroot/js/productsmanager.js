@@ -4,6 +4,9 @@ function openAddProductModal() {
     document.getElementById('addProductForm').reset(); // Reset form
     document.getElementById('addMessage').innerHTML = ''; // Xóa thông điệp cũ
     $('#addProductModal').modal('show'); // Hiển thị modal
+    // Tắt backdrop (vùng mờ phía sau modal)
+    $('.modal-backdrop').remove(); // Loại bỏ backdrop cũ (nếu có)
+    $('body').removeClass('modal-open'); // Xóa lớp modal-open khỏi body
 }
 
 // Hàm xử lý lưu sản phẩm
@@ -86,7 +89,7 @@ async function loadProducts() {
                         <td><img src="${imageUrl}" alt="Hình ảnh sản phẩm" width="50"></td>
                         <td>${product.categoryName}</td>
                         <td>
-                            <button class="btn btn-sm btn-edit-product" onclick="editProduct(${product.productId})">Chỉnh sửa</button>
+                            <button class="btn btn-sm btn-warning" onclick="editProduct(${product.productId})">Chỉnh sửa</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.productId})">Xóa</button>
                         </td>
                     </tr>
@@ -138,6 +141,9 @@ function openEditProductModal(product) {
     }
 
     $('#editProductModal').modal('show'); // Show the modal
+    // Tắt backdrop (vùng mờ phía sau modal)
+    $('.modal-backdrop').remove(); // Loại bỏ backdrop cũ (nếu có)
+    $('body').removeClass('modal-open'); // Xóa lớp modal-open khỏi body
 }
 
 async function updateProduct(productId) {
@@ -240,3 +246,14 @@ async function deleteProduct(productId) {
         }
     }
 }
+
+// Thêm sự kiện đóng modal thủ công cho nút "Hủy"
+// Đóng modal thêm sản phẩm
+document.querySelector('#addProductModal .btn-secondary[data-dismiss="modal"]').addEventListener('click', function () {
+    $('#addProductModal').modal('hide');
+});
+
+// Đóng modal chỉnh sửa sản phẩm
+document.querySelector('#editProductModal .btn-secondary[data-dismiss="modal"]').addEventListener('click', function () {
+    $('#editProductModal').modal('hide');
+});
