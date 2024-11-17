@@ -1,0 +1,129 @@
+﻿/* CSS cho sản phẩm */
+:root {
+    --primary: #5B8C51;
+    --secondary: #EDDD5E;
+    --light: #F7F7F7;
+    --dark: #404A3D;
+}
+
+.product-section {
+    padding-top: 150px;
+    padding-bottom: 150px;
+}
+
+.product-filters {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+    .product-filters ul {
+        list-style: none;
+        padding: 0;
+        display: inline-block;
+    }
+
+        .product-filters ul li {
+            display: inline;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+            .product-filters ul li.active,
+            .product-filters ul li:hover {
+                color: var(--primary);
+            }
+
+.single-product-item {
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+    overflow: hidden;
+    margin-bottom: 30px;
+    background: #fff;
+    transition: 0.5s;
+}
+
+    .single-product-item:hover {
+        box-shadow: 0 0 25px rgba(0, 0, 0, .15);
+    }
+
+.product-image img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s;
+}
+
+.single-product-item:hover .product-image img {
+    transform: scale(1.05);
+}
+
+.single-product-item h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 20px 0;
+    color: var(--dark);
+}
+
+.product-price {
+    font-size: 18px;
+    color: var(--primary);
+}
+
+    .product-price span {
+        font-size: 14px;
+        color: #777;
+    }
+
+.cart-btn {
+    display: inline-block;
+    background: var(--secondary);
+    color: var(--light);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+    .cart-btn:hover {
+        background: var(--secondary);
+        color: var(--dark);
+    }
+
+
+
+/* CSS cho phân trang */
+.pagination-wrap {
+    text-align: center;
+    margin-top: 50px;
+}
+
+    .pagination-wrap ul {
+        list-style: none;
+        padding: 0;
+        display: inline-block;
+    }
+
+        .pagination-wrap ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+            .pagination-wrap ul li a {
+                color: var(--dark);
+                font-size: 16px;
+                font-weight: 500;
+                padding: 8px 15px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                transition: 0.3s;
+            }
+
+                .pagination-wrap ul li a:hover,
+                .pagination-wrap ul li a.active {
+                    background: var(--primary);
+                    color: var(--light);
+                    border-color: var(--primary);
+                }
+

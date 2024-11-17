@@ -1,0 +1,11 @@
+.reset-password .input-email {
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd !important;
+    outline: #000 !important;
+    width: 50%;
+}
+
+.reset-password {
+    height: 90% !important;
+}

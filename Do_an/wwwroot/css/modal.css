@@ -1,0 +1,51 @@
+﻿/* CSS cho modal */
+.modal {
+	display: none; /* Ẩn modal theo mặc định */
+	position: fixed; /* Ở trên cùng của cửa sổ */
+	z-index: 1; /* Để đảm bảo modal nằm trên tất cả các phần tử khác */
+	left: 0;
+	top: 0;
+	width: 100%; /* Toàn bộ chiều rộng */
+	height: 100%; /* Toàn bộ chiều cao */
+	overflow: auto; /* Bật cuộn nếu cần */
+	background-color: rgba(0, 0, 0, 0.5); /* Màu nền trong suốt */
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto; /* Đặt modal ở giữa */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%; /* Độ rộng của modal */
+	max-width: 400px; /* Độ rộng tối đa */
+	text-align: center;
+}
+
+.close-button {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+	.close-button:hover,
+	.close-button:focus {
+		color: black;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+.button {
+	display: inline-block;
+	margin: 10px;
+	padding: 10px 20px;
+	background-color: #4CAF50; /* Màu xanh lá cây */
+	color: white;
+	text-decoration: none;
+	border-radius: 5px;
+}
+
+	.button:hover {
+		background-color: #45a049; /* Màu tối hơn khi hover */
+	}
+

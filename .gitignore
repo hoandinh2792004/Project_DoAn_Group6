@@ -1,0 +1,70 @@
+# Build Folders
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio Files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+*.sln.iml
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!.nuget/packages/  # Uncomment to keep .nuget folder if you use NuGet
+
+# Project Files
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pdb
+*.cache
+*.ilk
+*.log
+
+# Test Results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+*.ncrunchproject
+*.ncrunchsolution
+
+# User-specific files
+*.rsuser
+*.suo
+
+# Visual Studio Code Extensions
+.vscode/extensions.json
+
+# Rider
+.idea/
+
+# Publish folder
+publish/
+
+# Azure
+*.publishsettings
+*.azurePubxml
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Backup files
+*~ 
+*.bak
+*.swp
+*.tmp

@@ -1,0 +1,83 @@
+﻿/* CSS for the Product Manager page */
+
+/* General styling for the table */
+.productmanager table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000; /* Đặt viền cho bảng với màu đen */
+}
+
+/* Styling for table headers */
+.productmanager table th, .productmanager table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
+    padding: 10px; /* Thêm khoảng cách cho các ô */
+}
+
+/* Styling for the Edit button */
+.productmanager button.btn-edit {
+    background-color: #ffc107; /* Màu vàng */
+    color: #fff; /* Màu chữ trắng */
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.productmanager button.btn-edit:hover {
+    background-color: #e0a800; /* Vàng đậm hơn khi hover */
+    transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
+
+/* Styling for other buttons (secondary or primary actions) */
+.productmanager button.btn-secondary {
+    background-color: #6c757d; /* Màu xám */
+    color: #fff;
+}
+
+.productmanager button.btn-primary {
+    background-color: #007bff; /* Màu xanh dương */
+    color: #fff;
+}
+
+/* Modal footer buttons alignment */
+.productmanager .modal-footer {
+    justify-content: space-between;
+}
+
+.productmanager .table thead th {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: 600;
+}
+/* Nút Thêm Sản Phẩm Mới (Màu xanh) */
+.productmanager .btn-add-product {
+    background-color: #007bff; /* Màu xanh */
+    border-color: #007bff;
+    color: #ffffff;
+}
+
+    .productmanager .btn-add-product:hover {
+        background-color: #0056b3; /* Màu xanh đậm khi hover */
+    }
+
+/* Đảm bảo màu chữ trắng cho btn-warning */
+.productmanager .btn-warning {
+    --bs-btn-color: #fff; /* Đặt màu chữ là trắng */
+    --bs-btn-bg: #ffc107;
+    --bs-btn-border-color: #ffc107;
+    --bs-btn-hover-color: #fff; /* Đặt màu chữ khi hover là trắng */
+    --bs-btn-hover-bg: #ffca2c;
+    --bs-btn-hover-border-color: #ffc720;
+    --bs-btn-focus-shadow-rgb: 217, 164, 6;
+    --bs-btn-active-color: #fff; /* Đặt màu chữ khi active là trắng */
+    --bs-btn-active-bg: #ffcd39;
+    --bs-btn-active-border-color: #ffc720;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff; /* Đặt màu chữ khi disabled là trắng */
+    --bs-btn-disabled-bg: #ffc107;
+    --bs-btn-disabled-border-color: #ffc107;
+}

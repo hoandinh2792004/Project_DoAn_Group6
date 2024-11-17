@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "ProductsManager";
+    Layout = "~/Areas/Admin/Views/Shared/_layout.cshtml";
+}
+
+
+  <div class="productmanager">
+    <div class="container mt-5">
+        <h2 class="text-center">Quản Lý Sản Phẩm</h2>
+
+        <!-- Nút thêm sản phẩm -->
+        <button class="btn btn-add-product" onclick="openAddProductModal()">Thêm Sản Phẩm Mới</button>
+
+        <!-- Bảng hiển thị danh sách sản phẩm -->
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Giá</th>
+                    <th>Mô Tả</th>
+                    <th>Số Lượng</th>
+                    <th>Hình Ảnh</th>
+                    <th>Danh Mục</th>
+                    <th>Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody id="productTableBody">
+                <!-- Dữ liệu sản phẩm sẽ được điền ở đây từ JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal thêm sản phẩm -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Thêm Sản Phẩm Mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div id="addMessage"></div>
+                        <input type="hidden" id="productId" value="">
+                        <div class="form-group">
+                            <label for="name">Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="name" placeholder="Nhập tên sản phẩm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Mô Tả</label>
+                            <textarea class="form-control" id="description" placeholder="Nhập mô tả sản phẩm" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Giá</label>
+                            <input type="number" class="form-control" id="price" placeholder="Nhập giá sản phẩm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Số Lượng</label>
+                            <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imageFile">Chọn Hình Ảnh</label>
+                            <input type="file" class="form-control" id="imageFile" accept="image/*" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryName">Danh Mục</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Nhập danh mục" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Lưu sản phẩm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal chỉnh sửa sản phẩm -->
+    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductModalLabel">Chỉnh Sửa Sản Phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <div id="editMessage"></div>
+                        <input type="hidden" id="editProductId" value="">
+                        <div class="form-group">
+                            <label for="editName">Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="editName" placeholder="Nhập tên sản phẩm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescription">Mô Tả</label>
+                            <textarea class="form-control" id="editDescription" placeholder="Nhập mô tả sản phẩm" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPrice">Giá</label>
+                            <input type="number" class="form-control" id="editPrice" placeholder="Nhập giá sản phẩm" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editQuantity">Số Lượng</label>
+                            <input type="number" class="form-control" id="editQuantity" placeholder="Nhập số lượng" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editImageFile">Chọn Hình Ảnh</label>
+                            <input type="file" class="form-control" id="editImageFile" accept="image/*">
+                        </div>
+                        <div class="form-group">
+                            <label for="editCategoryName">Danh Mục</label>
+                            <input type="text" class="form-control" id="editCategoryName" placeholder="Nhập danh mục" required>
+                        </div>
+                        <img id="oldImagePreview" src="" alt="Hình ảnh cũ" width="100" style="display: none;">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="updateProduct(document.getElementById('editProductId').value)">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/productsmanager.js"></script>
+<!-- Thêm các tệp Bootstrap JS nếu chưa có -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
