@@ -1,0 +1,117 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="input-group w-100 mx-auto d-flex">
+    <input id="searchInput" type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+    <span id="mic-icon" class="input-group-text p-3">
+        <i class="fa fa-microphone" style="cursor: pointer;"></i>
+    </span>
+</div>
+
+<button id='btnTalk' style="display: inline-block;">Voice chat!</button>
+<br>
+<span id='message'></span>
+
+<!-- Listening Box with Microphone Icon -->
+<div id="listening-box" class="listening-box" style="display: none;">
+    <i class="fa fa-microphone listening-icon"></i>
+    <span class="listening-text">Đang nghe...</span>
+</div></div>
+
+<style>
+    /* CSS for Listening Box with Icon */
+    .listening-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.85);
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 18px;
+        z-index: 1000;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+    }
+
+        .listening-box .listening-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+</style>
+
+
+
+<script>
+    var message = document.querySelector('#message');
+    var searchInput = document.querySelector('#searchInput');
+    var productList = document.querySelector('#product-list');
+    var listeningBox = document.querySelector('#listening-box');
+    var btnTalk = document.querySelector('#btnTalk');
+
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var recognition = new SpeechRecognition();
+    recognition.lang = 'vi-VN';
+    recognition.interimResults = false;
+    recognition.continuous = false; // Ensures it stops listening automatically
+
+    // Display the listening box when speech recognition starts
+    recognition.onstart = function () {
+        listeningBox.style.display = 'flex';
+    };
+
+    // Process results and hide the listening box
+    recognition.onresult = function (event) {
+        var content = event.results[0][0].transcript;
+        searchInput.value = content;
+        performSearch(content); // Execute the search function
+        listeningBox.style.display = 'none';
+    };
+
+    // Hide the listening box when speech ends
+    recognition.onspeechend = function () {
+        recognition.stop();
+        listeningBox.style.display = 'none';
+    };
+
+    // Handle errors and hide the listening box
+    recognition.onerror = function (event) {
+        message.textContent = 'Lỗi: ' + event.error;
+        listeningBox.style.display = 'none';
+    };
+
+    // Start voice recognition on btnTalk click
+    btnTalk.addEventListener('click', function () {
+        recognition.start();
+        listeningBox.style.display = 'flex'; // Show listening box when starting the voice recognition
+    });
+
+    // Search function to display matching products
+    function performSearch(query) {
+        var products = document.querySelectorAll('.product-item');
+        products.forEach(function (product) {
+            var productName = product.getAttribute('data-name').toLowerCase();
+            product.style.display = productName.includes(query.toLowerCase()) ? 'block' : 'none';
+        });
+    }
+
+    // Handle enter key in the search input
+    searchInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            performSearch(searchInput.value);
+        }
+    });
+
+    // Perform search when search icon is clicked
+    document.querySelector('#search-icon-1').addEventListener('click', function () {
+        performSearch(searchInput.value);
+    });
+</script>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">

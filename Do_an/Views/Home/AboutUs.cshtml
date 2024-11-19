@@ -1,0 +1,350 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Heart & Garden</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="~/User/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/User/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/User/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/User/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/User/css/style.css" rel="stylesheet">
+    <link href="~/User/css/navbar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/modal.css">
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
+        <div class="main-logo">
+            <a asp-action="Index" asp-controller="Home">
+                <img src="~/User/img/logo_doan.png" alt="logo" class="img-fluid" style="height:auto;">
+            </a>
+        </div>
+        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a asp-action="Index" asp-controller="Home" class="nav-item nav-link active">Trang chủ</a>
+                <a href="service.html" class="nav-item nav-link">Services</a>
+                <a asp-action="Shop" asp-controller="Home" class="nav-item nav-link">Sản phẩm</a>
+                <a asp-action="AboutUs" asp-controller="Home" class="nav-item nav-link">Về chúng tôi</a>
+                <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+            </div>
+            <div class="border-start ps-4 d-none d-lg-block">
+                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            </div>
+            <div class="border-start ps-4 d-none d-lg-block">
+                <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                </button>
+            </div>
+            <div class="border-start ps-4 d-none d-lg-block">
+                <a asp-action="Login" asp-controller="Login" class="btn btn-sm p-0" id="user-icon">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- View Cart Start -->
+    <div id="backdrop" class="backdrop"></div>
+    <div class="side-cart-container">
+        <div id="sidecart" class="sidecart">
+            <div class="cart-header">
+                <span id="close-btn">&times;</span>
+                <h3 class="cart-title">Giỏ Hàng</h3>
+                <div class="cart-count">
+                    <span id="cart-count">0</span>
+                </div>
+            </div>
+            <div class="Giỏ Hàng">
+                <div class="prod">
+                    <div class="Giỏ Hàng Sản Phẩm">
+                        <ol style="list-style: none;">
+                            <li class="d-flex">
+                                <!-- Thêm sản phẩm vào đây -->
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="side-cart-bottom">
+                <div class="sub-total">
+                    <span class="total-title float-left">Tổng Hóa Đơn:</span>
+                    <span class="total-price float-right" id="total-price">đ</span>
+                </div>
+                <div class="cart-actions">
+                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Thanh Toán</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal yêu cầu đăng nhập -->
+    <div id="loginPromptModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Yêu cầu Đăng nhập</h2>
+            <p>Vui lòng đăng nhập để thực hiện thanh toán.</p>
+            <a asp-action="Login" asp-controller="Login" class="button">Đăng nhập</a> <!-- Thay đổi đường dẫn đến trang đăng nhập -->
+            <a href="#" class="button" onclick="closeModal()">Hủy</a>
+        </div>
+    </div>
+    <!-- View Cart End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-3 text-white mb-4 animated slideInDown">Về Chúng Tôi</h1>
+            <nav aria-label="breadcrumb animated slideInDown">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-end">
+                <div class="col-lg-6">
+                    <div class="row g-2">
+                        <div class="col-6 position-relative wow fadeIn" data-wow-delay="0.7s">
+                            <div class="about-experience bg-secondary rounded">
+                                <h1 class="display-1 mb-0">25</h1>
+                                <small class="fs-5 fw-bold">Năm kinh nghiệm</small>
+                            </div>
+                        </div>
+                        <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
+                            <img class="img-fluid rounded" src="~/User/img/chamsoc/vuong.jpg">
+                        </div>
+                        <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
+                            <img class="img-fluid rounded" src="~/User/img/chamsoc/vuong.jpg">
+                        </div>
+                        <div class="col-6 wow fadeIn" data-wow-delay="0.5s">
+                            <img class="img-fluid rounded" src="~/User/img/chamsoc/vuong.jpg">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
+                    <h1 class="mb-4">Ứng dụng AI để tạo trải nghiệm mua sắm thông minh và tiện lợi.</h1>
+                    <p class="mb-4"> Mang đến vẻ đẹp tự nhiên và giải pháp xanh hiện đại, giúp bạn dễ dàng chăm sóc không gian sống</p>
+                    <div class="row g-5 pt-2 mb-5">
+                        <div class="col-sm-6">
+                            <img class="img-fluid mb-4" src="~/User/img/chamsoc/customer-service-72-64.png" alt="">
+                            <h5 class="mb-3">Phục Vụ Nhanh Chóng và chuyên nghiệp </h5>
+                            <span>Với chúng tôi, thiên nhiên luôn trong tầm tay bạn.</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <img class="img-fluid mb-4" src="~/User/img/chamsoc/product-18-64.png" alt="">
+                            <h5 class="mb-3">Chứa các sản phẩm xu hướng</h5>
+                            <span>Cây không chỉ là cây, đó là hơi thở của không gian.</span>
+                        </div>
+                    </div>
+                    <a class="btn btn-secondary rounded-pill py-3 px-5" href="">Khám Phá Thêm</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+    <!-- Banner Start -->
+    <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="/User/img/Slide1.png">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-sm-4">
+                            <img class="img-fluid rounded" src="~/User/img/chamsoc/gar.jpg" alt="">
+                        </div>
+                        <div class="col-sm-8">
+                            <h2 class="text-white mb-3">Chúng tôi bán các sản phẩm hàng đầu</h2>
+                            <p class="text-white mb-4">Hãy để thiên nhiên hòa quyện vào cuộc sống của bạn một cách thông minh và bền vững.</p>
+                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Đọc Thêm</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-sm-4">
+                            <img class="img-fluid rounded" src="~/User/img/chamsoc/a.jpg" alt="">
+                        </div>
+                        <div class="col-sm-8">
+                            <h2 class="text-white mb-3">Chúng tôi vận chuyển xuyên quốc gia</h2>
+                            <p class="text-white mb-4">Mang đến vẻ đẹp tự nhiên và giải pháp xanh hiện đại, giúp bạn dễ dàng chăm sóc không gian sống</p>
+                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Đọc Thêm</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Banner End -->
+    <!-- Team Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="section-title bg-white text-center text-primary px-3">Nhóm của Chúng tôi</p>
+                <h1 class="mb-5">Kinh Nghiệm của từng thành viên trong nhóm</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="team-item rounded p-4">
+                        <img class="img-fluid rounded mb-4" src="~/User/img/team-1.jpg" alt="">
+                        <h5>Donald Trump</h5>
+                        <p class="text-primary">Founder</p>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="team-item rounded p-4">
+                        <img class="img-fluid rounded mb-4" src="~/User/img/team-2.jpg" alt="">
+                        <h5>Danny</h5>
+                        <p class="text-primary">Co-Founders</p>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="team-item rounded p-4">
+                        <img class="img-fluid rounded mb-4" src="~/User/img/team-3.jpg" alt="">
+                        <h5>Kenny Park</h5>
+                        <p class="text-primary">Farmer</p>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Công Ty của Chúng Tôi</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Số 3 Trịnh Văn Bô, Hòe Thị, Nam Từ Liêm</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>Group6@gmai.</p>
+                    <div class="d-flex pt-3">
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Liên Kết Nhanh</h5>
+                    <a class="btn btn-link" href="">Về Chúng Tôi</a>
+                    <a class="btn btn-link" href="">Liên Hệ với Chúng Tối</a>
+                    <a class="btn btn-link" href="">Dịch Vụ của chúng tôi</a>
+                    <a class="btn btn-link" href="">Điều khoản & Điều kiện</a>
+                    <a class="btn btn-link" href="">Hỗ Trợ Khách Hàng</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Giờ Làm Việc</h5>
+                    <p class="mb-1">Thứ Hai - Thứ Sáu</p>
+                    <h6 class="text-light">09:00 am - 07:00 pm</h6>
+                    <p class="mb-1">Thứ Bảy</p>
+                    <h6 class="text-light">09:00 am - 12:00 pm</h6>
+                    <p class="mb-1">Chủ Nhật</p>
+                    <h6 class="text-light">Closed</h6>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Bản tin</h5>
+                    <p>Chúng tôi không chỉ bán cây, chúng tôi giúp bạn kết nối với thiên nhiên.</p>
+                    <div class="position-relative w-100">
+                        <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
+                        <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">Đăng Nhập</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+    <!-- Copyright Start -->
+    <div class="container-fluid bg-secondary text-body copyright py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="fw-semi-bold" href="#">Heart And G</a>, All Right Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                    Designed By <a class="fw-semi-bold" href="https://htmlcodex.com">HTML Codex</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/User/lib/wow/wow.min.js"></script>
+    <script src="~/User/lib/easing/easing.min.js"></script>
+    <script src="~/User/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/User/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/User/lib/counterup/counterup.min.js"></script>
+    <script src="~/User/lib/parallax/parallax.min.js"></script>
+    <script src="~/User/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="~/js/navbar.js"></script>
+    <script src="~/js/modal.js"></script>
+    <script src="~/js/Product.js"></script>
+    <script src="~/js/cart.js"></script>
+    <!-- Template Javascript -->
+    <script src="~/User/js/main.js"></script>
+</body>
+
+</html>

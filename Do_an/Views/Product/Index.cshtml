@@ -1,0 +1,215 @@
+﻿@model IEnumerable<Do_an.Data.Product>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    /* CSS for Listening Box with Icon */
+    .listening-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.85);
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 18px;
+        z-index: 1000;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+    }
+
+        .listening-box .listening-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+</style>
+
+
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
+    <div class="main-logo">
+        <a asp-action="Index" asp-controller="Home">
+            <img src="~/User/img/logo_doan.png" alt="logo" class="img-fluid" style="height:auto;">
+        </a>
+    </div>
+    <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <a asp-action="Index" asp-controller="Home" class="nav-item nav-link active">Trang chủ</a>
+            <a href="service.html" class="nav-item nav-link">Services</a>
+            <a asp-action="Shop" asp-controller="Home" class="nav-item nav-link">Sản phẩm</a>
+            <a asp-action="AboutUs" asp-controller="Home" class="nav-item nav-link">Về Chúng Tôi</a>
+            <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+        </div>
+        <div class="border-start ps-4 d-none d-lg-block">
+            <a href="~/Product/index" class="btn btn-sm p-0">
+                <i class="fa fa-search"></i>
+            </a>
+        </div>
+        <div class="border-start ps-4 d-none d-lg-block">
+            <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
+                <i class="fa fa-shopping-cart"></i>
+                <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+            </button>
+        </div>
+        <div class="border-start ps-4 d-none d-lg-block">
+            <a asp-action="Login" asp-controller="Login" class="btn btn-sm p-0" id="user-icon">
+                <i class="fa-regular fa-user"></i>
+            </a>
+        </div>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+<!-- View Cart Start -->
+<div id="backdrop" class="backdrop"></div>
+<div class="side-cart-container">
+    <div id="sidecart" class="sidecart">
+        <div class="cart-header">
+            <span id="close-btn">&times;</span>
+            <h3 class="cart-title">Shopping Cart</h3>
+            <div class="cart-count">
+                <span id="cart-count">0</span>
+            </div>
+        </div>
+        <div class="cart-items">
+            <div class="prod">
+                <div class="product-cart">
+                    <ol style="list-style: none;">
+                        <li class="d-flex">
+
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="side-cart-bottom">
+            <div class="sub-total">
+                <span class="total-title float-left">Total:</span>
+                <span class="total-price float-right" id="total-price">đ</span>
+            </div>
+            <div class="cart-actions">
+                <a asp-action="Payment" asp-controller="User" class="button-checkout">Check Out</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- View Cart End -->
+
+<div class="input-group w-100 mx-auto d-flex">
+    <input id="searchInput" type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+    <span id="mic-icon" class="input-group-text p-3">
+        <i class="fa fa-microphone" style="cursor: pointer;"></i>
+    </span>
+</div>
+
+<button id='btnTalk' style="display: none;">Voice chat!</button>
+<br>
+<span id='message'></span>
+
+<!-- Listening Box with Microphone Icon -->
+<div id="listening-box" class="listening-box" style="display: none;">
+    <i class="fa fa-microphone listening-icon"></i>
+    <span class="listening-text">Đang nghe...</span>
+</div>
+
+<br>
+<br>
+
+<!-- Khu vực hiển thị danh sách sản phẩm -->
+<div id="product-list" class="container-xxl py-5 px-0">
+    @Html.Partial("_ProductListPartial", Model)
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    var searchInput = document.querySelector('#searchInput');
+    var productList = document.querySelector('#product-list');
+    var message = document.querySelector('#message');
+    var listeningBox = document.querySelector('#listening-box'); // Add the listening box element
+
+    // Tích hợp nhận diện giọng nói
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var recognition = new SpeechRecognition();
+    recognition.lang = 'vi-VN'; // Đặt ngôn ngữ tiếng Việt
+    recognition.interimResults = false;
+
+    // Display the listening box when speech recognition starts
+    recognition.onstart = function () {
+        listeningBox.style.display = 'flex';
+    };
+
+    // Process results and hide the listening box
+    recognition.onresult = function (event) {
+        var lastResult = event.results.length - 1;
+        var content = event.results[lastResult][0].transcript;
+        content = content.replace(/\.$/, '');
+        searchInput.value = content;
+        performSearch(content); // Thực hiện tìm kiếm sau khi nhận diện giọng nói hoàn tất
+        listeningBox.style.display = 'none';
+    };
+
+    // Hide the listening box when speech ends
+    recognition.onspeechend = function () {
+        recognition.stop();
+        listeningBox.style.display = 'none';
+    };
+
+    // Handle errors and hide the listening box
+    recognition.onerror = function (event) {
+        message.textContent = 'Error occurred in recognition: ' + event.error;
+        listeningBox.style.display = 'none';
+    };
+
+    // Start voice recognition on microphone icon click
+    document.querySelector('#mic-icon').addEventListener('click', function () {
+        recognition.start();
+    });
+
+    // Hàm tìm kiếm và hiển thị kết quả qua AJAX
+    function performSearch(query) {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Search", "Product")",
+            data: { query: query },
+            success: function (data) {
+                productList.innerHTML = data;
+            }
+        });
+    }
+
+    // Thêm sự kiện click và Enter để thực hiện tìm kiếm
+    document.querySelector('#search-icon-1').addEventListener('click', function () {
+        performSearch(searchInput.value);
+    });
+
+    searchInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            performSearch(searchInput.value);
+        }
+    });
+    // Sửa hàm xử lý kết quả giọng nói để loại bỏ khoảng trắng và ký tự không mong muốn
+    recognition.onresult = function (event) {
+        var lastResult = event.results.length - 1;
+        var content = event.results[lastResult][0].transcript;
+        content = content.replace(/\.$/, '').trim(); // Xóa dấu chấm và khoảng trắng thừa
+        searchInput.value = content;
+        performSearch(content);
+        listeningBox.style.display = 'none';
+    };
+</script>
+<script src="~/js/cart.js"></script>
+
+
+
+

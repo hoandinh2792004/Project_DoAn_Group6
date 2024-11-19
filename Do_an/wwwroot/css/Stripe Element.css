@@ -1,0 +1,57 @@
+﻿<style >
+/* Card form styles */
+.payment-detail label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.payment-detail .form-control {
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+    .payment-detail .form-control:focus {
+        border-color: #2ea3b7; /* Highlight color on focus */
+        box-shadow: 0 0 5px rgba(46, 163, 183, 0.5);
+    }
+
+.payment-detail .row {
+    margin-bottom: 20px;
+}
+
+    .payment-detail .row .col-xs-6 {
+        padding-right: 10px;
+    }
+
+/* Custom styling for error message */
+#card-errors {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Button styling */
+.payment-detail button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+    .payment-detail button:hover {
+        background-color: #45a049;
+    }
+#confirm-payment:disabled {
+    background-color: #d3d3d3; /* Gray background */
+    color: #808080; /* Gray text */
+    cursor: not-allowed; /* Change cursor to indicate it's disabled */
+}
+
+
+</style >
