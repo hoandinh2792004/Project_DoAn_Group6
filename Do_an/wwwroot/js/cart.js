@@ -222,6 +222,7 @@ function deleteItem(element, productPrice, quantity) {
 
     // Xóa phần tử sản phẩm trong giao diện người dùng
     itemElement.remove();
+    location.reload();
 }
 
 

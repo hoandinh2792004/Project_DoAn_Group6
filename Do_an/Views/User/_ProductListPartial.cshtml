@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Do_an.Data.Product>
+
+<div class="container-xxl py-5">
+    <div class="row gx-4" id="product-list">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var product in Model)
+            {
+                var imageUrl = string.IsNullOrEmpty(product.ImageUrl)
+                ? "http://localhost:5135/images/default.png"
+                : $"http://localhost:5135/images/{product.ImageUrl.Split('/').Last()}";
+
+                var formattedPrice = product.Price.ToString("N0").Replace(",", ".") + "₫";
+
+                <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="product-item">
+                        <div class="position-relative">
+                            <img class="img-fluid" src="@imageUrl" alt="@product.Name">
+                            <div class="product-overlay">
+                                <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="ProductDetail?id=@product.ProductId">
+                                    <i class="bi bi-link"></i>
+                                </a>
+                                <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
+                                   data-name="@product.Name"
+                                   data-price="@product.Price"
+                                   data-img="@imageUrl">
+                                    <i class="bi bi-cart"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center p-4">
+                            <a class="d-block h5" href="single-product.html?id=@product.ProductId">@product.Name</a>
+                            <span class="text-primary me-1">@formattedPrice</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Không có sản phẩm nào phù hợp với hình ảnh.</p>
+        }
+    </div>
+</div>

@@ -1,5 +1,6 @@
-﻿$(document).ready(function () {
-    let itemsPerPage = parseInt($('#pageSize').val()) || 4; 
+﻿
+$(document).ready(function () {
+    let itemsPerPage = parseInt($('#pageSize').val()) || 4;
     let currentPage = 1;
     let products = [];
 
