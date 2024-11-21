@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Hoandinh\\project.Net\\Do_an\\Do_an\\Do_an.csproj": {}
+    "C:\\Users\\Admin\\Desktop\\Main code\\Project_DoAn_Group6\\Do_an\\Do_an.csproj": {}
   },
   "projects": {
-    "D:\\Hoandinh\\project.Net\\Do_an\\Do_an\\Do_an.csproj": {
+    "C:\\Users\\Admin\\Desktop\\Main code\\Project_DoAn_Group6\\Do_an\\Do_an.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Hoandinh\\project.Net\\Do_an\\Do_an\\Do_an.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\Main code\\Project_DoAn_Group6\\Do_an\\Do_an.csproj",
         "projectName": "Do_an",
-        "projectPath": "D:\\Hoandinh\\project.Net\\Do_an\\Do_an\\Do_an.csproj",
-        "packagesPath": "C:\\Users\\Hoan Dinh\\.nuget\\packages\\",
-        "outputPath": "D:\\Hoandinh\\project.Net\\Do_an\\Do_an\\obj\\",
+        "projectPath": "C:\\Users\\Admin\\Desktop\\Main code\\Project_DoAn_Group6\\Do_an\\Do_an.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\Desktop\\Main code\\Project_DoAn_Group6\\Do_an\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Hoan Dinh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -104,7 +104,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[8.0.6, )"
+              "version": "[8.0.7, )"
             },
             "MimeKit": {
               "target": "Package",
@@ -166,7 +166,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

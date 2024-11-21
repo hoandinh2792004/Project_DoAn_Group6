@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hỗ Trợ Chọn Cây Trồng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f3;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chat-messages {
+            padding: 15px;
+            flex-grow: 1;
+            overflow-y: auto;
+            height: 400px;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+            .message.bot {
+                background-color: #e0f7e9;
+                color: #2e7d32;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+            .message.user {
+                background-color: #dfe6e9;
+                color: #2d3436;
+                text-align: right;
+                margin-left: auto;
+                margin-right: 10px;
+            }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-top: 1px solid #ddd;
+        }
+
+            .chat-input input {
+                flex: 1;
+                padding: 10px;
+                font-size: 16px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .chat-input button {
+                margin-left: 10px;
+                padding: 10px 20px;
+                font-size: 16px;
+                background-color: #4caf50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+                .chat-input button:hover {
+                    background-color: #45a049;
+                }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">Chat Hỗ Trợ Chọn Cây Trồng</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">Xin chào! Tôi có thể giúp bạn chọn loại cây trồng phù hợp. Bạn quan tâm đến yếu tố nào: đất đai, ánh sáng, phong thủy, hay lợi ích từ cây trồng như tài lộc, môi trường, sức khỏe, hoặc cảnh quan?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userMessage" placeholder="Nhập tin nhắn...">
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+
+    <script>
+        const responses = [
+            // Điều kiện đất đai
+            {
+                keywords: ["đất cát", "khô", "hạn", "ít nước", "khó trồng"],
+                response: "Bạn nên chọn các loại cây chịu hạn tốt như Xương Rồng, Lô Hội hoặc Cây Sen Đá."
+            },
+            {
+                keywords: ["ẩm", "mưa nhiều", "nhiều nước", "dễ thấm", "ngập úng"],
+                response: "Cây chuối, cây tre, hoặc cây ráy là lựa chọn tốt cho đất ẩm."
+            },
+
+            // Điều kiện ánh sáng
+            {
+                keywords: ["nắng gắt", "nhiều ánh sáng", "ánh nắng mạnh", "ngoài trời"],
+                response: "Cây Hướng Dương, cây Cọ Cảnh, hoặc cây Bàng Singapore rất phù hợp với ánh sáng mạnh."
+            },
+            {
+                keywords: ["bóng râm", "ít ánh sáng", "trong nhà", "thiếu nắng"],
+                response: "Bạn nên chọn cây Phát Tài, cây Kim Tiền hoặc cây Lưỡi Hổ để trồng trong nhà."
+            },
+
+            // Phong thủy
+            {
+                keywords: ["mệnh kim", "vàng", "trắng", "phong thủy kim"],
+                response: "Người mệnh Kim nên chọn cây Kim Ngân, cây Kim Tiền, hoặc cây Lan Ý."
+            },
+            {
+                keywords: ["mệnh mộc", "xanh lá", "phong thủy mộc"],
+                response: "Người mệnh Mộc hợp với cây Trầu Bà, cây Ngọc Bích hoặc cây Vạn Niên Thanh."
+            },
+            {
+                keywords: ["mệnh thủy", "xanh nước biển", "đen", "phong thủy thủy"],
+                response: "Người mệnh Thủy nên chọn cây Lan Ý, cây Lưỡi Hổ hoặc cây Cọ Nhật."
+            },
+            {
+                keywords: ["mệnh hỏa", "đỏ", "cam", "phong thủy hỏa"],
+                response: "Người mệnh Hỏa hợp với cây Phú Quý, cây Hồng Môn hoặc cây Trạng Nguyên."
+            },
+            {
+                keywords: ["mệnh thổ", "nâu", "vàng đất", "phong thủy thổ"],
+                response: "Người mệnh Thổ nên chọn cây Sen Đá Nâu, cây Cung Điện Vàng hoặc cây Lưỡi Mèo."
+            },
+
+            // Lợi ích - Tài lộc
+            {
+                keywords: ["tài lộc", "may mắn", "giàu có", "phát tài", "thu hút tiền bạc"],
+                response: "Cây Kim Tiền, cây Phát Tài, và cây Ngọc Ngân là những lựa chọn tuyệt vời để mang lại tài lộc."
+            },
+
+            // Lợi ích - Môi trường
+            {
+                keywords: ["môi trường", "bảo vệ", "sạch", "không khí", "lọc bụi", "trong lành", "tươi mát", "giảm ô nhiễm"],
+                response: "Cây Tre, cây Bàng Singapore, và cây Lưỡi Hổ giúp cải thiện không khí, bảo vệ môi trường và giảm ô nhiễm."
+            },
+
+            // Lợi ích - Sức khỏe
+            {
+                keywords: ["sức khỏe", "lọc không khí", "hít thở", "thư giãn", "giảm stress", "tốt cho phổi"],
+                response: "Cây Lưỡi Hổ, cây Lan Ý và cây Dương Xỉ giúp lọc không khí, giảm stress, và cải thiện sức khỏe."
+            },
+
+            // Lợi ích - Cảnh quan
+            {
+                keywords: ["cảnh quan", "đẹp", "sang", "sáng", "nghệ thuật", "quyến rũ", "hài hòa", "thẩm mỹ", "nổi bật"],
+                response: "Cây Cau Cảnh, cây Bàng Singapore, và cây Hoa Giấy là những lựa chọn tuyệt vời để làm đẹp không gian sống và cảnh quan."
+            },
+        ];
+
+        function sendMessage() {
+            const message = userMessage.value.trim();
+            if (message === "") return;
+
+            const userDiv = document.createElement("div");
+            userDiv.className = "message user";
+            userDiv.textContent = message;
+            chatMessages.appendChild(userDiv);
+
+            userMessage.value = "";
+
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot";
+
+            let foundResponse = "Cảm ơn thông tin của bạn. Tôi sẽ xem xét thêm và hỗ trợ cụ thể hơn!";
+            for (const response of responses) {
+                if (response.keywords.some(keyword => message.toLowerCase().includes(keyword))) {
+                    foundResponse = response.response;
+                    break;
+                }
+            }
+
+            botDiv.textContent = foundResponse;
+            chatMessages.appendChild(botDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+
+
