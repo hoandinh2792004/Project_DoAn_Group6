@@ -68,4 +68,4 @@ ehthumbs.db
 *.bak
 *.swp
 *.tmp
-/Do_an/appsettings.Development.json
+/Do_an/Do_an/appsettings.Development.json
