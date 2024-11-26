@@ -110,6 +110,14 @@
               "target": "Package",
               "version": "[4.8.0, )"
             },
+            "OpenCvSharp4": {
+              "target": "Package",
+              "version": "[4.10.0.20241108, )"
+            },
+            "OpenCvSharp4.runtime.win": {
+              "target": "Package",
+              "version": "[4.10.0.20241108, )"
+            },
             "Serilog.AspNetCore": {
               "target": "Package",
               "version": "[8.0.3, )"

@@ -58,6 +58,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcm9kdWN0RGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Hoandinh/project.Net/Do_an/Do_an/Views/Home/QuyenGop.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxRdXllbkdvcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Hoandinh/project.Net/Do_an/Do_an/Views/Home/Shop.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxTaG9wLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -98,16 +102,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQYXltZW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Hoandinh/project.Net/Do_an/Do_an/Views/User/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcml2YWN5LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Hoandinh/project.Net/Do_an/Do_an/Views/User/ProductDetail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcm9kdWN0RGV0YWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Hoandinh/project.Net/Do_an/Do_an/Views/User/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Hoandinh/project.Net/Do_an/Do_an/Views/User/quyengop.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxxdXllbmdvcC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Hoandinh/project.Net/Do_an/Do_an/Views/User/Shop.cshtml]

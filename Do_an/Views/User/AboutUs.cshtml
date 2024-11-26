@@ -34,6 +34,36 @@
     <link href="~/User/css/navbar.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/modal.css">
 </head>
+<style>
+    /* Page Header */
+    .page-header2 {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .page-header2 .header-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+
+        .page-header2 .container {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .page-header2 h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+</style>
 
 <body>
     <!-- Spinner Start -->
@@ -53,22 +83,23 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link active">Trang chủ</a>
-                <a href="service.html" class="nav-item nav-link">Services</a>
+                <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link">Trang chủ</a>
                 <a asp-action="Shop" asp-controller="User" class="nav-item nav-link">Sản phẩm</a>
-                <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link">Về chúng tôi</a>
-                <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+                <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link active">Về chúng tôi</a>
+                <a asp-action="QuyenGop" asp-controller="User" class="nav-item nav-link">Quyên góp</a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            <div class="ps-4 d-none d-lg-block">
+                <a asp-action="Shop" asp-controller="User" class="btn btn-sm p-0">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
                     <i class="fa fa-shopping-cart"></i>
                     <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
                 </button>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
                         <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
@@ -82,6 +113,7 @@
         </div>
     </nav>
     <!-- Navbar End -->
+
 
     <!-- View Cart Start -->
     <div id="backdrop" class="backdrop"></div>
@@ -119,14 +151,15 @@
     <!-- View Cart End -->
 
     <!-- Page Header Start -->
-    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container-fluid page-header2 py-5 wow fadeIn" data-wow-delay="0.1s">
+        <img src="~/User/img/cay-sen-da-thumb.jpg" alt="Header Image" class="img-fluid header-img">
         <div class="container text-center py-5">
-            <h1 class="display-3 text-white mb-4 animated slideInDown">About Us</h1>
-            <nav aria-label="breadcrumb animated slideInDown">
+            <h1 class="display-2 text-white mb-4">Về chúng tôi</h1>
+            <nav aria-label="breadcrumb">
                 <ol class="breadcrumb justify-content-center mb-0">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">About</li>
+                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="#">Trang</a></li>
+                    <li class="breadcrumb-item text-white" aria-current="page">Về chúng tôi</li>
                 </ol>
             </nav>
         </div>
@@ -141,133 +174,108 @@
                     <div class="row g-2">
                         <div class="col-6 position-relative wow fadeIn" data-wow-delay="0.7s">
                             <div class="about-experience bg-secondary rounded">
-                                <h1 class="display-1 mb-0">25</h1>
-                                <small class="fs-5 fw-bold">Years Experience</small>
+                                <h1 class="display-1 mb-0">5</h1>
+                                <small class="fs-5 fw-bold">Năm Kinh Nghiệm</small>
                             </div>
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.1s">
-                            <img class="img-fluid rounded" src="~/User/img/Caycanh/Service1.png">
+                            <img class="img-fluid rounded" src="~/User/img/Caycanh/image5.png">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.3s">
-                            <img class="img-fluid rounded" src="~/User/img/Caycanh/Service1.png">
+                            <img class="img-fluid rounded" src="~/User/img/Caycanh/image1.png">
                         </div>
                         <div class="col-6 wow fadeIn" data-wow-delay="0.5s">
-                            <img class="img-fluid rounded" src="~/User/img/Caycanh/Service1.png">
+                            <img class="img-fluid rounded" src="~/User/img/Caycanh/image2.png">
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <p class="section-title bg-white text-start text-primary pe-3">About Us</p>
-                    <h1 class="mb-4">Know About Our Dairy Farm & Our History</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                    <div class="row g-5 pt-2 mb-5">
-                        <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="~/User/img/chamsoc/Hear (3).png" alt="">
-                            <h5 class="mb-3">Dedicated Services</h5>
-                            <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
-                        </div>
-                        <div class="col-sm-6">
-                            <img class="img-fluid mb-4" src="~/User/img/chamsoc/Hear (5).png" alt="">
-                            <h5 class="mb-3">Organic Products</h5>
-                            <span>Clita erat ipsum et lorem et sit, sed stet lorem sit clita</span>
-                        </div>
-                    </div>
-                    <a class="btn btn-secondary rounded-pill py-3 px-5" href="">Explore More</a>
+                    <p class="section-title bg-white text-start text-primary pe-3">Về chúng tôi</p>
+                    <h1 class="mb-4">Chào mừng đến với Heart & Garden </h1>
+                    <p class="mb-4">Tại Heart & Garden, chúng tôi hiểu rằng cây cảnh không chỉ là món đồ trang trí, mà còn là người bạn đồng hành tạo nên không gian sống tươi mới và sinh động. Với cam kết mang đến cho bạn những cây cảnh đẹp nhất, chúng tôi cung cấp một dịch vụ mua sắm trực tuyến tiện lợi, nhanh chóng và dễ dàng, giúp bạn tìm thấy cây cảnh lý tưởng cho ngôi nhà hoặc văn phòng của mình.</p>
+
+                    <p class="mb-4">Chúng tôi tự hào giới thiệu các tính năng nổi bật trên website của mình:</p>
+                    <ul class="mb-4">
+                        <li><strong>Tìm kiếm thông minh bằng giọng nói và chatbot AI:</strong> Bạn có thể dễ dàng tìm thấy cây cảnh yêu thích chỉ với một câu lệnh bằng giọng nói. Nếu bạn không chắc chắn về loại cây mình muốn, hãy trò chuyện với AI chatbot của chúng tôi để nhận những gợi ý sản phẩm phù hợp.</li>
+                        <li><strong>Sản phẩm đa dạng và chất lượng:</strong> Chúng tôi cung cấp các loại cây cảnh đẹp mắt từ cây nội thất, cây ngoại thất, bonsai đến các loại cây hoa, giúp bạn làm đẹp mọi không gian sống.</li>
+                        <li><strong>Chăm sóc khách hàng tận tâm:</strong> Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn trong quá trình chọn lựa và chăm sóc cây cảnh.</li>
+                        <li><strong>Giao hàng nhanh chóng và an toàn:</strong> Chúng tôi cam kết giao hàng nhanh chóng và bảo vệ cây cảnh của bạn trong suốt quá trình vận chuyển.</li>
+                    </ul>
+
+                    <a class="btn btn-secondary rounded-pill py-3 px-5" href="~/Home/Shop">Mua ngay</a>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- About End -->
-    <!-- Banner Start -->
-    <div class="container-fluid banner my-5 py-5" data-parallax="scroll" data-image-src="/User/img/Slide1.png">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.3s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="~/User/img/Slide1.png" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Sell Best Dairy Products</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                    <div class="row g-4 align-items-center">
-                        <div class="col-sm-4">
-                            <img class="img-fluid rounded" src="~/User/img/Slide2.png" alt="">
-                        </div>
-                        <div class="col-sm-8">
-                            <h2 class="text-white mb-3">We Deliver Fresh Mild Worldwide</h2>
-                            <p class="text-white mb-4">Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                            <a class="btn btn-secondary rounded-pill py-2 px-4" href="">Read More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Banner End -->
-    <!-- Team Start -->
+    <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
-            <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-                <p class="section-title bg-white text-center text-primary px-3">Our Team</p>
-                <h1 class="mb-5">Experienced Team Members</h1>
+            <div class="text-center mx-auto pb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
+                <p class="section-title bg-white text-center text-primary px-3">Dịch vụ của chúng tôi</p>
+                <!-- <h1 class="mb-5">Services That We Offer For Entrepreneurs</h1> -->
             </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="~/User/img/team-1.jpg" alt="">
-                        <h5>Adam Crew</h5>
-                        <p class="text-primary">Founder</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+            <div class="row gy-5 gx-4">
+                <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item d-flex h-100">
+                        <div class="service-img">
+                            <img class="img-fluid" src="~/User/img/Caycanh/Service1.png" alt="">
+                        </div>
+                        <div class="service-text p-5 pt-0">
+                            <div class="service-icon">
+                                <img class="img-fluid rounded-circle" src="~/User/img/Caycanh/logoservice1.png" alt="">
+                            </div>
+                            <h5 class="mb-3">
+                                Cây cảnh mini</h4>
+                                <p class="mb-4">Heart & Garden ra đời mong muốn là điểm nối của mỗi người với thiên nhiên bằng những sản phẩm chất lượng, sáng tạo, thuần Việt. </p>
+                                <a class="btn btn-square rounded-circle" href=""><i class="bi bi-chevron-double-right"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="~/User/img/team-2.jpg" alt="">
-                        <h5>Doris Jordan</h5>
-                        <p class="text-primary">Veterinarian</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item d-flex h-100">
+                        <div class="service-img">
+                            <img class="img-fluid" src="~/User/img/Tuthien/image.png" alt="">
+                        </div>
+                        <div class="service-text p-5 pt-0">
+                            <div class="service-icon">
+                                <img class="img-fluid rounded-circle" src="~/User/img/Tuthien/logotuthien.png" alt="">
+                            </div>
+                            <h5 class="mb-3">Thu gom và từ thiện </h5>
+                            <p class="mb-4">Chúng tôi tạo ra các điểm thu gom và từ thiện nhằm hỗ trợ các bạn thiếu may mắn, trẻ em, người già... Giúp tạo ra sự gắn kết giữa con người, lan tỏa lòng nhân ái và tinh thần đoàn kết trong xã hội.</p>
+                            <a class="btn btn-square rounded-circle" href=""><i class="bi bi-chevron-double-right"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item rounded p-4">
-                        <img class="img-fluid rounded mb-4" src="~/User/img/team-3.jpg" alt="">
-                        <h5>Jack Dawson</h5>
-                        <p class="text-primary">Farmer</p>
-                        <div class="d-flex justify-content-center">
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-square btn-outline-secondary rounded-circle mx-1" href=""><i class="fab fa-instagram"></i></a>
+                <div class="col-lg-4 col-md-6 pt-5 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item d-flex h-100">
+                        <div class="service-img">
+                            <img class="img-fluid" src="~/User/img/chamsoc/Hear (3).png" alt="">
+                        </div>
+                        <div class="service-text p-5 pt-0">
+                            <div class="service-icon">
+                                <img class="img-fluid rounded-circle" src="~/User/img/chamsoc/logoservice3.1.png" alt="">
+                            </div>
+                            <h5 class="mb-3">Hướng dẫn chăm sóc cây</h5>
+                            <p class="mb-4">Những hướng dẫn chăm sóc cây được đúc kết từ kinh nghiệm nhiều năm. Tài liệu sẽ là những thông tin bổ ích giúp bạn đọc có nhiều thông tin và kiến thức để chăm sóc tốt cây cảnh. </p>
+                            <a class="btn btn-square rounded-circle" href=""><i class="bi bi-chevron-double-right"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Team End -->
-
+    <!-- Service End -->
     <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Our Office</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                    <h5 class="text-white mb-4">Cơ sở chính</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trịnh Văn Bô, Hà Nội</p>
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>hear&graden@work.com</p>
                     <div class="d-flex pt-3">
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
@@ -277,24 +285,21 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Quick Links</h5>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Our Services</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">Support</a>
+                    <a class="btn btn-link" href="">Trang chủ</a>
+                    <a class="btn btn-link" href="">Sản phẩm</a>
+                    <a class="btn btn-link" href="">Về chúng tôi</a>
+                    <a class="btn btn-link" href="">Quyên góp</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Business Hours</h5>
-                    <p class="mb-1">Monday - Friday</p>
+                    <h5 class="text-white mb-4">Giờ mở cửa</h5>
+                    <p class="mb-1">Thứ 2 - Thứ 6</p>
                     <h6 class="text-light">09:00 am - 07:00 pm</h6>
-                    <p class="mb-1">Saturday</p>
+                    <p class="mb-1">Thứ 7 - Chủ nhật</p>
                     <h6 class="text-light">09:00 am - 12:00 pm</h6>
-                    <p class="mb-1">Sunday</p>
-                    <h6 class="text-light">Closed</h6>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Newsletter</h5>
-                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                    <h5 class="text-white mb-4">Bản tin</h5>
+                    <p>Green & Heart luôn lắng nghe khách hàng để hoàn thiện hơn mỗi ngày. Chúc bạn ngày mới tốt lành</p>
                     <div class="position-relative w-100">
                         <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
                         <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
@@ -304,21 +309,7 @@
         </div>
     </div>
     <!-- Footer End -->
-    <!-- Copyright Start -->
-    <div class="container-fluid bg-secondary text-body copyright py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a class="fw-semi-bold" href="#">Your Site Name</a>, All Right Reserved.
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                    Designed By <a class="fw-semi-bold" href="https://htmlcodex.com">HTML Codex</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Copyright End -->
+  
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
 

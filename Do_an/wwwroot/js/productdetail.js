@@ -127,23 +127,39 @@
         });
     }
 
-    // Hàm thêm sản phẩm vào giỏ hàng từ `productDetail.js`
+    // Function to add a product to the cart
     function addToCart(productName, productPrice, productImg, productQty = 1) {
-        // Lấy giỏ hàng từ sessionStorage hoặc tạo mảng mới nếu chưa có
+        const cartItems = document.querySelector('.cart-items ol');
+
+        // Check if the item already exists in session storage
         let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
         const existingItem = cart.find(item => item.name === productName);
 
         if (existingItem) {
-            // Cập nhật số lượng nếu sản phẩm đã tồn tại trong giỏ
+            alert(`Sản phẩm "${productName}" đã có trong giỏ hàng.`);
             existingItem.qty += productQty;
+
+            // Update displayed quantity in the cart
+            const existingItemElement = Array.from(cartItems.children).find(item => {
+                return item.querySelector('.product-name-mini span').textContent === productName;
+            });
+            if (existingItemElement) {
+                const qtyElement = existingItemElement.querySelector('.qty-value');
+                qtyElement.textContent = existingItem.qty;
+                const productPriceElement = existingItemElement.querySelector('.product-price');
+                productPriceElement.textContent = formatPrice(existingItem.qty * productPrice); // Update price format
+            }
         } else {
-            // Thêm sản phẩm mới vào giỏ
             cart.push({ name: productName, price: productPrice, img: productImg, qty: productQty });
+            const newItem = createCartItemElement(productName, productPrice, productImg, productQty);
+            cartItems.appendChild(newItem);
         }
 
-        // Lưu giỏ hàng vào sessionStorage
         sessionStorage.setItem('cart', JSON.stringify(cart));
-        console.log("Product added to cart:", { name: productName, price: productPrice, qty: productQty });
+
+        // Update total count and price
+        updateCartCount(productQty);
+        updateTotalPrice(productPrice * productQty);
     }
 
     // Gọi hàm fetchProductDetail với `productId`

@@ -7,7 +7,7 @@ $(document).ready(function () {
     if (window.location.pathname.includes('UserDashboard')) {
         itemsPerPage = 4;
     } else if (window.location.pathname.includes('Shop')) {
-        itemsPerPage = 12;
+        itemsPerPage = 8;
     }
 
     // Gọi API để lấy danh sách sản phẩm
@@ -64,7 +64,7 @@ $(document).ready(function () {
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <a class="d-block h5" href="single-product.html?id=${product.productId}">${product.name}</a>
+                        <a class="d-block h5" href="ProductDetail?id=${product.productId}">${product.name}</a>
                         <span class="text-primary me-1">${formattedPrice}₫</span> 
                     </div>
                 </div>
@@ -94,7 +94,7 @@ $(document).ready(function () {
                     <div class="position-relative">
                         <img class="img-fluid" src="${imageUrl}" alt="${product.name}">
                         <div class="product-overlay">
-                            <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="Home/ProductDetail?id=${product.productId}">
+                            <a id="product-link-btn" class="btn btn-square btn-secondary rounded-circle m-1" href="/Home/ProductDetail?id=${product.productId}">
                                 <i class="bi bi-link"></i>
                             </a>
                              <a class="btn btn-square btn-secondary rounded-circle m-1 add-to-cart"
@@ -106,7 +106,7 @@ $(document).ready(function () {
                         </div>
                     </div>
                     <div class="text-center p-4">
-                        <a class="d-block h5" href="single-product.html?id=${product.productId}">${product.name}</a>
+                        <a class="d-block h5" href="/Home/ProductDetail?id=${product.productId}">${product.name}</a>
                          <span class="text-primary me-1">${formattedPrice}₫</span> 
                     </div>
                 </div>
@@ -136,6 +136,7 @@ $(document).ready(function () {
         if (page < 1 || page > totalPages) return;
         currentPage = page;
         renderProductsUser();
+        renderProducts();
         setupPagination();
     }
 

@@ -12,23 +12,25 @@
         <button class="btn btn-add-product" onclick="openAddProductModal()">Thêm Sản Phẩm Mới</button>
 
         <!-- Bảng hiển thị danh sách sản phẩm -->
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Tên Sản Phẩm</th>
-                    <th>Giá</th>
-                    <th>Mô Tả</th>
-                    <th>Số Lượng</th>
-                    <th>Hình Ảnh</th>
-                    <th>Danh Mục</th>
-                    <th>Thao Tác</th>
-                </tr>
-            </thead>
-            <tbody id="productTableBody">
-                <!-- Dữ liệu sản phẩm sẽ được điền ở đây từ JavaScript -->
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Sản Phẩm</th>
+                        <th>Giá</th>
+                        <th>Mô Tả</th>
+                        <th>Số Lượng</th>
+                        <th>Hình Ảnh</th>
+                        <th>Danh Mục</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="productTableBody">
+                    <!-- Dữ liệu sản phẩm sẽ được điền ở đây từ JavaScript -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Modal thêm sản phẩm -->

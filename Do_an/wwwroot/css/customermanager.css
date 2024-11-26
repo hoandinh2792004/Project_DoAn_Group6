@@ -71,3 +71,8 @@
     --bs-btn-disabled-bg: #ffc107;
     --bs-btn-disabled-border-color: #ffc107;
 }
+/* Thanh cuộn cho bảng danh sách sản phẩm */
+.customermanager .table-responsive {
+    max-height: 400px; /* Chiều cao tối đa của bảng */
+    overflow-y: auto; /* Hiển thị thanh cuộn dọc khi nội dung vượt quá chiều cao */
+}

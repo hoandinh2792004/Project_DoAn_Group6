@@ -12,6 +12,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
+using OpenCvSharp;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting; // Đảm bảo bạn đã khai báo namespace này
+
 
 namespace Do_an.Controllers
 {
@@ -20,12 +24,15 @@ namespace Do_an.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly DoAnContext _context;
         private readonly CustomerService _customerService;
+        private readonly IWebHostEnvironment _hostEnvironment;  // Khai báo IWebHostEnvironment
 
-        public UserController(ILogger<UserController> logger, DoAnContext context, CustomerService customerService)
+        // Thêm IWebHostEnvironment vào constructor
+        public UserController(ILogger<UserController> logger, DoAnContext context, CustomerService customerService, IWebHostEnvironment hostEnvironment)
         {
             _logger = logger;
             _context = context;
             _customerService = customerService;
+            _hostEnvironment = hostEnvironment;  // Khởi tạo _hostEnvironment
         }
 
         // Phương thức kiểm tra JWT trong cookie
@@ -101,111 +108,130 @@ namespace Do_an.Controllers
                 return BadRequest("Không có hình ảnh được tải lên.");
             }
 
+            string tempFilePath = null;
             try
             {
-                // Lưu tạm thời ảnh tải lên
-                var tempFilePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-                using (var stream = new FileStream(tempFilePath, FileMode.Create))
+                // Lưu ảnh tải lên vào thư mục images
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Tạo tên file ngẫu nhiên cho ảnh
+                var fileName = Path.GetFileName(image.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     image.CopyTo(stream);
                 }
 
-                // Tìm sản phẩm phù hợp
-                var matchingProduct = FindMatchingProduct(tempFilePath);
+                // Gọi hàm tìm sản phẩm theo ảnh
+                var matchingProducts = FindMatchingProducts(filePath);
 
-                // Xóa file tạm sau khi xử lý
-                if (System.IO.File.Exists(tempFilePath))
+                // Trả về PartialView với danh sách sản phẩm
+                if (matchingProducts.Any())
                 {
-                    System.IO.File.Delete(tempFilePath);
+                    return PartialView("_ProductListPartial", matchingProducts);
                 }
-
-                if (matchingProduct != null)
+                else
                 {
-                    // Trả về view hiển thị sản phẩm phù hợp
-                    return PartialView("_ProductListPartial", new List<Product> { matchingProduct });
+                    return PartialView("_ProductListPartial", new List<Product>());
                 }
-
-                // Không tìm thấy sản phẩm
-                return PartialView("_ProductListPartial", new List<Product> { matchingProduct });
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi và ghi log
                 Console.WriteLine($"Lỗi: {ex.Message}");
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình xử lý.");
             }
         }
 
-        // Hàm xử lý tìm sản phẩm giống hình ảnh tải lên
-        private Product FindMatchingProduct(string uploadedImagePath)
+        // Tìm danh sách sản phẩm phù hợp
+        private List<Product> FindMatchingProducts(string uploadedImagePath)
         {
-            // Lấy danh sách hình ảnh sản phẩm từ cơ sở dữ liệu
+            var matchingProducts = new List<Product>();
+
+            // Lấy danh sách sản phẩm từ database
             var productImages = _context.Products.Select(p => new
             {
-                ProductId = p.ProductId,
+                p.ProductId,
                 p.Name,
-                ImagePath = Path.Combine("wwwroot/images", p.ImageUrl) // Đường dẫn ảnh sản phẩm
+                ImagePath = Path.Combine(_hostEnvironment.WebRootPath, "User", p.ImageUrl)
             }).ToList();
 
             foreach (var product in productImages)
             {
-                if (IsImageSimilar(uploadedImagePath, product.ImagePath))
+                // Kiểm tra file ảnh
+                if (!System.IO.File.Exists(product.ImagePath))
                 {
-                    // Nếu hình ảnh phù hợp, trả về sản phẩm
-                    return _context.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                    Console.WriteLine($"Không tìm thấy ảnh sản phẩm tại: {product.ImagePath}");
+                    continue;
+                }
+
+                // So sánh ảnh
+                if (CompareImagesUsingHistogram(uploadedImagePath, product.ImagePath))
+                {
+                    var matchingProduct = _context.Products.FirstOrDefault(p => p.ProductId == product.ProductId);
+                    if (matchingProduct != null)
+                    {
+                        matchingProducts.Add(matchingProduct);
+                    }
                 }
             }
 
-            return null; // Không tìm thấy sản phẩm phù hợp
+            return matchingProducts;
         }
 
-        // Hàm kiểm tra độ tương tự của hai hình ảnh
-        private bool IsImageSimilar(string uploadedImagePath, string productImagePath)
+        // So sánh hình ảnh bằng Histogram
+        private bool CompareImagesUsingHistogram(string uploadedImagePath, string productImagePath)
         {
             try
             {
-                if (!System.IO.File.Exists(productImagePath))
+                // Đọc ảnh
+                using var uploadedImage = new Mat(uploadedImagePath, ImreadModes.Color);
+                using var productImage = new Mat(productImagePath, ImreadModes.Color);
+
+                // Kiểm tra xem ảnh có rỗng không
+                if (uploadedImage.Empty() || productImage.Empty())
                 {
-                    return false; // Nếu file sản phẩm không tồn tại, bỏ qua
+                    Console.WriteLine("Ảnh tải lên hoặc ảnh sản phẩm bị lỗi.");
+                    return false;
                 }
 
-                // Sử dụng ImageSharp để tải ảnh
-                using var uploadedImage = SixLabors.ImageSharp.Image.Load<Rgba32>(uploadedImagePath);
-                using var productImage = SixLabors.ImageSharp.Image.Load<Rgba32>(productImagePath);
+                // Resize ảnh về kích thước chuẩn
+                Cv2.Resize(uploadedImage, uploadedImage, new Size(128, 128));
+                Cv2.Resize(productImage, productImage, new Size(128, 128));
 
-                // Resize ảnh để đồng bộ kích thước
-                uploadedImage.Mutate(x => x.Resize(128, 128));
-                productImage.Mutate(x => x.Resize(128, 128));
+                // Tính histogram
+                var histSize = new int[] { 256 };
+                var ranges = new Rangef[] { new Rangef(0, 256) };
+                Mat uploadedHist = new Mat();
+                Mat productHist = new Mat();
 
-                // So khớp từng pixel
-                int matchingPixels = 0;
-                int totalPixels = 128 * 128;
+                Cv2.CalcHist(new Mat[] { uploadedImage }, new int[] { 0 }, null, uploadedHist, 1, histSize, ranges);
+                Cv2.CalcHist(new Mat[] { productImage }, new int[] { 0 }, null, productHist, 1, histSize, ranges);
 
-                for (int y = 0; y < 128; y++)
-                {
-                    for (int x = 0; x < 128; x++)
-                    {
-                        var pixel1 = uploadedImage[x, y]; // Lấy pixel từ ảnh tải lên
-                        var pixel2 = productImage[x, y];  // Lấy pixel từ ảnh sản phẩm
+                // Chuẩn hóa histogram
+                Cv2.Normalize(uploadedHist, uploadedHist, 0, 1, NormTypes.MinMax);
+                Cv2.Normalize(productHist, productHist, 0, 1, NormTypes.MinMax);
 
-                        // So sánh pixel
-                        if (pixel1.Equals(pixel2))  // So sánh 2 pixel
-                        {
-                            matchingPixels++;
-                        }
-                    }
-                }
+                // So sánh histogram
+                double similarity = Cv2.CompareHist(uploadedHist, productHist, HistCompMethods.Correl);
+                Console.WriteLine($"Độ tương tự: {similarity}");
 
-                // Tính tỉ lệ tương tự
-                double similarity = (double)matchingPixels / totalPixels;
-                return similarity > 0.9; // Ngưỡng tương tự >90%
+                // Ngưỡng tương tự
+                return similarity > 0.8;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi so sánh hình ảnh: {ex.Message}");
+                Console.WriteLine($"Lỗi so sánh ảnh: {ex.Message}");
                 return false;
             }
         }
+
+
+
 
 
         public IActionResult Payment()
@@ -359,6 +385,13 @@ namespace Do_an.Controllers
         }
 
         public IActionResult AboutUs()
+        {
+            var authResult = CheckAuthToken();
+            if (authResult != null) return authResult;
+            return View();
+        }
+   
+        public IActionResult QuyenGop()
         {
             var authResult = CheckAuthToken();
             if (authResult != null) return authResult;
