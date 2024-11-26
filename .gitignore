@@ -68,3 +68,4 @@ ehthumbs.db
 *.bak
 *.swp
 *.tmp
+/Web_bestcoder/appsettings.Development.json
