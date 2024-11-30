@@ -3,6 +3,9 @@
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + "đ";
+    }
     // Hàm lấy chi tiết sản phẩm từ server
     function fetchProductDetail(id) {
         $.ajax({
@@ -38,7 +41,7 @@
                             <span class="text-success ms-2">In stock</span>
                         </div>
                         <div class="mb-3">
-                            <span class="h5">${product.price}đ</span>
+                            <span class="h5">${formatPrice(product.price)}</span>
                         </div>
                         <p>${product.description}</p>
                         <div class="row">
@@ -50,21 +53,20 @@
                             <div class="col-md-4 col-6 mb-3">
                                 <label class="mb-2 d-block">Quantity</label>
                                 <div class="input-group mb-3" style="width: 170px;">
-                                    <button class="btn btn-white border border-secondary px-3" type="button"><i class="fas fa-minus"></i></button>
-                                    <input type="text" class="form-control text-center border border-secondary" placeholder="1" />
-                                    <button class="btn btn-white border border-secondary px-3" type="button"><i class="fas fa-plus"></i></button>
+                                    <button class="btn btn-white border border-secondary px-3 decrease-qty" type="button"><i class="fas fa-minus"></i></button>
+                                    <input type="text" class="form-control text-center border border-secondary quantity-input" value="1" />
+                                    <button class="btn btn-white border border-secondary px-3 increase-qty" type="button"><i class="fas fa-plus"></i></button>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-warning shadow-0"> Buy now </a>
+                        <a href="#" class="btn btn-warning shadow-0 buy-now">
+                            Buy now
+                        </a>
                         <a class="btn btn-primary shadow-0 add-to-cart"
                            data-name="${product.name}"
                            data-price="${product.price}" 
                            data-img="${imageUrl}">
                            <i class="bi bi-cart"></i> Add to cart
-                        </a>
-                        <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3">
-                           <i class="me-1 fa fa-heart fa-lg"></i> Save 
                         </a>
                     </div>
                 </main>
@@ -72,8 +74,10 @@
 
                 // Lắng nghe sự kiện click trên nút "Add to cart"
                 $('.add-to-cart').on('click', function (event) {
-
                     event.preventDefault(); // Prevent default link behavior
+
+                    // Retrieve the selected quantity from the input field
+                    const productQty = parseInt($('.quantity-input').val()) || 1; // Default to 1 if invalid
 
                     // Retrieve data attributes from the clicked button
                     const productName = $(this).data('name');
@@ -81,7 +85,40 @@
                     const productImg = $(this).data('img');
 
                     // Call addToCart with the retrieved data
-                    addToCart(productName, productPrice, productImg);
+                    addToCart(productName, productPrice, productImg, productQty);
+                });
+
+                // Handle the increase/decrease quantity buttons
+                $('.increase-qty').on('click', function () {
+                    let quantity = parseInt($('.quantity-input').val());
+                    $('.quantity-input').val(quantity + 1);
+                });
+
+                $('.decrease-qty').on('click', function () {
+                    let quantity = parseInt($('.quantity-input').val());
+                    if (quantity > 1) {
+                        $('.quantity-input').val(quantity - 1);
+                    }
+                });
+
+                // Handle "Buy Now" button click
+                // Handle "Buy Now" button click
+                $('.buy-now').on('click', function (event) {
+                    event.preventDefault();
+
+                    // Retrieve the selected quantity from the input field
+                    const productQty = parseInt($('.quantity-input').val()) || 1; // Default to 1 if invalid
+
+                    // Retrieve product data from the product (the same as "Add to Cart")
+                    const productName = product.name;
+                    const productPrice = product.price;
+                    const productImg = imageUrl;
+
+                    // Add product to cart
+                    addToCart(productName, productPrice, productImg, productQty);
+
+                    // Trigger checkout process
+                    handleCheckout();
                 });
             },
             error: function (error) {
@@ -90,28 +127,7 @@
         });
     }
 
-    // Hàm thêm sản phẩm vào giỏ hàng từ `productDetail.js`
-    function addToCart(productName, productPrice, productImg, productQty = 1) {
-        // Lấy giỏ hàng từ sessionStorage hoặc tạo mảng mới nếu chưa có
-        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-        const existingItem = cart.find(item => item.name === productName);
-
-        if (existingItem) {
-            // Cập nhật số lượng nếu sản phẩm đã tồn tại trong giỏ
-            existingItem.qty += productQty;
-        } else {
-            // Thêm sản phẩm mới vào giỏ
-            cart.push({ name: productName, price: productPrice, img: productImg, qty: productQty });
-        }
-
-        // Lưu giỏ hàng vào sessionStorage
-        sessionStorage.setItem('cart', JSON.stringify(cart));
-        console.log("Product added to cart:", { name: productName, price: productPrice, qty: productQty });
-
-        // Làm mới trang để cập nhật giỏ hàng
-        location.reload();
-    }
-
+    // Function to add a product to the cart
     function addToCart(productName, productPrice, productImg, productQty = 1) {
         const cartItems = document.querySelector('.cart-items ol');
 
@@ -153,3 +169,57 @@
         $('#product-detail').html('<p>Không có sản phẩm nào được chọn.</p>');
     }
 });
+
+// Handle checkout process
+async function handleCheckout() {
+    const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    const totalAmount = cart.reduce((sum, item) => {
+        const priceInNumber = parseFloat(item.price) || 0;
+        return sum + (priceInNumber * item.qty);
+    }, 0);
+
+    if (totalAmount > 99999999) {
+        alert("Total amount exceeds the limit for payment processing.");
+        return;
+    }
+
+    const paymentRequest = {
+        PaymentAmount: totalAmount,
+        AuctionID: 123,
+        UserID: 456
+    };
+
+    try {
+        const response = await fetch('http://localhost:5135/api/payment/create-intent', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(paymentRequest)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error("Failed to create payment intent");
+        }
+
+        const paymentData = await response.json();
+
+        // Check if clientSecret is present in the response
+        if (!paymentData.clientSecret) {
+            console.error("Missing client_secret in the response");
+            alert("There was an error processing your payment. Please contact support.");
+            return;
+        }
+
+        window.location.href = `/User/Payment?clientSecret=${paymentData.clientSecret}`;
+    } catch (error) {
+        console.error("Error during checkout:", error);
+        alert("There was an error processing your payment. Please try again.");
+    }
+}

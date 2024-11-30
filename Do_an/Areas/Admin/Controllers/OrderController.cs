@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Google;
+using Do_an.Models;
 
 
 namespace Do_an.Areas.Admin.Controllers
@@ -32,12 +33,14 @@ namespace Do_an.Areas.Admin.Controllers
             try
             {
                 var orders = await _context.Orders
+                    
                     .Select(o => new OrderDto
                     {
                         OrderId = o.OrderId,
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
                         Status = o.Status,
+                        UserId = o.UserId, // Lấy UserId từ bảng Customer (giả sử Order có liên kết với Customer)
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -63,6 +66,7 @@ namespace Do_an.Areas.Admin.Controllers
                 return StatusCode(500, "An error occurred while retrieving order customer data."); // Trả về lỗi server
             }
         }
+
 
         [HttpDelete("Delete/{id}")]
         public async Task<ActionResult> DeleteOrder(int id)
@@ -113,6 +117,9 @@ namespace Do_an.Areas.Admin.Controllers
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
                         Status = o.Status,
+                        UserId = o.UserId,
+                        ShippingAddress = o.ShippingAddress,  
+                        PaymentMethod = o.PaymentMethod,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -218,6 +225,29 @@ namespace Do_an.Areas.Admin.Controllers
                 _logger.LogError(ex, $"Lỗi khi chỉnh sửa thông tin đơn hàng với ID: {id}");
                 return StatusCode(500, "Đã xảy ra lỗi khi chỉnh sửa thông tin đơn hàng.");
             }
+        }
+
+        [HttpPut("UpdateStatus/{orderId}")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] UpdateStatusRequest request)
+        {
+            // Kiểm tra đầu vào
+            if (request == null || string.IsNullOrWhiteSpace(request.Status))
+            {
+                return BadRequest("Dữ liệu cập nhật không hợp lệ.");
+            }
+
+            // Tìm đơn hàng dựa trên orderId
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                return NotFound($"Không tìm thấy đơn hàng với ID: {orderId}.");
+            }
+
+            // Cập nhật trạng thái đơn hàng
+            order.Status = request.Status;
+            await _context.SaveChangesAsync();
+
+            return Ok($"Trạng thái của đơn hàng ID: {orderId} đã được cập nhật thành '{request.Status}'.");
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,29 +46,31 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link active">Trang chủ</a>
-                <a href="service.html" class="nav-item nav-link">Services</a>
-                <a asp-action="Shop" asp-controller="User" class="nav-item nav-link">Sản phẩm</a>
+                <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link ">Trang chủ</a>
+                <a asp-action="Shop" asp-controller="User" class="nav-item nav-link active">Sản phẩm</a>
                 <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link">Về chúng tôi</a>
-                <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+                <a asp-action="QuyenGop" asp-controller="User" class="nav-item nav-link">Quyên góp</a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            <div class="ps-4 d-none d-lg-block">
+                <a asp-action="Shop" asp-controller="User" class="btn btn-sm p-0">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
                     <i class="fa fa-shopping-cart"></i>
                     <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
                 </button>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
                         <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
                     </a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Profile</a>
-                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Logout</a>
+                    <div class="dropdown-menu bg-light m-0" style="position: absolute; left: -25px;">
+                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Trang cá nhân</a>
+                        <a asp-action="Order" asp-controller="User" class="dropdown-item">Đơn hàng của tôi</a>
+                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -81,7 +84,7 @@
         <div id="sidecart" class="sidecart">
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
+                <h3 class="cart-title">Giỏ hàng</h3>
                 <div class="cart-count">
                     <span id="cart-count">0</span>
                 </div>
@@ -99,11 +102,11 @@
             </div>
             <div class="side-cart-bottom">
                 <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
+                    <span class="total-title float-left">Tổng:</span>
                     <span class="total-price float-right" id="total-price">đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Check Out</a>
+                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Thanh toán</a>
                 </div>
             </div>
         </div>
@@ -124,10 +127,10 @@
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Our Office</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                    <h5 class="text-white mb-4">Cơ sở chính</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trịnh Văn Bô, Hà Nội</p>
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>hear&graden@work.com</p>
                     <div class="d-flex pt-3">
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
@@ -137,24 +140,21 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Quick Links</h5>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Our Services</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">Support</a>
+                    <a class="btn btn-link" href="">Trang chủ</a>
+                    <a class="btn btn-link" href="">Sản phẩm</a>
+                    <a class="btn btn-link" href="">Về chúng tôi</a>
+                    <a class="btn btn-link" href="">Quyên góp</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Business Hours</h5>
-                    <p class="mb-1">Monday - Friday</p>
+                    <h5 class="text-white mb-4">Giờ mở cửa</h5>
+                    <p class="mb-1">Thứ 2 - Thứ 6</p>
                     <h6 class="text-light">09:00 am - 07:00 pm</h6>
-                    <p class="mb-1">Saturday</p>
+                    <p class="mb-1">Thứ 7 - Chủ nhật</p>
                     <h6 class="text-light">09:00 am - 12:00 pm</h6>
-                    <p class="mb-1">Sunday</p>
-                    <h6 class="text-light">Closed</h6>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Newsletter</h5>
-                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                    <h5 class="text-white mb-4">Bản tin</h5>
+                    <p>Green & Heart luôn lắng nghe khách hàng để hoàn thiện hơn mỗi ngày. Chúc bạn ngày mới tốt lành</p>
                     <div class="position-relative w-100">
                         <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
                         <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
@@ -164,6 +164,7 @@
         </div>
     </div>
     <!-- Footer End -->
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="path/to/jquery.js"></script>
     <script src="~/js/productdetail.js"></script>

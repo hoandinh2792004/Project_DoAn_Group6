@@ -25,18 +25,14 @@ namespace Do_an.Data
         public virtual DbSet<Review> Reviews { get; set; }
         public virtual DbSet<WasteCollectionPoint> WasteCollectionPoints { get; set; }
         public virtual DbSet<WasteExchange> WasteExchanges { get; set; }
-        
 
-        /*        public virtual DbSet<UserManagerContext> UserManagerContext { get; set; }*/
-        // Thêm các DbSet cho User và Role
+        // Đã loại bỏ UserManagerContext
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             modelBuilder.Entity<Admin>(entity =>
             {
                 entity.HasKey(e => e.AdminId).HasName("PK__Admin__719FE4E891B50B4C");
@@ -103,7 +99,14 @@ namespace Do_an.Data
                     .HasColumnType("datetime");
                 entity.Property(e => e.Status).HasMaxLength(50);
                 entity.Property(e => e.TotalAmount).HasColumnType("decimal(10, 2)");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)  // Set up the navigation property to User
+                    .WithMany()  // Assume a User can have many Orders
+                    .HasForeignKey(d => d.UserId)  // The foreign key is UserId
+                    .HasConstraintName("FK_Orders_Users_UserID");
             });
+
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
@@ -184,7 +187,6 @@ namespace Do_an.Data
                 entity.HasKey(e => e.ExchangeId).HasName("PK__WasteExc__35C06BF0F14DB14E");
                 entity.Property(e => e.ExchangeId).HasColumnName("ExchangeID");
                 entity.Property(e => e.ExchangeDate).HasColumnType("datetime");
-                
             });
 
             // Định nghĩa các mối quan hệ cho User, Role và UserRole nếu cần

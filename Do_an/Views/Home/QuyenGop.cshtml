@@ -1,0 +1,767 @@
+﻿@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Milky - Dairy Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="~/User/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/User/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/User/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/User/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/User/css/style.css" rel="stylesheet">
+    <link href="~/User/css/navbar.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/css/modal.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@@goongmaps/goong-js@1.0.9/dist/goong-js.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@@goongmaps/goong-js@1.0.9/dist/goong-js.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+
+
+    <!-- AI -->
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=hPlRPFXe"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .map-container {
+            position: relative;
+            height: 100vh; /* Full screen height */
+        }
+
+        #map {
+            width: 100%; /* Set map width */
+            height: 100%; /* Set map height */
+            border: 1px solid #ddd; /* Optional border */
+        }
+
+        .search-bar1 {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1; /* Đảm bảo thanh tìm kiếm ở trên bản đồ */
+            display: flex;
+            gap: 6px;
+            width: 60%; /* Tăng chiều dài của thanh tìm kiếm */
+            max-width: 400px; /* Đặt chiều dài tối đa */
+            font-family: 'Roboto', sans-serif; /* Áp dụng font chữ tiếng Việt */
+        }
+
+            .search-bar1 input {
+                border: 1px solid #ddd;
+                padding: 6px;
+                border-radius: 4px;
+                outline: none;
+                flex: 1; /* Cho input chiếm nhiều không gian hơn */
+                font-size: 14px;
+            }
+
+            .search-bar1 button {
+                padding: 6px 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+            }
+
+        /* Page Header */
+        .page-header2 {
+            position: relative;
+            padding: 0;
+            overflow: hidden;
+        }
+
+            .page-header2 .header-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                filter: brightness(0.5);
+            }
+
+            .page-header2 .container {
+                position: relative;
+                z-index: 1;
+                color: white;
+            }
+
+            .page-header2 h1 {
+                font-size: 3rem;
+                font-weight: bold;
+            }
+
+  
+
+   
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
+        <div class="main-logo">
+            <a asp-action="Index" asp-controller="Home">
+                <img src="~/User/img/logo_doan.png" alt="logo" class="img-fluid" style="height:auto;">
+            </a>
+        </div>
+        <button type="button" class="navbar-toggler me-0" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a asp-action="Index" asp-controller="Home" class="nav-item nav-link ">Trang chủ</a>
+                @*                 <a href="service.html" class="nav-item nav-link">Services</a>
+                *@                <a asp-action="Shop" asp-controller="Home" class="nav-item nav-link">Sản phẩm</a>
+                <a asp-action="AboutUs" asp-controller="Home" class="nav-item nav-link">Về Chúng Tôi</a>
+                <a asp-action="QuyenGop" asp-controller="Home" class="nav-item nav-link active">Quyên góp</a>
+            </div>
+            <div class="ps-4 d-none d-lg-block">
+                <a asp-action="Shop" asp-controller="Home" class="btn btn-sm p-0">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </a>
+            </div>
+            <div class=" ps-4 d-none d-lg-block">
+                <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                </button>
+            </div>
+            <div class=" ps-4 d-none d-lg-block">
+                <a asp-action="Login" asp-controller="Login" class="btn btn-sm p-0" id="user-icon">
+                    <i class="fa-regular fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- View Cart Start -->
+    <div id="backdrop" class="backdrop"></div>
+    <div class="side-cart-container">
+        <div id="sidecart" class="sidecart">
+            <div class="cart-header">
+                <span id="close-btn">&times;</span>
+                <h3 class="cart-title">Giỏ Hàng</h3>
+                <div class="cart-count">
+                    <span id="cart-count">0</span>
+                </div>
+            </div>
+            <div class="cart-items">
+                <div class="prod">
+                    <div class="product-cart">
+                        <ol style="list-style: none;">
+                            <li class="d-flex">
+                                <!-- Thêm sản phẩm vào đây -->
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="side-cart-bottom">
+                <div class="sub-total">
+                    <span class="total-title float-left">Tổng:</span>
+                    <span class="total-price float-right" id="total-price">đ</span>
+                </div>
+                <div class="cart-actions">
+                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Thanh toán</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal yêu cầu đăng nhập -->
+    <div id="loginPromptModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h2>Yêu cầu Đăng nhập</h2>
+            <p>Vui lòng đăng nhập để thực hiện thanh toán.</p>
+            <a asp-action="Login" asp-controller="Login" class="button">Đăng nhập</a> <!-- Thay đổi đường dẫn đến trang đăng nhập -->
+            <a href="#" class="button" onclick="closeModal()">Hủy</a>
+        </div>
+    </div>
+    <!-- View Cart End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header2 py-5 wow fadeIn" data-wow-delay="0.1s">
+        <img src="~/User/img/Vuon_Nho-161753.jpg" alt="Header Image" class="img-fluid header-img">
+        <div class="container text-center py-5">
+            <h1 class="display-2 text-white mb-4">Quyên Góp</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center mb-0">
+                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="#">Trang</a></li>
+                    <li class="breadcrumb-item text-white" aria-current="page">Quyên Góp</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Page Header End -->
+    <!-- About Start -->
+    <div class="container-fluid py-5 about bg-light">
+        <div class="container py-4">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="overflow-hidden img-border-radius">
+                        <img src="~/User/img/AI.jpeg" class="img-fluid w-100" alt="Image">
+                    </div>
+                </div>
+                <div class="col-lg-7 wow fadeIn" data-wow-delay="0.3s">
+                    <h3 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Giới thiệu</h3>
+                    <h3 class="text-dark mb-4 display-6">Đổi Rác Tái Chế Lấy Sen Đá🌱</h3>
+
+                    <p class="text-dark mb-4">
+                        "Đổi Rác Tái Chế Lấy Sen Đá" là một chương trình độc đáo và ý nghĩa nhằm thúc đẩy ý thức bảo vệ môi trường thông qua hành động thiết thực. Chương trình khuyến khích cộng đồng thu gom rác tái chế và đổi lấy những phần thưởng là cây sen đá xinh đẹp – biểu tượng của sự tái sinh và sức sống bền bỉ.
+                        <br>
+                        Chương trình không chỉ góp phần giảm thiểu rác thải, tạo môi trường sống trong lành mà còn truyền tải thông điệp mạnh mẽ về việc sống xanh và bảo vệ hành tinh.
+                    </p>
+                    <h3 class="text-dark mb-4 display-6">Chức năng AI phân loại rác thải
+</h3>
+                    <p class="text-dark mb-4">
+                        Một điểm nổi bật của chương trình là việc áp dụng công nghệ trí tuệ nhân tạo (AI) để phân loại rác thải một cách chính xác và nhanh chóng.
+                    </p>
+                    <h6 class="mb-3">
+                        </i> Cách thức hoạt động:
+                    </h6>
+                    <p class="text-dark mb-4">
+                        Ứng dụng AI qua webcam: Người tham gia có thể đưa rác thải vào camera để hệ thống nhận diện và phân loại.
+                        <br>
+                        Tích hợp công nghệ Teachable Machine: Sử dụng mô hình đã được huấn luyện để nhận biết các loại rác phổ biến như: Nhựa (chai nhựa, túi nhựa, v.v.), Kim loại (lon, hộp kim loại, v.v.), Giấy (báo, giấy carton, v.v.)
+                        <br>
+                        Gợi ý xử lý: Sau khi phân loại, hệ thống sẽ đưa ra gợi ý về cách tái chế hoặc xử lý loại rác thải đó một cách hiệu quả nhất.
+                    </p>
+                    <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">
+                        Lợi ích của chương trình
+                    </h4>
+
+                    <div class="row mb-4">
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-3">🚀 <strong>Nâng cao ý thức bảo vệ môi trường.</strong></li>
+                                <li class="mb-3">🌟 <strong>Tạo thói quen sống xanh.</strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-3">🌐 <strong>Lan tỏa thông điệp xanh.</strong></li>
+                                <li class="mb-3">💓 <strong>Đưa AI vào các hoạt động đời sống hàng ngày.</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Button Trigger -->
+                    <a href="javascript:void(0)" onclick="showAIForm()" class="btn btn-primary px-5 py-3 btn-border-radius">
+                        AI phân loại rác
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- Overlay and AI Form -->
+<div id="overlay" class="overlay" style="display: none;" onclick="closeAIForm()"></div>
+<div id="ai-form" class="ai-modal" style="display: none;">
+    <div class="ai-modal-content">
+        <span class="ai-close" onclick="closeAIForm()">&times;</span>
+        <h4 class="text-center mb-4">AI Phân Loại Rác Thải</h4>
+        <div id="initial-container" class="text-center">
+            <button type="button" onclick="startWebcam()" class="btn btn-primary my-3">Bắt Đầu</button>
+        </div>
+        <div id="webcam-container" class="webcam-box" style="display: none;"></div>
+        <div id="label-container" class="label-box" style="display: none;"></div>
+    </div>
+</div>
+
+<!-- Updated Styles -->
+<style>
+    /* Overlay for background blur */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    /* Modal container */
+    .ai-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #8BC34A, #81c784); /* Gradient background */
+        color: white; /* White text for better contrast */
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 700px;
+        width: 90%;
+        max-height: 90%;
+        overflow-y: auto;
+    }
+
+    /* Modal content */
+    .ai-modal-content {
+        position: relative;
+    }
+
+    /* Close button */
+    .ai-close {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        cursor: pointer;
+        color: white;
+    }
+
+    /* Webcam container */
+    .webcam-box {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0;
+    }
+
+    /* Labels */
+    .label-box {
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        color: #ffeb3b;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Button styling */
+    button.btn-primary {
+        font-size: 18px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background-color: #007bff;
+        color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    button.btn-primary:hover {
+        background-color: #0056b3;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Responsive styling for smaller screens */
+    @@media (max-width: 768px) {
+        .ai-modal {
+            max-width: 95%;
+            padding: 20px;
+        }
+
+        .ai-close {
+            font-size: 24px;
+        }
+
+        button.btn-primary {
+            font-size: 16px;
+            padding: 8px 15px;
+        }
+    }
+</style>
+
+    <script>
+        // Đường dẫn model Teachable Machine
+    const URL = "https://teachablemachine.withgoogle.com/models/moV2TrKaa/";
+
+        let model, webcam, labelContainer, maxPredictions;
+        let lastLabel = '';
+
+        function showAIForm() {
+            document.getElementById("overlay").style.display = "block";
+            document.getElementById("ai-form").style.display = "block";
+        }
+
+        function closeAIForm() {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("ai-form").style.display = "none";
+            stopWebcam();
+        }
+
+        async function startWebcam() {
+            document.getElementById("initial-container").style.display = "none";
+            document.getElementById("webcam-container").style.display = "flex";
+            document.getElementById("label-container").style.display = "block";
+
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+
+            // Load model và metadata
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+
+            // Setup webcam
+            const flip = true;
+            webcam = new tmImage.Webcam(300, 300, flip); // Kích thước webcam
+            await webcam.setup();
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+
+            // Append webcam vào DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            labelContainer.innerHTML = "Đang nhận diện...";
+        }
+
+        async function loop() {
+            webcam.update(); // Cập nhật webcam frame
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+
+        async function predict() {
+            const predictions = await model.predictTopK(webcam.canvas, 1);
+            const label = predictions[0].className;
+
+            if (label !== lastLabel) {
+                lastLabel = label;
+                responsiveVoice.speak(label, "Vietnamese Female");
+                labelContainer.innerText = label;
+            }
+        }
+
+        function stopWebcam() {
+            if (webcam) {
+                webcam.stop();
+            }
+            const webcamContainer = document.getElementById("webcam-container");
+            webcamContainer.innerHTML = ""; // Clear webcam canvas
+            document.getElementById("initial-container").style.display = "block";
+            document.getElementById("webcam-container").style.display = "none";
+            document.getElementById("label-container").style.display = "none";
+        }
+
+    </script>
+
+
+
+
+    <!-- About End -->
+
+        <div class="container-fluid program py-2">
+            <div class="container py-5">
+                <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 700px;">
+                    @*                 <h4 class="text-primary mb-4 border-bottom border-primary border-2 d-inline-block p-2 title-border-radius">Quyên góp</h4>
+                    *@                <h1 class="mb-5 display-5">
+                        🔥 Các cửa hàng có chương trình quyên góp
+                    </h1>
+                </div>
+                <section id="foodies" class="my-5">
+                    <div class="container map-container ">
+                        <!-- Search Bars for Destination and User's Address -->
+                        <div class="search-bar1">
+                            <input type="text" id="user-address" placeholder="Nhập địa chỉ của bạn" />
+                        </div>
+                        <div class="search-bar1">
+                            <input type="text" id="search-input" placeholder="Nhập địa điểm quyên góp" onkeypress="if(event.key === 'Enter') searchLocation()" />
+                            <button onclick="searchLocation()">Tìm Kiếm</button>
+                        </div>
+                        <!-- Map -->
+                        <div id="map"></div>
+
+                        <script>
+                            var accessToken = '@Configuration["GoongMap:MaptilesKey"]';
+                            goongjs.accessToken = accessToken;
+
+                            var map = new goongjs.Map({
+                                container: 'map',
+                                style: 'https://tiles.goong.io/assets/goong_map_web.json',
+                                center: [105.79449389547807, 21.023262952893536],
+                                zoom: 8
+                            });
+
+                            var markers = [
+                                [105.79449389547807, 21.023262952893536],
+                                [105.79969171424, 21.03145698011039],
+                                [105.7463049346494, 21.038202237863658],
+                                [105.8449280838239, 21.03606203346743],
+                                [105.84872309736471, 21.009139690306966],
+                                [105.89861318021843, 21.06003589119038],
+                                [105.34241795451874, 20.82357592939995],
+                                [106.05056351778904, 20.6800965470578],
+                                [104.88130233508849, 21.71023507970105]
+                            ];
+
+                            markers.forEach(function (coord) {
+                                new goongjs.Marker()
+                                    .setLngLat(coord)
+                                    .addTo(map);
+                            });
+
+                            // Variable to keep track of the current route ID
+                            let currentRouteId = null;
+                            // Variable to store the current search marker
+                            let currentSearchMarker = null;
+
+                            // Function to add a route to the map
+                            function addRoute(currentLocation, destination, routeId) {
+                                var goongClient = goongSdk({
+                                    accessToken: '@Configuration["APIKey:MaptilesKey"]'
+                                });
+
+                                goongClient.directions
+                                    .getDirections({
+                                        origin: `${currentLocation.lat},${currentLocation.lng}`,
+                                        destination: `${destination[1]},${destination[0]}`,
+                                        vehicle: 'car'
+                                    })
+                                    .send()
+                                    .then(function (response) {
+                                        var directions = response.body;
+                                        var route = directions.routes[0];
+
+                                        var geometry_string = route.overview_polyline.points;
+                                        var geoJSON = polyline.toGeoJSON(geometry_string);
+
+                                        // Remove any previous route before adding a new one
+                                        if (currentRouteId) {
+                                            removeRoute(currentRouteId);
+                                        }
+
+                                        // Add the new route to the map
+                                        map.addSource(routeId, {
+                                            'type': 'geojson',
+                                            'data': geoJSON
+                                        });
+
+                                        map.addLayer({
+                                            'id': routeId,
+                                            'type': 'line',
+                                            'source': routeId,
+                                            'layout': {
+                                                'line-join': 'round',
+                                                'line-cap': 'round'
+                                            },
+                                            'paint': {
+                                                'line-color': '#1e88e5',
+                                                'line-width': 8
+                                            }
+                                        });
+
+                                        // Update the currentRouteId with the new route ID
+                                        currentRouteId = routeId;
+                                    });
+                            }
+
+                            // Function to remove a route from the map
+                            function removeRoute(routeId) {
+                                if (map.getLayer(routeId)) {
+                                    map.removeLayer(routeId);
+                                }
+                                if (map.getSource(routeId)) {
+                                    map.removeSource(routeId);
+                                }
+                            }
+
+                            // Get the user's current location and initialize markers with click event
+                            navigator.geolocation.getCurrentPosition(function (position) {
+                                var currentLocation = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude
+                                };
+
+                                map.flyTo({ center: [currentLocation.lng, currentLocation.lat], zoom: 12 });
+
+                                // Add a marker for the user's current location
+                                new goongjs.Marker({ color: 'red' })
+                                    .setLngLat([currentLocation.lng, currentLocation.lat])
+                                    .addTo(map);
+
+                                // Loop through each destination marker
+                                markers.forEach(function (destination, index) {
+                                    var marker = new goongjs.Marker()
+                                        .setLngLat(destination)
+                                        .addTo(map);
+
+                                    var routeId = `route-${index}`;
+
+                                    // Show route on marker click
+                                    marker.getElement().addEventListener('click', function () {
+                                        addRoute(currentLocation, destination, routeId);
+                                    });
+                                });
+                            }, function (error) {
+                                console.error("Error obtaining location:", error);
+                                alert("Unable to retrieve your location.");
+                            });
+
+                            function searchLocation() {
+                                var query = document.getElementById("search-input").value;
+                                if (!query) {
+                                    alert("Vui lòng nhập địa chỉ quyên góp.");
+                                    return;
+                                }
+
+                                var apiKey = '@Configuration["APIKey:MaptilesKey"]';
+                                var url = `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(query)}&api_key=${apiKey}`;
+
+                                fetch(url)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.results && data.results.length > 0) {
+                                            var result = data.results[0];
+                                            var lngLat = [result.geometry.location.lng, result.geometry.location.lat];
+
+                                            map.flyTo({ center: lngLat, zoom: 12 });
+
+                                            // Remove any existing search marker
+                                            if (currentSearchMarker) {
+                                                currentSearchMarker.remove();
+                                            }
+
+                                            // Just update map center without adding a new marker
+                                        } else {
+                                            alert("Không tìm thấy địa điểm, vui lòng thử lại.");
+                                        }
+                                    });
+                            }
+
+                            map.addControl(
+                                new GoongGeocoder({
+                                    accessToken: '@Configuration["APIKey:MaptilesKey"]',
+                                    goongjs: goongjs
+                                })
+                            );
+
+                        </script>
+
+                    </div>
+                </section>
+                <h6 class="mb-3">
+                    </i>
+                    <p class="text-center mt-4">Thời gian quyên góp tình nguyện: Chủ nhật mỗi tuần từ 7h - 11h và 13h - 17h.</p>
+                    <p class="text-center mt-4">Cảm ơn bạn đã tham gia vào chương trình quyên góp của chúng tôi!</p>
+                </h6>
+
+
+
+
+            </div>
+        </div>
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Cơ sở chính</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trịnh Văn Bô, Hà Nội</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>hear&graden@work.com</p>
+                    <div class="d-flex pt-3">
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <a class="btn btn-link" href="">Trang chủ</a>
+                    <a class="btn btn-link" href="">Sản phẩm</a>
+                    <a class="btn btn-link" href="">Về chúng tôi</a>
+                    <a class="btn btn-link" href="">Quyên góp</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Giờ mở cửa</h5>
+                    <p class="mb-1">Thứ 2 - Thứ 6</p>
+                    <h6 class="text-light">09:00 am - 07:00 pm</h6>
+                    <p class="mb-1">Thứ 7 - Chủ nhật</p>
+                    <h6 class="text-light">09:00 am - 12:00 pm</h6>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Bản tin</h5>
+                    <p>Green & Heart luôn lắng nghe khách hàng để hoàn thiện hơn mỗi ngày. Chúc bạn ngày mới tốt lành</p>
+                    <div class="position-relative w-100">
+                        <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
+                        <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+   
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/User/lib/wow/wow.min.js"></script>
+    <script src="~/User/lib/easing/easing.min.js"></script>
+    <script src="~/User/lib/waypoints/waypoints.min.js">    </script>
+    <script src="~/User/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/User/lib/counterup/counterup.min.js"></script>
+    <script src="~/User/lib/parallax/parallax.min.js"></script>
+    <script src="~/User/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="~/js/navbar.js"></script>
+    <script src="~/js/modal.js"></script>
+    <script src="~/js/Product.js"></script>
+    <script src="~/js/cart.js"></script>
+    <!-- Template Javascript -->
+    <script src="~/User/js/main.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@@mapbox/polyline/src/polyline.js"></script>
+    <script src="https://unpkg.com/@@goongmaps/goong-sdk/umd/goong-sdk.min.js"></script>
+</body>
+
+</html>

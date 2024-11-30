@@ -374,3 +374,8 @@ body {
     background: #333;
 }
 
+.btn-primary.disabled, .btn-primary:disabled {
+    color: #fff;
+    background-color: #aab7c4;
+    border-color: #aab7c4;
+}

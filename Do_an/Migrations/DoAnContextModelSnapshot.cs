@@ -163,10 +163,22 @@ namespace Do_an.Migrations
                     b.Property<int?>("CustomerUserId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Img")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("OrderDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
@@ -175,12 +187,18 @@ namespace Do_an.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("decimal(10, 2)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserID");
+
                     b.HasKey("OrderId")
                         .HasName("PK__Orders__C3905BAF5E28BB23");
 
                     b.HasIndex("AdminId");
 
                     b.HasIndex("CustomerUserId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -198,7 +216,10 @@ namespace Do_an.Migrations
                         .HasColumnType("int")
                         .HasColumnName("OrderID");
 
-                    b.Property<decimal>("Price")
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Price")
                         .HasColumnType("decimal(10, 2)");
 
                     b.Property<int?>("ProductId")
@@ -208,8 +229,11 @@ namespace Do_an.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int?>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShippingAddress")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Total")
                         .ValueGeneratedOnAddOrUpdate()
@@ -514,6 +538,15 @@ namespace Do_an.Migrations
                     b.HasOne("Do_an.Data.Customer", null)
                         .WithMany("Orders")
                         .HasForeignKey("CustomerUserId");
+
+                    b.HasOne("User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_Orders_Users_UserID");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Do_an.Data.OrderDetail", b =>

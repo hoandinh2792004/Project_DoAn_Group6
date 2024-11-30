@@ -1,0 +1,22 @@
+﻿/* Tuỳ chỉnh modal */
+.modal-title {
+    font-weight: bold;
+}
+
+.table-bordered th,
+.table-bordered td {
+    vertical-align: middle;
+    text-align: center;
+    border: 2px solid #ddd;
+}
+
+.modal-footer button {
+    min-width: 80px;
+}
+/* Ẩn backdrop */
+.modal-backdrop {
+    display: none !important;
+}
+.modal-body{
+    border 3px solid #ddd;
+}

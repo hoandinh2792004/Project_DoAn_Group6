@@ -31,7 +31,120 @@
     <link href="~/User/css/navbar.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/modal.css">
 </head>
+<style>
+      /* CSS for Listening Box with Icon */
+    /* Làm tối giao diện */
+    .dark-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 10;
+    }
+
+    /* Box hiển thị mic và chữ "Đang nghe" */
+    .listening-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px 40px;
+        border-radius: 10px;
+        text-align: center;
+        z-index: 20;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+        .listening-box i {
+            color: #ff5722;
+            margin-bottom: 10px;
+        }
+
+        .listening-box p {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+        /* Container cho sóng */
+.wave-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
 }
+
+/* Sóng động */
+.wave {
+    width: 8px;
+    height: 30px;
+    background-color: #ff5722;
+    animation: wave-animation 1.2s infinite;
+    border-radius: 4px;
+}
+
+.wave:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.wave:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.wave:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Hiệu ứng động */
+@@keyframes wave-animation {
+    0%, 100% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(2.5);
+    }
+}
+
+    /* Page Header */
+    .page-header2 {
+        position: relative;
+        padding: 0;
+        overflow: hidden;
+    }
+
+        .page-header2 .header-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+
+        .page-header2 .container {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .page-header2 h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+    .dropdown-menu {
+        position: absolute;
+        left: -25px; /* Điều chỉnh giá trị âm để menu lệch trái thêm */
+    }
+
+</style>
+
 
 <!-- Navbar Start -->
 <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
@@ -45,28 +158,32 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link active">Trang chủ</a>
-            <a href="service.html" class="nav-item nav-link">Services</a>
-            <a href="product.html" class="nav-item nav-link">Sản phẩm</a>
+            <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link ">Trang chủ</a>
+            <a asp-action="Shop" asp-controller="User" class="nav-item nav-link active">Sản phẩm</a>
             <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link">Về chúng tôi</a>
-            <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+            <a asp-action="QuyenGop" asp-controller="User" class="nav-item nav-link">Quyên góp</a>
         </div>
-        <div class="border-start ps-4 d-none d-lg-block">
-            <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+        <div class="ps-4 d-none d-lg-block">
+            <a asp-action="Shop" asp-controller="User" class="btn btn-sm p-0">
+                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            </a>
         </div>
-        <div class="border-start ps-4 d-none d-lg-block">
+        <div class=" ps-4 d-none d-lg-block">
             <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
                 <i class="fa fa-shopping-cart"></i>
                 <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
             </button>
         </div>
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
-                <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
-            </a>
-            <div class="dropdown-menu bg-light m-0">
-                <a asp-action="Profile" asp-controller="User" class="dropdown-item">Profile</a>
-                <a asp-action="Index" asp-controller="Home" class="dropdown-item">Logout</a>
+        <div class=" ps-4 d-none d-lg-block">
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
+                    <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
+                </a>
+                <div class="dropdown-menu bg-light m-0" style="position: absolute; left: -25px;">
+                    <a asp-action="Profile" asp-controller="User" class="dropdown-item">Trang cá nhân</a>
+                    <a asp-action="Order" asp-controller="User" class="dropdown-item">Đơn hàng của tôi</a>
+                    <a asp-action="Index" asp-controller="Home" class="dropdown-item">Đăng xuất</a>
+                </div>
             </div>
         </div>
     </div>
@@ -79,7 +196,7 @@
     <div id="sidecart" class="sidecart">
         <div class="cart-header">
             <span id="close-btn">&times;</span>
-            <h3 class="cart-title">Shopping Cart</h3>
+            <h3 class="cart-title">Giỏ Hàng</h3>
             <div class="cart-count">
                 <span id="cart-count">0</span>
             </div>
@@ -97,30 +214,69 @@
         </div>
         <div class="side-cart-bottom">
             <div class="sub-total">
-                <span class="total-title float-left">Total:</span>
+                <span class="total-title float-left">Tổng:</span>
                 <span class="total-price float-right" id="total-price">đ</span>
             </div>
             <div class="cart-actions">
-                <a asp-action="Payment" asp-controller="User" class="button-checkout">Check Out</a>
+                <a asp-action="Payment" asp-controller="User" class="button-checkout">Thanh toán</a>
             </div>
         </div>
     </div>
 </div>
 <!-- View Cart End -->
 
+<!-- Page Header Start -->
+<div class="container-fluid page-header2 py-5 wow fadeIn" data-wow-delay="0.1s" style="margin-bottom: 50px">
+    <img src="~/User/img/Slide1.png" alt="Header Image" class="img-fluid header-img">
+    <div class="container text-center py-5">
+        <h1 class="display-2 text-white mb-4">Sản phẩm</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="#">Trang</a></li>
+                <li class="breadcrumb-item text-white" aria-current="page">Sản phẩm</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- Page Header End -->
+
+<div class="input-group w-100 mx-auto d-flex">
+    <input id="searchInput" type="search" class="form-control p-3" placeholder="Từ khóa" aria-describedby="search-icon-1">
+    <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+    <span id="mic-icon" class="input-group-text p-3">
+        <i class="fa fa-microphone" style="cursor: pointer;"></i>
+    </span>
+   @*  <span id="image-search-icon" class="input-group-text p-3" style="cursor: pointer;">
+        <i class="fa fa-image"></i>
+        <input id="imageInput" type="file" accept="image/*" style="display: none;" />
+    </span> *@
+</div>
+
+<!-- Overlay for dark mode -->
+<div id="dark-overlay" class="dark-overlay" style="display: none;"></div>
+
+<div id="listening-box" class="listening-box" style="display: none;">
+    <div class="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <p>Đang nghe...</p>
+</div>
+
 <!-- Products Section -->
 <div class="container-xxl py-5">
     <div class="container">
-        <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
-            <p class="section-title bg-white text-center text-primary px-3">Sản phẩm của chúng tôi</p>
-            <h1 class="mb-5">Bán Chạy Nhất</h1>
-        </div>
         <div class="row gx-4" id="product-list-user">
             <!-- Sản phẩm sẽ được thêm vào đây thông qua JavaScript -->
         </div>
     </div>
 </div>
 <!-- End Products Section -->
+
+
+
 
 <!-- Phần phân trang -->
 <div class="row">
@@ -145,10 +301,10 @@
     <div class="container py-5">
         <div class="row g-5">
             <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4">Our Office</h5>
-                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                <h5 class="text-white mb-4">Cơ sở chính</h5>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trịnh Văn Bô, Hà Nội</p>
                 <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>hear&graden@work.com</p>
                 <div class="d-flex pt-3">
                     <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
                     <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
@@ -158,24 +314,21 @@
             </div>
             <div class="col-lg-3 col-md-6">
                 <h5 class="text-white mb-4">Quick Links</h5>
-                <a class="btn btn-link" href="">About Us</a>
-                <a class="btn btn-link" href="">Contact Us</a>
-                <a class="btn btn-link" href="">Our Services</a>
-                <a class="btn btn-link" href="">Terms & Condition</a>
-                <a class="btn btn-link" href="">Support</a>
+                <a class="btn btn-link" href="">Trang chủ</a>
+                <a class="btn btn-link" href="">Sản phẩm</a>
+                <a class="btn btn-link" href="">Về chúng tôi</a>
+                <a class="btn btn-link" href="">Quyên góp</a>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4">Business Hours</h5>
-                <p class="mb-1">Monday - Friday</p>
+                <h5 class="text-white mb-4">Giờ mở cửa</h5>
+                <p class="mb-1">Thứ 2 - Thứ 6</p>
                 <h6 class="text-light">09:00 am - 07:00 pm</h6>
-                <p class="mb-1">Saturday</p>
+                <p class="mb-1">Thứ 7 - Chủ nhật</p>
                 <h6 class="text-light">09:00 am - 12:00 pm</h6>
-                <p class="mb-1">Sunday</p>
-                <h6 class="text-light">Closed</h6>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h5 class="text-white mb-4">Newsletter</h5>
-                <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                <h5 class="text-white mb-4">Bản tin</h5>
+                <p>Green & Heart luôn lắng nghe khách hàng để hoàn thiện hơn mỗi ngày. Chúc bạn ngày mới tốt lành</p>
                 <div class="position-relative w-100">
                     <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
                     <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
@@ -211,16 +364,183 @@
 
 
 <script>
-    // Navbar scroll function with debounce for performance
-    function debounce(func, delay) {
-        let debounceTimer;
-        return function () {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => func.apply(this, arguments), delay);
-        };
+    var searchInput = document.querySelector('#searchInput');
+    var productList = document.querySelector('#product-list-user');
+    var darkOverlay = document.querySelector('#dark-overlay');
+    var listeningBox = document.querySelector('#listening-box');
+
+    // Thiết lập nhận diện giọng nói
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.lang = 'vi-VN';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    // Xử lý sự kiện bắt đầu nhận diện giọng nói
+    recognition.onstart = function () {
+        toggleListeningMode(true); // Hiển thị giao diện "Đang nghe"
+    };
+
+    // Xử lý kết quả nhận diện giọng nói
+    recognition.onresult = function (event) {
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+                let result = event.results[i][0].transcript.trim();
+                finalTranscript += result;
+            }
+        }
+
+        if (finalTranscript) {
+            finalTranscript = normalizeQuery(finalTranscript); // Chuẩn hóa chuỗi
+
+            searchInput.value = finalTranscript; // Đồng bộ text vào ô tìm kiếm
+            performSearch(finalTranscript);     // Gửi query tìm kiếm
+            toggleListeningMode(false);
+        }
+    };
+
+    // Xử lý khi kết thúc việc nhận diện giọng nói
+    recognition.onspeechend = function () {
+        recognition.stop();
+        toggleListeningMode(false);
+    };
+
+    // Lắng nghe sự kiện click biểu tượng micro
+    document.querySelector('#mic-icon').addEventListener('click', function () {
+        recognition.start(); // Bắt đầu nhận diện giọng nói
+    });
+
+    // Đồng bộ khi người dùng gõ vào ô tìm kiếm
+    searchInput.addEventListener('input', function () {
+        const query = normalizeQuery(searchInput.value); // Chuẩn hóa chuỗi nhập vào
+        performSearch(query); // Thực hiện tìm kiếm
+    });
+
+    // Xử lý lỗi nhận diện
+    recognition.onerror = function (event) {
+        console.error('Recognition error:', event.error);
+        toggleListeningMode(false);
+    };
+
+    // Hiển thị hoặc ẩn giao diện "Đang nghe"
+    function toggleListeningMode(isListening) {
+        if (isListening) {
+            darkOverlay.style.display = 'block'; // Hiển thị nền tối
+            listeningBox.style.display = 'block'; // Hiển thị hộp "Đang nghe"
+        } else {
+            darkOverlay.style.display = 'none'; // Ẩn nền tối
+            listeningBox.style.display = 'none'; // Ẩn hộp
+        }
     }
 
-    window.addEventListener("scroll", debounce(function () {
-        document.querySelector(".navbar").classList.toggle("scrolled", window.scrollY > 50);
-    }, 10));
+    // Hàm chuẩn hóa chuỗi tìm kiếm
+    function normalizeQuery(query) {
+        return query
+            .toLowerCase() // Đảm bảo tìm kiếm không phân biệt chữ hoa/thường
+            .trim()         // Loại bỏ khoảng trắng thừa ở đầu/cuối
+            .replace(/\s+/g, ' ') // Chuẩn hóa khoảng trắng thừa giữa các từ
+            .replace(/\.$/, '');   // Loại bỏ dấu chấm ở cuối chuỗi
+    }
+
+    // Hàm thực hiện tìm kiếm qua AJAX
+    function performSearch(query) {
+        if (!query.trim()) {
+            fetchAllProducts(); // Gọi API lấy tất cả sản phẩm
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Search", "User")",
+            data: { query: query },
+            success: function (data) {
+                productList.innerHTML = data;
+            },
+            error: function () {
+                alert("Không thể tải dữ liệu. Vui lòng thử lại.");
+            }
+        });
+    }
+
+    // Hàm lấy tất cả sản phẩm khi không có tìm kiếm
+    function fetchAllProducts() {
+        $.ajax({
+            type: "GET", // Hoặc POST nếu cần
+            url: "@Url.Action("GetAllProducts", "User")", // URL lấy tất cả sản phẩm
+            success: function (data) {
+                productList.innerHTML = data; // Hiển thị danh sách tất cả sản phẩm
+            },
+            error: function () {
+                alert("Không thể tải dữ liệu. Vui lòng thử lại.");
+            }
+        });
+    }
+
+    // Function to fetch all products
+    function fetchAllProducts() {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("FetchAllProducts", "User")", // API trả về toàn bộ sản phẩm
+            success: function (data) {
+                productList.innerHTML = data; // Hiển thị danh sách tất cả sản phẩm
+            },
+            error: function () {
+                alert("Không thể tải tất cả sản phẩm. Vui lòng thử lại.");
+            }
+        });
+    }
+
+    // Add click event to search icon
+    document.querySelector('#search-icon-1').addEventListener('click', function () {
+        performSearch(searchInput.value);
+    });
+
+    // Trigger search on Enter key press
+    searchInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            performSearch(searchInput.value);
+        }
+    });
+
+
+    document.querySelector('#image-search-icon').addEventListener('click', function () {
+        document.querySelector('#imageInput').click(); // Mở cửa sổ chọn ảnh
+    });
+
+    document.querySelector('#imageInput').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            // Hiển thị thông báo tìm kiếm
+            document.querySelector('#product-list-user').innerHTML = "<p>Đang tìm kiếm sản phẩm theo hình ảnh...</p>";
+
+            var formData = new FormData();
+            formData.append('image', file);
+
+            // AJAX gửi ảnh lên server
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SearchByImage", "User")",  // Đảm bảo URL của controller và action chính xác
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data) {
+                        document.querySelector('#product-list-user').innerHTML = data; // Hiển thị danh sách sản phẩm
+                    } else {
+                        document.querySelector('#product-list-user').innerHTML = "<p>Không tìm thấy sản phẩm phù hợp.</p>";
+                    }
+                },
+                error: function () {
+                    document.querySelector('#product-list-user').innerHTML = "<p>Đã xảy ra lỗi khi tìm kiếm sản phẩm. Vui lòng thử lại.</p>";
+                }
+            });
+        }
+    });
+
+
 </script>
+
+
+</html>

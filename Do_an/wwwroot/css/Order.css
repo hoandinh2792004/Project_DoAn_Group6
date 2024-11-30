@@ -1,0 +1,98 @@
+﻿.order-list {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    border: 2px solid #ddd;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.order-img img {
+    width: 150x;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.order-info {
+    flex-grow: 1;
+    margin-left: 15px;
+}
+
+.product-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.product-type,
+.product-quantity {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.order-price {
+    text-align: right;
+    margin-left: 10px;
+}
+
+.product-price {
+    font-size: 16px;
+    color: #000;
+}
+
+.total-price {
+    font-size: 18px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 20px;
+}
+
+.btn {
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+    }
+
+.btn-warning {
+    background-color: #e74c3c;
+    color: white;
+}
+
+    .btn-warning:hover {
+        background-color: #ff0000;
+    }
+
+    .btn-warning:active,
+    .btn-warning:focus {
+        background-color: #e74c3c; /* Giữ màu đỏ khi nhấn */
+        outline: none; /* Loại bỏ viền khi nút được nhấn */
+        box-shadow: none;
+    }

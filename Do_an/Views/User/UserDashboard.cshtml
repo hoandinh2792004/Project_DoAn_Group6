@@ -37,6 +37,161 @@
     <link href="~/User/css/style.css" rel="stylesheet">
     <link href="~/User/css/navbar.css" rel="stylesheet">
 </head>
+<style>
+    .chat-bubble {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 48px; /* Giảm kích cỡ nút */
+        height: 48px; /* Giảm kích cỡ nút */
+        background-color: #4caf50;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        font-size: 20px; /* Giảm kích thước biểu tượng */
+        z-index: 1000;
+    }
+
+        .chat-bubble i {
+            font-size: 24px; /* Giảm kích thước biểu tượng */
+        }
+
+    .chat-container {
+        display: none; /* Ẩn giao diện chatbot ban đầu */
+        position: fixed;
+        bottom: 70px;
+        right: 15px;
+        width: 100%;
+        max-width: 360px; /* Giảm chiều rộng */
+        background: white;
+        border-radius: 8px; /* Giảm góc bo tròn */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        flex-direction: column;
+        z-index: 999;
+        overflow: hidden;
+    }
+
+    .chat-header {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px; /* Giảm padding */
+        text-align: center;
+        font-size: 16px; /* Giảm font-size */
+        font-weight: bold;
+    }
+
+    .chat-messages {
+        padding: 12px; /* Giảm padding */
+        flex-grow: 1;
+        overflow-y: auto;
+        max-height: 380px; /* Giảm chiều cao */
+        background-color: #f9f9f9;
+    }
+
+    .message {
+        margin-bottom: 8px; /* Giảm khoảng cách */
+        max-width: 80%;
+        padding: 8px; /* Giảm padding */
+        border-radius: 6px; /* Giảm góc bo tròn */
+        font-size: 14px; /* Giảm font-size */
+    }
+
+        .message.bot {
+            background-color: #e0f7e9;
+            color: #2e7d32;
+            text-align: left;
+            margin-left: 8px; /* Giảm khoảng cách */
+        }
+
+        .message.user {
+            background-color: #dfe6e9;
+            color: #2d3436;
+            text-align: right;
+            margin-left: auto;
+            margin-right: 8px; /* Giảm khoảng cách */
+        }
+
+    .chat-input {
+        display: flex;
+        padding: 8px; /* Giảm padding */
+        background-color: #f1f1f1;
+        border-top: 1px solid #ddd;
+    }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px; /* Giảm padding */
+            font-size: 14px; /* Giảm font-size */
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .chat-input button {
+            margin-left: 8px; /* Giảm khoảng cách */
+            padding: 8px 16px; /* Giảm padding */
+            font-size: 14px; /* Giảm font-size */
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .chat-input button:hover {
+                background-color: #45a049;
+            }
+
+    /* Điều chỉnh bố cục sản phẩm */
+    .product-item1 {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px; /* Giảm khoảng cách */
+        border: 1px solid #ddd;
+        padding: 8px; /* Giảm padding */
+        border-radius: 4px; /* Giảm góc bo tròn */
+        background-color: #f9f9f9;
+    }
+
+        .product-item1 img {
+            width: 80px; /* Giảm kích thước hình ảnh */
+            height: 80px; /* Giảm kích thước hình ảnh */
+            object-fit: cover;
+            border-radius: 4px; /* Giảm góc bo tròn */
+            margin-right: 12px; /* Giảm khoảng cách */
+        }
+
+    .product-details {
+        flex: 1;
+    }
+
+        .product-details strong {
+            font-size: 14px; /* Giảm font-size */
+            color: #333;
+        }
+
+        .product-details span {
+            display: block;
+            margin-top: 4px; /* Giảm khoảng cách */
+            font-size: 12px; /* Giảm font-size */
+            color: #666;
+        }
+
+    .chat-messages {
+        max-height: 320px; /* Giảm chiều cao */
+        overflow-y: auto;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        left: -25px; /* Điều chỉnh giá trị âm để menu lệch trái thêm */
+    }
+
+
+</style>
 
 <body>
     <!-- Spinner Start -->
@@ -58,28 +213,30 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a asp-action="Userdashboard" asp-controller="User" class="nav-item nav-link active">Trang chủ</a>
-                <a href="service.html" class="nav-item nav-link">Services</a>
                 <a asp-action="Shop" asp-controller="User" class="nav-item nav-link">Sản phẩm</a>
                 <a asp-action="AboutUs" asp-controller="User" class="nav-item nav-link">Về chúng tôi</a>
-                <a href="contact.html" class="nav-item nav-link">Quyên góp</a>
+                <a asp-action="QuyenGop" asp-controller="User" class="nav-item nav-link">Quyên góp</a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
-                <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+            <div class="ps-4 d-none d-lg-block">
+                <a asp-action="Shop" asp-controller="User" class="btn btn-sm p-0">
+                    <button type="button" class="btn btn-sm p-0"><i class="fa fa-search"></i></button>
+                </a>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <button type="button" class="btn btn-sm p-0 position-relative" id="open-cart-btn">
                     <i class="fa fa-shopping-cart"></i>
                     <span id="cart-item-count" class="badge bg-danger position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
                 </button>
             </div>
-            <div class="border-start ps-4 d-none d-lg-block">
+            <div class=" ps-4 d-none d-lg-block">
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
                         <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
                     </a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Profile</a>
-                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Logout</a>
+                    <div class="dropdown-menu bg-light m-0" style="position: absolute; left: -25px;">
+                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Trang cá nhân</a>
+                        <a asp-action="Order" asp-controller="User" class="dropdown-item">Đơn hàng của tôi</a>
+                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +250,7 @@
         <div id="sidecart" class="sidecart">
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
+                <h3 class="cart-title">Giỏ Hàng</h3>
                 <div class="cart-count">
                     <span id="cart-count">0</span>
                 </div>
@@ -111,11 +268,11 @@
             </div>
             <div class="side-cart-bottom">
                 <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
+                    <span class="total-title float-left">Tổng:</span>
                     <span class="total-price float-right" id="total-price">đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Check Out</a>
+                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Thanh toán</a>
                 </div>
             </div>
         </div>
@@ -134,7 +291,7 @@
                                 <div class="col-lg-8 text-start">
                                     <!-- <p class="fs-4 text-white ">Không đơn thuần là cửa hàng cây xanh, chúng tôi còn mang đến giá trị lớn cho xã hội.</p> -->
                                     <h1 class="display-1 text-white mb-5 animated slideInRight">Cây cảnh mini Heart & Garden</h1>
-                                    <a href="" class="btn btn-secondary rounded-pill py-3 px-5 animated slideInRight">Khám phá</a>
+                                    <a asp-action="AboutUs" asp-controller="User" class="btn btn-secondary rounded-pill py-3 px-5 animated slideInRight">Khám phá</a>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +305,7 @@
                                 <div class="col-lg-12 text-center">
                                     <!-- <p class="fs-4 text-white">Welcome to our dairy farm</p> -->
                                     <!-- <h1 class="display-1 text-white mb-5 animated slideInRight">Hãy tham gia cùng chúng tôi</h1> -->
-                                    <a href="" class="btn btn-secondary rounded-pill py-3 px-5 animated slideInLeft" style="margin-top:-280px ;">Đăng ký</a>
+                                    <a asp-action="QuyenGop" asp-controller="User" class="btn btn-secondary rounded-pill py-3 px-5 animated slideInLeft" style="margin-top:-280px ;">Đăng ký</a>
                                 </div>
                             </div>
                         </div>
@@ -241,49 +398,54 @@
         </div>
     </div>
     <!-- Product End -->
-
- 
     <!-- Testimonial Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center mx-auto wow fadeInUp" data-wow-delay="0.1s" style="max-width: 500px;">
                 <p class="section-title bg-white text-center text-primary px-3">Phản hồi từ khách hàng</p>
-                <h1 class="mb-5">What People Say About Our Dairy Farm</h1>
+                <h1 class="mb-5">Khách hàng đánh giá về Website chúng tôi </h1>
             </div>
             <div class="row g-5 align-items-center">
                 <div class="col-lg-5 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="testimonial-img">
-                        <img class="img-fluid animated pulse infinite" src="~/User/img/testimonial-1.jpg" alt="">
-                        <img class="img-fluid animated pulse infinite" src="~/User/img/testimonial-2.jpg" alt="">
-                        <img class="img-fluid animated pulse infinite" src="~/User/img/testimonial-3.jpg" alt="">
-                        <img class="img-fluid animated pulse infinite" src="~/User/img/testimonial-4.jpg" alt="">
+                        <img class="img-fluid animated pulse infinite" src="~/User/img/Tuthien/1.jpg" alt="">
+                        <img class="img-fluid animated pulse infinite" src="~/User/img/Tuthien/2.jpg" alt="">
+                        <img class="img-fluid animated pulse infinite" src="~/User/img/Tuthien/3.jpg" alt="">
+                        <img class="img-fluid animated pulse infinite" src="~/User/img/Tuthien/4.jpg" alt="">
                     </div>
                 </div>
                 <div class="col-lg-7 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="owl-carousel testimonial-carousel">
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="~/User/img/testimonial-1.jpg" alt="">
-                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
-                            <h5>Client Name</h5>
-                            <span class="text-primary">Profession</span>
+                            <img class="img-fluid mb-3" src="~/User/img/Tuthien/1.jpg" alt="">
+                            <p class="fs-5">
+                                "Trải nghiệm mua sắm ở đây thật tuyệt vời! Tôi có thể dễ dàng tìm kiếm cây cảnh yêu thích chỉ bằng cách nói chuyện với AI chatbot. Không cần phải mất thời gian tìm kiếm, chỉ cần nói tên cây hoặc mô tả ngắn, chatbot sẽ giúp tôi tìm được ngay sản phẩm phù hợp. Dịch vụ rất nhanh và các cây cảnh đều rất đẹp, chất lượng tốt. Cảm ơn cửa hàng rất nhiều!"
+
+                            </p>
+                            <h5>Nguyen Ha Ngoc Anh</h5>
+                            <span class="text-primary">Khách hàng</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="~/User/img/testimonial-2.jpg" alt="">
-                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
-                            <h5>Client Name</h5>
-                            <span class="text-primary">Profession</span>
+                            <img class="img-fluid mb-3" src="~/User/img/Tuthien/2.jpg" alt="">
+                            <p class="fs-5">
+                                "Mua cây cảnh online ở đây thật dễ dàng nhờ tính năng tìm kiếm bằng giọng nói. Chỉ cần nói 'Sen đá' và chatbot sẽ tìm ngay cho tôi các lựa chọn phù hợp. Tôi cũng rất ấn tượng với khả năng của AI trong việc gợi ý các cây cảnh phù hợp với nhu cầu của tôi. Duy chỉ có một chút thiếu sót về việc chi tiết mô tả cây cảnh, nhưng tổng thể rất hài lòng!"
+                            </p>
+                            <h5>Bear</h5>
+                            <span class="text-primary">Khách hàng</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="~/User/img/testimonial-3.jpg" alt="">
-                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
-                            <h5>Client Name</h5>
-                            <span class="text-primary">Profession</span>
+                            <img class="img-fluid mb-3" src="~/User/img/Tuthien/3.jpg" alt="">
+                            <p class="fs-5">"AI chatbot của cửa hàng rất thông minh và thân thiện. Tôi đã hỏi về cách chăm sóc cây cảnh và chatbot không chỉ trả lời chính xác mà còn đưa ra các lời khuyên hữu ích về cách duy trì cây lâu dài. Tính năng tìm kiếm giọng nói rất tiện lợi, giúp tôi tiết kiệm thời gian tìm cây. Tôi sẽ tiếp tục ủng hộ cửa hàng này trong tương lai!"</p>
+                            <h5>Dinh Phu Hoan</h5>
+                            <span class="text-primary">Khách hàng</span>
                         </div>
                         <div class="testimonial-item">
-                            <img class="img-fluid mb-3" src="~/User/img/testimonial-4.jpg" alt="">
-                            <p class="fs-5">Dolores sed duo clita tempor justo dolor et stet lorem kasd labore dolore lorem ipsum. At lorem lorem magna ut et, nonumy et labore et tempor diam tempor erat.</p>
-                            <h5>Client Name</h5>
-                            <span class="text-primary">Profession</span>
+                            <img class="img-fluid mb-3" src="~/User/img/Tuthien/4.jpg" alt="">
+                            <p class="fs-5">
+                                "Website rất dễ sử dụng và tìm kiếm cây cảnh trở nên thú vị hơn nhờ vào tính năng chatbot AI và voice search. Mặc dù tôi rất thích việc tìm cây bằng giọng nói, nhưng đôi khi chatbot vẫn hiểu sai từ khóa. Dù vậy, tôi vẫn rất ấn tượng với sự tiện lợi của nó và chất lượng sản phẩm cực kỳ tốt. Cửa hàng có rất nhiều lựa chọn, và tôi rất hài lòng với cây cảnh tôi đã mua."
+                            </p>
+                            <h5>Couple</h5>
+                            <span class="text-primary">Khách hàng</span>
                         </div>
                     </div>
                 </div>
@@ -291,77 +453,17 @@
         </div>
     </div>
     <!-- Testimonial End -->
-    <!-- Gallery Start -->
-    <div class="container-xxl py-5 px-0">
-        <div class="row g-0">
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="row g-0">
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-5.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-5.jpg" alt="">
-                        </a>
-                    </div>
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-1.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-1.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="row g-0">
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-2.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-2.jpg" alt="">
-                        </a>
-                    </div>
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-6.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-6.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="row g-0">
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-7.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-7.jpg" alt="">
-                        </a>
-                    </div>
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-3.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-3.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                <div class="row g-0">
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-4.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-4.jpg" alt="">
-                        </a>
-                    </div>
-                    <div class="col-12">
-                        <a class="d-block" href="img/gallery-8.jpg" data-lightbox="gallery">
-                            <img class="img-fluid" src="~/User/img/gallery-8.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Gallery End -->
+
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
             <div class="row g-5">
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Our Office</h5>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                    <h5 class="text-white mb-4">Cơ sở chính</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Trịnh Văn Bô, Hà Nội</p>
                     <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>hear&graden@work.com</p>
                     <div class="d-flex pt-3">
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-twitter"></i></a>
                         <a class="btn btn-square btn-secondary rounded-circle me-2" href=""><i class="fab fa-facebook-f"></i></a>
@@ -371,24 +473,21 @@
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h5 class="text-white mb-4">Quick Links</h5>
-                    <a class="btn btn-link" href="">About Us</a>
-                    <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Our Services</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">Support</a>
+                    <a class="btn btn-link" href="">Trang chủ</a>
+                    <a class="btn btn-link" href="">Sản phẩm</a>
+                    <a class="btn btn-link" href="">Về chúng tôi</a>
+                    <a class="btn btn-link" href="">Quyên góp</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Business Hours</h5>
-                    <p class="mb-1">Monday - Friday</p>
+                    <h5 class="text-white mb-4">Giờ mở cửa</h5>
+                    <p class="mb-1">Thứ 2 - Thứ 6</p>
                     <h6 class="text-light">09:00 am - 07:00 pm</h6>
-                    <p class="mb-1">Saturday</p>
+                    <p class="mb-1">Thứ 7 - Chủ nhật</p>
                     <h6 class="text-light">09:00 am - 12:00 pm</h6>
-                    <p class="mb-1">Sunday</p>
-                    <h6 class="text-light">Closed</h6>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <h5 class="text-white mb-4">Newsletter</h5>
-                    <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+                    <h5 class="text-white mb-4">Bản tin</h5>
+                    <p>Green & Heart luôn lắng nghe khách hàng để hoàn thiện hơn mỗi ngày. Chúc bạn ngày mới tốt lành</p>
                     <div class="position-relative w-100">
                         <input class="form-control bg-transparent w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
                         <button type="button" class="btn btn-secondary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
@@ -398,24 +497,96 @@
         </div>
     </div>
     <!-- Footer End -->
-    <!-- Copyright Start -->
-    <div class="container-fluid bg-secondary text-body copyright py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a class="fw-semi-bold" href="#">Your Site Name</a>, All Right Reserved.
-                </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                    Designed By <a class="fw-semi-bold" href="https://htmlcodex.com">HTML Codex</a>
-                </div>
-            </div>
+   @*  <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a> *@
+
+    <!-- Nút Chatbot -->
+    <div class="chat-bubble" onclick="toggleChat()">
+        <i class="bi bi-chat-dots"></i>
+    </div>
+
+    <!-- Giao diện Chatbot -->
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <div class="chat-header">Chat Hỗ Trợ Chọn Cây Trồng</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot"> Heart & Garden xin chào! Tôi có thể cung cấp cho bạn loại cây trồng phù hợp. Bạn cần cây như thế nào ?</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userMessage" placeholder="Nhập tin nhắn...">
+            <button onclick="sendMessage()">Gửi</button>
         </div>
     </div>
-    <!-- Copyright End -->
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a>
 
+    <script>
+        // Định nghĩa hàm toggleChat toàn cục
+        function toggleChat() {
+            const chatContainer = document.getElementById("chatContainer");
+            const isHidden = chatContainer.style.display === "none" || !chatContainer.style.display;
+            chatContainer.style.display = isHidden ? "block" : "none";
+        }
+
+        async function sendMessage() {
+            const userMessage = document.getElementById("userMessage");
+            const chatMessages = document.getElementById("chatMessages");
+            const message = userMessage.value.trim();
+
+            if (message === "") return;
+
+            // Hiển thị tin nhắn người dùng
+            const userDiv = document.createElement("div");
+            userDiv.className = "message user";
+            userDiv.textContent = message;
+            chatMessages.appendChild(userDiv);
+            userMessage.value = "";
+
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot";
+
+            try {
+                // Gửi yêu cầu API
+                const response = await fetch(`http://localhost:5135/api/ChatBot/search?keyword=${encodeURIComponent(message)}`);
+                const responseData = await response.json();
+                console.log("API Response Data:", responseData);
+
+                // Kiểm tra và hiển thị kết quả
+                if (responseData && responseData.data && responseData.data.$values && responseData.data.$values.length > 0) {
+                    let productResponse = "Đây là các sản phẩm tôi tìm thấy:<br>";
+                    responseData.data.$values.forEach((product) => {
+                        const id = product.productId;
+                        const name = product.name || "Không có tên";
+                        const category = product.categoryName || "Không rõ danh mục";
+                        const description = product.description || "Không có mô tả";
+                        const price = product.price && !isNaN(product.price) ? `${product.price.toLocaleString()} VND` : "Không rõ giá";
+                        const imageUrl = product.imageUrl || "/images/default.png";
+
+                        productResponse += `
+                                        <div class="product-item1">
+                                            <a href="http://localhost:5135/Home/ProductDetail?id=${id}" target="_blank">
+                <img src="${imageUrl}" alt="${name}" class="product-image">
+                                            </a>
+                                            <div class="product-details">
+                                                <strong>${name}</strong> <span>(${category})</span>
+                                                <span>${description}</span>
+                                                <span><strong>Giá:</strong> ${price}</span>
+                                            </div>
+                                        </div>
+                                    `;
+                    });
+                    botDiv.innerHTML = productResponse;
+                } else {
+                    botDiv.textContent = responseData.response || "Không có sản phẩm nào khớp với tìm kiếm.";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                botDiv.textContent = "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.";
+            }
+
+            chatMessages.appendChild(botDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+
+    </script>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

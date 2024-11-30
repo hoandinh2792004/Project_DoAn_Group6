@@ -4,7 +4,7 @@
 .ordermanager table {
     width: 100%;
     border-collapse: collapse;
-    border: 2px solid #000; /* Đặt viền cho bảng với màu đen */
+    border: 2px solid #ddd; /* Đặt viền cho bảng với màu đen */
 }
 
     /* Styling for table headers */
@@ -69,4 +69,9 @@
     --bs-btn-disabled-color: #fff; /* Đặt màu chữ khi disabled là trắng */
     --bs-btn-disabled-bg: #ffc107;
     --bs-btn-disabled-border-color: #ffc107;
+}
+/* Thanh cuộn cho bảng danh sách sản phẩm */
+.ordermanager .table-responsive {
+    max-height: 400px; /* Chiều cao tối đa của bảng */
+    overflow-y: auto; /* Hiển thị thanh cuộn dọc khi nội dung vượt quá chiều cao */
 }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.Hosting;
+using Do_an.DTOs;
 
 namespace Do_an.Areas.Admin.Controllers
 {
@@ -253,6 +254,34 @@ namespace Do_an.Areas.Admin.Controllers
                 return StatusCode(500, "Đã xảy ra lỗi trong quá trình lấy dữ liệu."); // Trả về lỗi server
             }
         }
+        // GET: api/Product
+        [HttpGet("GetOrderTotals")]
+        public async Task<ActionResult<IEnumerable<OrderTotalDto>>> GetOrderTotals()
+        {
+            try
+            {
+                var orderTotals = await _context.OrderDetails
+                    .GroupBy(o => o.OrderId) // Nhóm theo OrderID
+                    .Select(g => new OrderTotalDto
+                    {
+                        OrderId = g.Key ?? 0, // Nếu OrderId null, gán giá trị mặc định là 0
+                        TotalSum = g.Sum(o => o.Total ?? 0) // Nếu Total null, gán giá trị mặc định là 0
+                    })
+                    .ToListAsync();
 
+                if (!orderTotals.Any()) // Kiểm tra danh sách có trống không
+                {
+                    return Ok(new List<OrderTotalDto>()); // Trả về danh sách trống
+                }
+
+                return Ok(orderTotals); // Trả về danh sách gộp OrderID và TotalSum
+            }
+            catch (Exception ex)
+            {
+                // Ghi log lỗi chi tiết
+                _logger.LogError(ex, "Đã xảy ra lỗi trong quá trình lấy dữ liệu tổng đơn hàng.");
+                return StatusCode(500, "Đã xảy ra lỗi trong quá trình lấy dữ liệu."); // Trả về lỗi server
+            }
+        }
     }
 }
