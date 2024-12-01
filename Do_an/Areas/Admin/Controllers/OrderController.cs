@@ -40,7 +40,8 @@ namespace Do_an.Areas.Admin.Controllers
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
                         Status = o.Status,
-                        UserId = o.UserId, // Lấy UserId từ bảng Customer (giả sử Order có liên kết với Customer)
+                        UserId = o.UserId,
+                        CancelReason = o.CancelReason,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -120,6 +121,7 @@ namespace Do_an.Areas.Admin.Controllers
                         UserId = o.UserId,
                         ShippingAddress = o.ShippingAddress,  
                         PaymentMethod = o.PaymentMethod,
+                        CancelReason = o.CancelReason,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -245,9 +247,17 @@ namespace Do_an.Areas.Admin.Controllers
 
             // Cập nhật trạng thái đơn hàng
             order.Status = request.Status;
+
+            // Kiểm tra nếu trạng thái là "Đơn hàng đã bị từ chối", cập nhật lý do hủy
+            if (request.Status == "Đơn hàng đã bị từ chối" && !string.IsNullOrWhiteSpace(request.CancelReason))
+            {
+                order.CancelReason = request.CancelReason; // Cập nhật lý do hủy
+            }
+
+            // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
 
-            return Ok($"Trạng thái của đơn hàng ID: {orderId} đã được cập nhật thành '{request.Status}'.");
+            return Ok($"Trạng thái của đơn hàng ID: {orderId} đã được cập nhật thành '{request.Status}' và lý do hủy (nếu có) đã được lưu.");
         }
     }
 }

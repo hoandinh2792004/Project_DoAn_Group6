@@ -57,7 +57,7 @@
                         <td>${order.status}</td>
                         <td>
                             <button class="btn btn-sm btn-warning" onclick="openEditOrderModal(${order.orderId})">Chỉnh sửa</button>
-                            <button class="btn btn-sm btn-warning" onclick="openOrderDetailModal(${order.orderId})">Chi tiết</button>
+                            <button class="btn btn-sm btn-detail" onclick="openOrderDetailModal(${order.orderId})">Chi tiết</button>
                             <button class="btn btn-sm btn-danger" onclick="deleteOrder(${order.orderId})">Xóa</button>
                         </td>
                     </tr>
@@ -243,6 +243,23 @@ async function openOrderDetailModal(orderId) {
             status: order.status || "Không rõ trạng thái" // Lấy trạng thái đơn hàng
         };
 
+        console.log('Toàn bộ thông tin đơn hàng:', order); // Kiểm tra toàn bộ thông tin đơn hàng
+        console.log('Lý do hủy:', order.cancelReason); // Kiểm tra lý do hủy
+
+        // Hiển thị lý do hủy nếu trạng thái là "Đơn hàng đã bị từ chối"
+        const cancelReasonDiv = document.getElementById('cancelReason');
+        const cancelReasonText = document.getElementById('cancelReasonText');
+        if (order.status === 'Đơn hàng đã bị từ chối') {
+            cancelReasonDiv.style.display = 'block'; // Hiển thị phần lý do hủy
+            if (order.cancelReason) {
+                cancelReasonText.textContent = order.cancelReason; // Hiển thị lý do hủy nếu có
+            } else {
+                cancelReasonText.textContent = 'Không có lý do hủy'; // Hiển thị thông báo mặc định nếu không có lý do hủy
+            }
+        } else {
+            cancelReasonDiv.style.display = 'none'; // Ẩn phần lý do hủy nếu đơn hàng không bị từ chối
+        }
+
         // Mở modal chi tiết với dữ liệu đã chuẩn bị
         openOrderDetailModalContent(orderData);
         $('.modal-backdrop').remove(); // Loại bỏ backdrop nếu có
@@ -286,10 +303,14 @@ function openOrderDetailModalContent(order) {
 
     if (order.status === "Đơn hàng đã được xác nhận và giao đi") {
         acceptButton.style.display = "none";
+    } else if (order.status === "Giao hàng thành công") {
+        acceptButton.style.display = "none";
+        rejectButton.style.display = "none";
     } else if (order.status === "Đơn hàng đã bị từ chối") {
         acceptButton.style.display = "none";
         rejectButton.style.display = "none";
-    } else {
+    }
+    else {
         acceptButton.style.display = "inline-block";
         rejectButton.style.display = "inline-block";
     }

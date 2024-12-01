@@ -57,23 +57,30 @@ function displayOrders(orders) {
 
     orderListElement.innerHTML = ''; // Xóa danh sách cũ
 
-    console.log('Kiểm tra dữ liệu đơn hàng trước khi hiển thị:', orders);
-
     if (orders && orders.length > 0) {
         orders.forEach(order => {
             const orderItem = document.createElement('div');
             orderItem.classList.add('order-item');
 
-            // Lấy thông tin chi tiết đơn hàng (orderDetails)
-            const orderDetails = order.orderDetails && order.orderDetails.$values; // Lấy toàn bộ chi tiết đơn hàng từ $values
+            const orderDetails = order.orderDetails && order.orderDetails.$values;
             if (!orderDetails || orderDetails.length === 0) {
                 return; // Nếu không có chi tiết đơn hàng, bỏ qua
             }
 
-            // Tạo HTML cho các chi tiết đơn hàng
             const productNames = orderDetails.map(detail => `<div>${detail.productName}</div>`).join('');
             const quantities = orderDetails.map(detail => `<div>${detail.quantity}</div>`).join('');
             const prices = orderDetails.map(detail => `<div>${detail.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>`).join('');
+
+
+            // Map trạng thái từ API về trạng thái chuẩn
+            const statusMapping = {
+                "Chờ xác nhận": "Đang chờ xử lý",
+                "Đơn hàng đã được xác nhận và giao đi": "Đã xác nhận và giao đi",
+                "Giao hàng thành công": "Đã hoàn thành",
+                "Đơn hàng đã bị từ chối": "Đã bị từ chối"
+            };
+
+            const mappedStatus = statusMapping[order.status] || order.status;
 
             orderItem.innerHTML = `
                 <div class="order-img">
@@ -88,16 +95,154 @@ function displayOrders(orders) {
                     <p class="total-price">${order.totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
                 </div>
                 <div class="order-actions">
-                    <button class="btn btn-primary">Đã nhận được đơn hàng</button>
+                 ${mappedStatus === 'Đã bị từ chối' ? '<p class="text-danger">Đơn hàng đã bị hủy</p>' : ''}
+                ${mappedStatus === 'Đã hoàn thành' ? '<p class="text-custom-success">Đơn hàng đã được giao</p>' : ''}
+                    <button 
+                        class="btn btn-primary btn-received-order ${mappedStatus !== "Đã xác nhận và giao đi" ? 'disabled' : ''}" 
+                        data-order-id="${order.orderId}" 
+                        onclick="updateOrderStatus(this, 'Giao hàng thành công')" 
+                        style="${mappedStatus !== 'Đã xác nhận và giao đi' ? 'background-color: #6c757d; cursor: not-allowed;' : ''}">
+                        Đã nhận được đơn hàng
+                    </button>
                     <button class="btn btn-info" data-order-id="${order.orderId}" onclick="openOrderDetailModal(this)">Xem chi tiết</button>
-                    <button class="btn btn-warning">Hủy đơn hàng</button>
+                    <button class="btn btn-warning" onclick="showCancelOrderModal(${order.orderId})">Hủy đơn hàng</button>
                 </div>
             `;
+
+            // Ẩn nút "Đã nhận được đơn hàng" nếu trạng thái là "Giao hàng thành công"
+            if (mappedStatus === "Đã hoàn thành") {
+                const receivedButton = orderItem.querySelector('.btn-received-order');
+                const cancelButton = orderItem.querySelector('.btn-warning');
+                if (receivedButton) {
+                    receivedButton.style.display = 'none';  // Ẩn nút nếu trạng thái đã hoàn thành
+                }
+                if (cancelButton) {
+                    cancelButton.style.display = 'none';  // Ẩn nút "Hủy đơn hàng"
+                }
+            }
+
+            // Ẩn nút "Đã nhận được đơn hàng" nếu trạng thái là "Đơn hàng đã bị từ chối"
+            if (mappedStatus === "Đã bị từ chối") {
+                const receivedButton = orderItem.querySelector('.btn-received-order');
+                const cancelButton = orderItem.querySelector('.btn-warning');
+                if (receivedButton) {
+                    receivedButton.style.display = 'none';  // Ẩn nút nếu trạng thái đơn hàng đã bị từ chối
+                }
+                if (cancelButton) {
+                    cancelButton.style.display = 'none';  // Ẩn nút "Hủy đơn hàng"
+                }
+            }
 
             orderListElement.appendChild(orderItem);
         });
     } else {
         orderListElement.innerHTML = '<p>Không có đơn hàng nào.</p>';
+    }
+}
+
+
+// Hiển thị modal để hỏi lý do hủy đơn hàng
+function showCancelOrderModal(orderId) {
+    // Mở modal
+    const cancelOrderModal = new bootstrap.Modal(document.getElementById('cancelOrderModal'));
+    cancelOrderModal.show();
+
+    // Lưu id đơn hàng để xử lý sau khi người dùng nhập lý do
+    window.currentOrderId = orderId;
+}
+
+// Hàm xử lý khi người dùng gửi lý do hủy đơn hàng
+async function submitCancelOrder() {
+    const cancelReason = document.getElementById('cancelReason').value;
+
+    if (!cancelReason) {
+        alert("Vui lòng nhập lý do hủy đơn hàng!");
+        return;
+    }
+
+    // Cập nhật trạng thái đơn hàng thành "Đơn hàng đã bị từ chối"
+    const orderId = window.currentOrderId;
+    console.log(`Đơn hàng ID: ${orderId} bị hủy với lý do: ${cancelReason}`);
+
+    // Gửi yêu cầu PUT tới API để cập nhật trạng thái đơn hàng và lý do hủy
+    try {
+        const response = await fetch(`http://localhost:5135/api/Order/UpdateStatus/${orderId}`, {
+            method: 'PUT',  // Thay đổi từ POST thành PUT
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                status: 'Đơn hàng đã bị từ chối',
+                cancelReason: cancelReason  // Gửi lý do hủy lên API
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Cập nhật trạng thái thất bại.');
+        }
+
+        console.log(`Đã cập nhật trạng thái đơn hàng ID ${orderId} thành "Đơn hàng đã bị từ chối" với lý do: ${cancelReason}.`);
+
+        // Cập nhật giao diện
+        const orderItems = document.querySelectorAll('.order-item');
+        orderItems.forEach(item => {
+            const orderIdElement = item.querySelector('[data-order-id]');
+            if (orderIdElement && orderIdElement.dataset.orderId == orderId) {
+                const receivedButton = item.querySelector('.btn-received-order');
+                const cancelButton = item.querySelector('.btn-warning');
+                const statusText = item.querySelector('.order-status');
+
+                if (receivedButton) receivedButton.style.display = 'none';  // Ẩn nút "Đã nhận được đơn hàng"
+                if (cancelButton) cancelButton.style.display = 'none';      // Ẩn nút "Hủy đơn hàng"
+                if (statusText) statusText.innerHTML = '<p class="text-danger">Đơn hàng đã bị hủy</p>';  // Hiển thị trạng thái "Đơn hàng đã bị hủy"
+            }
+        });
+
+        // Đóng modal sau khi xử lý xong
+        const cancelOrderModal = bootstrap.Modal.getInstance(document.getElementById('cancelOrderModal'));
+        cancelOrderModal.hide();
+
+        // Làm mới lại danh sách đơn hàng
+        getOrdersByUserId(userId);  // Gọi lại hàm lấy danh sách đơn hàng với userId hiện tại
+
+    } catch (error) {
+        console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
+        alert('Không thể cập nhật trạng thái đơn hàng. Vui lòng thử lại sau.');
+    }
+}
+
+
+// Hàm cập nhật trạng thái đơn hàng
+async function updateOrderStatus(buttonElement, newStatus) {
+    const orderId = buttonElement.getAttribute('data-order-id');
+    console.log(`Cập nhật trạng thái đơn hàng ID: ${orderId} thành "${newStatus}"`);
+
+    try {
+        // Gửi yêu cầu PUT tới API để cập nhật trạng thái đơn hàng
+        const response = await fetch(`http://localhost:5135/api/Order/UpdateStatus/${orderId}`, {
+            method: 'PUT',  // Thay đổi từ POST thành PUT
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        if (!response.ok) {
+            throw new Error('Cập nhật trạng thái thất bại.');
+        }
+
+        console.log(`Đã cập nhật trạng thái đơn hàng ID ${orderId} thành "${newStatus}".`);
+
+        // Lấy lại danh sách đơn hàng sau khi cập nhật thành công
+        alert(`Đơn hàng ID ${orderId} đã được cập nhật trạng thái thành "${newStatus}".`);
+
+        // Làm mới lại danh sách đơn hàng
+        getOrdersByUserId(userId);  // Gọi lại hàm lấy danh sách đơn hàng với userId hiện tại
+
+        buttonElement.style.display = 'none'; 
+
+        // Tự động làm mới trang web
+        location.reload();  // Tải lại trang để cập nhật danh sách đơn hàng
+
+    } catch (error) {
+        console.error('Lỗi khi cập nhật trạng thái đơn hàng:', error);
+        alert('Không thể cập nhật trạng thái đơn hàng. Vui lòng thử lại sau.');
     }
 }
 
@@ -112,7 +257,7 @@ async function openOrderDetailModal(buttonElement) {
     }
 
     // Tìm đơn hàng với orderId trong danh sách orders
-    const order = orders.find(order => order.orderId.toString() === orderId.toString());  // So sánh đúng kiểu dữ liệu
+    const order = orders.find(order => order.orderId.toString() === orderId.toString()); // So sánh đúng kiểu dữ liệu
 
     if (!order) {
         console.error('Không tìm thấy đơn hàng với orderId:', orderId);
@@ -149,12 +294,6 @@ async function openOrderDetailModal(buttonElement) {
         const shippingAddress = order.shippingAddress || 'Không có địa chỉ';
 
         // Cập nhật thông tin khách hàng vào modal
-        console.log('Tên khách hàng:', customerName);
-        console.log('Email khách hàng:', customerEmail);
-        console.log('Số điện thoại khách hàng:', customerPhone);
-        console.log('Phương thức thanh toán:', paymentMethod);
-        console.log('Địa chỉ giao hàng:', shippingAddress);
-
         document.getElementById('customerName').textContent = customerName;
         document.getElementById('customerEmail').textContent = customerEmail;
         document.getElementById('customerPhone').textContent = customerPhone;
@@ -187,10 +326,77 @@ async function openOrderDetailModal(buttonElement) {
     // Hiển thị tổng tiền
     document.getElementById('orderTotal').textContent = order.totalAmount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
-    // Mở modal
+    // Map giá trị trạng thái từ API về trạng thái chuẩn
+    const statusMapping = {
+        "Chờ xác nhận": "Đang chờ xử lý",
+        "Đơn hàng đã được xác nhận và giao đi": "Đã xác nhận và giao đi",
+        "Giao hàng thành công": "Đã hoàn thành",
+        "Đơn hàng đã bị từ chối": "Đã bị hủy"
+    };
+
+    // Nếu trạng thái không khớp, chuyển đổi bằng bản đồ
+    const mappedStatus = statusMapping[order.status] || order.status;
+    console.log('Trạng thái sau khi map:', mappedStatus);
+
+    const statuses = [
+        { id: 1, text: "Đang chờ xử lý" },
+        { id: 2, text: "Đã xác nhận và giao đi" },
+        { id: 3, text: "Đã hoàn thành" },
+        { id: 4, text: "Đã bị hủy" },
+    ];
+
+    const currentStatusIndex = statuses.findIndex((status) => status.text === mappedStatus);
+    console.log('Chỉ số trạng thái hiện tại:', currentStatusIndex);
+
+    if (currentStatusIndex === -1) {
+        console.error('Không tìm thấy trạng thái khớp với dữ liệu đơn hàng.');
+    }
+
+    const statusContainer = document.getElementById("orderStatusSteps");
+    if (!statusContainer) {
+        console.error('Không tìm thấy phần tử #orderStatusSteps trong HTML.');
+        return;
+    }
+
+    statusContainer.innerHTML = "";
+    statuses.forEach((status, index) => {
+        console.log(`Đang xử lý trạng thái: ${status.text} (index: ${index})`);
+
+        const step = document.createElement("div");
+        step.classList.add("status-step");
+
+        const badgeClass = index <= currentStatusIndex ? "bg-primary" : "bg-secondary";
+
+        step.innerHTML = `
+            <span class="badge ${badgeClass}">${index + 1}</span>
+            <p>${status.text}</p>
+        `;
+        statusContainer.appendChild(step);
+    });
+
+    console.log('Hoàn tất hiển thị trạng thái đơn hàng.');
+
+    console.log('Toàn bộ thông tin đơn hàng:', order); // Kiểm tra toàn bộ thông tin đơn hàng
+    console.log('Lý do hủy:', order.cancelReason); // Kiểm tra lý do hủy
+
+    // Hiển thị lý do hủy nếu trạng thái là "Đơn hàng đã bị từ chối"
+    const cancelReasonDiv = document.getElementById('cancelReason');
+    const cancelReasonText = document.getElementById('cancelReasonText');
+    if (order.status === 'Đơn hàng đã bị từ chối') {
+        cancelReasonDiv.style.display = 'block'; // Hiển thị phần lý do hủy
+        if (order.cancelReason) {
+            cancelReasonText.textContent = order.cancelReason; // Hiển thị lý do hủy nếu có
+        } else {
+            cancelReasonText.textContent = 'Không có lý do hủy'; // Hiển thị thông báo mặc định nếu không có lý do hủy
+        }
+    } else {
+        cancelReasonDiv.style.display = 'none'; // Ẩn phần lý do hủy nếu đơn hàng không bị từ chối
+    }
+
     const modal = new bootstrap.Modal(document.getElementById('orderDetailModal'));
     modal.show();
 }
+
 
 
 // Lấy token và giải mã userId
@@ -206,4 +412,5 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Không thể lấy userId từ token.');
     }
 });
+
 

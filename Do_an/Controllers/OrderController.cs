@@ -42,6 +42,7 @@ namespace Do_an.Controllers
                         ShippingAddress = o.ShippingAddress,
                         PaymentMethod = o.PaymentMethod,
                         Img = o.Img,
+                        CancelReason = o.CancelReason,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,

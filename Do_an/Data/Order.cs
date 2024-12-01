@@ -21,6 +21,8 @@ public partial class Order
 
     public string Img { get; set; }
 
+    public string? CancelReason { get; set; }
+
     public virtual User User { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();

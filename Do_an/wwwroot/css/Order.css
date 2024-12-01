@@ -73,12 +73,13 @@
 }
 
 .btn-primary {
-    background-color: #3498db;
+    background-color: #2ecc71;
     color: white;
 }
 
     .btn-primary:hover {
-        background-color: #2980b9;
+        background-color: #27ae60;
+        
     }
 
 .btn-warning {
@@ -88,6 +89,7 @@
 
     .btn-warning:hover {
         background-color: #ff0000;
+        
     }
 
     .btn-warning:active,
@@ -96,3 +98,21 @@
         outline: none; /* Loại bỏ viền khi nút được nhấn */
         box-shadow: none;
     }
+.btn-received-order.disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.btn-info {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #0dcaf0;
+}
+    .btn-info:hover {
+        background-color: #007bff;
+    }
+.text-custom-success {
+    color: #28a745; /* Mã màu xanh lá */
+    
+}
+

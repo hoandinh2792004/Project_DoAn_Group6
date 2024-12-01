@@ -18,6 +18,8 @@
 
         public string Img { get; set; }
 
+        public string? CancelReason { get; set; }
+
         public CustomerDto Customer { get; set; } = new CustomerDto();
         public List<OrderDetailDto> OrderDetails { get; set; }
     }
