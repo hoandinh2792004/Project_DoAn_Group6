@@ -1,4 +1,4 @@
-﻿using Do_an.Areas.Admin.Dtos;
+using Do_an.Areas.Admin.Dtos;
 using Do_an.Data; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +42,7 @@ namespace Do_an.Areas.Admin.Controllers
                         Status = o.Status,
                         UserId = o.UserId,
                         CancelReason = o.CancelReason,
+                        Img = o.Img,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -122,6 +123,7 @@ namespace Do_an.Areas.Admin.Controllers
                         ShippingAddress = o.ShippingAddress,  
                         PaymentMethod = o.PaymentMethod,
                         CancelReason = o.CancelReason,
+                        Img = o.Img,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
