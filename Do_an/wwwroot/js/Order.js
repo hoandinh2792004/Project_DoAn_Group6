@@ -1,4 +1,4 @@
-﻿// Phương thức lấy token từ cookie
+// Phương thức lấy token từ cookie
 function getAuthToken() {
     const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
     return token ? token.split('=')[1] : null;
@@ -284,6 +284,7 @@ async function openOrderDetailModal(buttonElement) {
         const customer = customers.$values.find(c => c.userId === userId);
         if (!customer) {
             console.error('Không tìm thấy thông tin khách hàng');
+            alert('Vui lòng cập nhật thông tin cá nhân trước khi tiếp tục.');
             return;
         }
 
