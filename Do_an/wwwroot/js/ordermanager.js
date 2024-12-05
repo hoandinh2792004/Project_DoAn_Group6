@@ -1,4 +1,4 @@
-﻿async function loadOrders() {
+async function loadOrders() {
     try {
         // Gọi cả hai API
         const [orderResponse, totalResponse] = await Promise.all([
@@ -223,7 +223,6 @@ async function openOrderDetailModal(orderId) {
 
         // Chuẩn bị thông tin chi tiết đơn hàng
         const orderDetails = order.orderDetails.$values.map(detail => ({
-            imageUrl: detail.imageUrl || "https://via.placeholder.com/50", // URL hình ảnh sản phẩm
             name: detail.productName || "Không có tên sản phẩm",
             sku: detail.sku || "N/A",
             quantity: detail.quantity || 0,
@@ -232,6 +231,7 @@ async function openOrderDetailModal(orderId) {
         }));
 
         const orderData = {
+            imageUrl: order.img || "https://via.placeholder.com/50",
             orderId: order.orderId || "N/A",
             customerName: customerName,
             customerEmail: customerEmail,
@@ -286,7 +286,7 @@ function openOrderDetailModalContent(order) {
     order.items.forEach(item => {
         const row = `
             <tr>
-                <td><img src="${item.imageUrl}" alt="${item.name}" width="50"></td>
+                <td><img src="${order.imageUrl || 'https://via.placeholder.com/50'}" alt="Hình sản phẩm" width="50" /></td>
                 <td>${item.name}</td>
                 <td>${order.orderId}</td>
                 <td>${item.quantity}</td>
