@@ -153,9 +153,9 @@ function showCancelOrderModal(orderId) {
 
 // Hàm xử lý khi người dùng gửi lý do hủy đơn hàng
 async function submitCancelOrder() {
-    const cancelReason = document.getElementById('cancelReason').value;
+    const cancelReason = document.getElementById('cancelReason').value.trim();
 
-    if (!cancelReason) {
+    if (cancelReason === '') {
         alert("Vui lòng nhập lý do hủy đơn hàng!");
         return;
     }
