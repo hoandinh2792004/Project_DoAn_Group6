@@ -11,57 +11,77 @@ namespace Do_an.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         // Phương thức kiểm tra JWT token trong cookie
-        private IActionResult CheckAuthToken()
-        {
-            // Lấy JWT từ cookie
-            var token = HttpContext.Request.Cookies["authToken"];
-            if (string.IsNullOrEmpty(token))
-            {
-                ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
-                return RedirectToAction("Login", "Login");
-            }
+      private IActionResult CheckAuthToken()
+{
+    // Lấy JWT từ cookie
+    var token = HttpContext.Request.Cookies["authToken"];
+    if (string.IsNullOrEmpty(token))
+    {
+        ViewBag.ErrorMessage = "Bạn cần đăng nhập để truy cập trang này.";
+        return RedirectToAction("Login", "Login");
+    }
 
-            // Xác thực JWT token
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+    // Xác thực JWT token
+    var handler = new JwtSecurityTokenHandler();
+    var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
-            if (jsonToken == null)
-            {
-                ViewBag.ErrorMessage = "Token không hợp lệ.";
-                return RedirectToAction("Login", "Login");
-            }
+    if (jsonToken == null)
+    {
+        ViewBag.ErrorMessage = "Token không hợp lệ.";
+        return RedirectToAction("Login", "Login");
+    }
 
-            // Lấy thông tin UserId từ token (nếu có)
-            var userIdClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid");
-            if (userIdClaim == null)
-            {
-                ViewBag.ErrorMessage = "Không tìm thấy thông tin người dùng trong token.";
-                return RedirectToAction("Login", "Login");
-            }
+    // Lấy thông tin UserId từ token (nếu có)
+    var userIdClaim = jsonToken?.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/userid");
+    if (userIdClaim == null)
+    {
+        ViewBag.ErrorMessage = "Không tìm thấy thông tin người dùng trong token.";
+        return RedirectToAction("Login", "Login");
+    }
 
-            var userId = userIdClaim.Value;
-            ViewBag.UserId = userId; // Lưu UserId vào ViewBag
+    var userId = userIdClaim.Value;
+    ViewBag.UserId = userId; // Lưu UserId vào ViewBag
 
-            return null; // Nếu token hợp lệ, trả về null
-        }
+    // Kiểm tra nếu UserId không phải là 1
+    if (userId != "1")
+    {
+        ViewBag.ErrorMessage = "Bạn không có quyền truy cập trang này.";
+        return RedirectToAction("Login", "Login");
+    }
 
-        public IActionResult Index()
-        {
-            var authResult = CheckAuthToken();
-            if (authResult != null) return authResult; // Nếu token không hợp lệ, chuyển hướng
+    return null; // Nếu token hợp lệ, trả về null
+}
 
-            try
-            {
-                return View();
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = "Đã xảy ra lỗi trong khi xử lý yêu cầu.";
-                // Log lỗi nếu cần thiết
-                return View();
-            }
-        }
+    public IActionResult Index()
+{
+    var authResult = CheckAuthToken();
+    if (authResult != null) return authResult; // Nếu token không hợp lệ, chuyển hướng
 
+    var accessResult = CheckAccess();
+    if (accessResult != null) return accessResult; // Nếu không có quyền truy cập, chuyển hướng
+
+    try
+    {
+        return View();
+    }
+    catch (Exception ex)
+    {
+        ViewBag.ErrorMessage = "Đã xảy ra lỗi trong khi xử lý yêu cầu.";
+        // Log lỗi nếu cần thiết
+        return View();
+    }
+}
+
+private IActionResult CheckAccess()
+{
+    var userId = ViewBag.UserId;
+    if (userId != "1")
+    {
+        ViewBag.ErrorMessage = "Bạn không có quyền truy cập trang này.";
+        return RedirectToAction("Login", "Login");
+    }
+    return null;
+}
         // Action cho trang Products
         public IActionResult ProductsManager()
         {
