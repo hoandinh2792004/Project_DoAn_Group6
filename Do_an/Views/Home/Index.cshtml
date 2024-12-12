@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -37,9 +37,22 @@
     <link href="~/User/css/style.css" rel="stylesheet">
     <link href="~/User/css/navbar.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="~/css/modal.css">
-    
+
 
 </head>
+
+<script>
+    window.embeddedChatbotConfig = {
+        chatbotId: "n3JewmzzIIl2SLEscgci0",
+        domain: "www.chatbase.co"
+    }
+</script>
+<script src="https://www.chatbase.co/embed.min.js"
+        chatbotId="n3JewmzzIIl2SLEscgci0"
+        domain="www.chatbase.co"
+        defer>
+</script>
+
 <style>
     .chat-bubble {
         position: fixed;
@@ -190,6 +203,16 @@
 
 </style>
 
+ @* <script id="6759a24edaeb1d837bc280e0-setup">
+     window.mindpalConfig = {
+         chatbotId: "6759a24edaeb1d837bc280e0",
+         chatbotAvatarUrl: "https://is2-ssl.mzstatic.com/image/thumb/Purple116/v4/5a/5a/f2/5a5af2a1-f3db-d741-c525-266de4e5f9e2/AppIcon-0-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg",
+         chatbotColor: "#06b94d",
+     };
+ </script>
+ <script id="6759a24edaeb1d837bc280e0-run"
+         src="https://mindpal.space/embed.min.js"></script> *@
+
 <body>
     <!-- Spinner Start -->
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
@@ -217,7 +240,6 @@
         </div>
     </div> -->
     <!-- Topbar End -->
-
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
         <div class="main-logo">
@@ -230,9 +252,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a asp-action="Index" asp-controller="Home"class="nav-item nav-link active">Trang chủ</a>
-@*                 <a href="service.html" class="nav-item nav-link">Services</a>
- *@                <a asp-action="Shop" asp-controller="Home" class="nav-item nav-link">Sản phẩm</a>
+                <a asp-action="Index" asp-controller="Home" class="nav-item nav-link active">Trang chủ</a>
+                @*                 <a href="service.html" class="nav-item nav-link">Services</a>
+                *@                <a asp-action="Shop" asp-controller="Home" class="nav-item nav-link">Sản phẩm</a>
                 <a asp-action="AboutUs" asp-controller="Home" class="nav-item nav-link">Về Chúng Tôi</a>
                 <a asp-action="QuyenGop" asp-controller="Home" class="nav-item nav-link">Quyên góp</a>
             </div>
@@ -255,14 +277,13 @@
         </div>
     </nav>
     <!-- Navbar End -->
-
     <!-- View Cart Start -->
     <div id="backdrop" class="backdrop"></div>
     <div class="side-cart-container">
         <div id="sidecart" class="sidecart">
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
+                <h3 class="cart-title">Giỏ Hàng</h3>
                 <div class="cart-count">
                     <span id="cart-count">0</span>
                 </div>
@@ -280,11 +301,11 @@
             </div>
             <div class="side-cart-bottom">
                 <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
+                    <span class="total-title float-left">Tổng:</span>
                     <span class="total-price float-right" id="total-price">đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Check Out</a>     
+                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Thanh toán</a>
                 </div>
             </div>
         </div>
@@ -301,7 +322,6 @@
         </div>
     </div>
     <!-- View Cart End -->
-
     <!-- Carousel Start -->
     <div class="container-fluid px-0 mb-5">
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
@@ -348,7 +368,6 @@
         </div>
     </div>
     <!-- Carousel End -->
-
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -421,7 +440,6 @@
         </div>
     </div>
     <!-- Product End -->
-
     <!-- Testimonial Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -519,11 +537,10 @@
         </div>
     </div>
     <!-- Footer End -->
-   
-     @* <!-- Back to Top -->
-     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a> *@
+    @* <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a> *@
 
-    <!-- Nút Chatbot -->
+   @*  <!-- Nút Chatbot -->
     <div class="chat-bubble" onclick="toggleChat()">
         <i class="bi bi-chat-dots"></i>
     </div>
@@ -532,86 +549,15 @@
     <div class="chat-container" id="chatContainer" style="display: none;">
         <div class="chat-header">Chat Hỗ Trợ Chọn Cây Trồng</div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot"> Heart & Garden xin chào! Tôi có thể cung cấp cho bạn loại cây trồng phù hợp. Bạn cần cây như thế nào ?</div>
+            <div class="message bot">Heart & Garden xin chào! Tôi có thể cung cấp cho bạn loại cây trồng phù hợp. Bạn cần cây như thế nào ?</div>
         </div>
         <div class="chat-input">
             <input type="text" id="userMessage" placeholder="Nhập tin nhắn...">
             <button onclick="sendMessage()">Gửi</button>
         </div>
-    </div>
+    </div> *@
 
-    <script>
-        // Định nghĩa hàm toggleChat toàn cục
-        function toggleChat() {
-            const chatContainer = document.getElementById("chatContainer");
-            const isHidden = chatContainer.style.display === "none" || !chatContainer.style.display;
-            chatContainer.style.display = isHidden ? "block" : "none";
-        }
-
-        async function sendMessage() {
-            const userMessage = document.getElementById("userMessage");
-            const chatMessages = document.getElementById("chatMessages");
-            const message = userMessage.value.trim();
-
-            if (message === "") return;
-
-            // Hiển thị tin nhắn người dùng
-            const userDiv = document.createElement("div");
-            userDiv.className = "message user";
-            userDiv.textContent = message;
-            chatMessages.appendChild(userDiv);
-            userMessage.value = "";
-
-            const botDiv = document.createElement("div");
-            botDiv.className = "message bot";
-
-            try {
-                // Gửi yêu cầu API
-                const response = await fetch(`http://localhost:5135/api/ChatBot/search?keyword=${encodeURIComponent(message)}`);
-                const responseData = await response.json();
-                console.log("API Response Data:", responseData);
-
-                // Kiểm tra và hiển thị kết quả
-                if (responseData && responseData.data && responseData.data.$values && responseData.data.$values.length > 0) {
-                    let productResponse = "Đây là các sản phẩm tôi tìm thấy:<br>";
-                    responseData.data.$values.forEach((product) => {
-                        const id = product.productId;
-                        const name = product.name || "Không có tên";
-                        const category = product.categoryName || "Không rõ danh mục";
-                        const description = product.description || "Không có mô tả";
-                        const price = product.price && !isNaN(product.price) ? `${product.price.toLocaleString()} VND` : "Không rõ giá";
-                        const imageUrl = product.imageUrl || "/images/default.png";
-
-                        productResponse += `
-                                <div class="product-item1">
-                                    <a href="http://localhost:5135/Home/ProductDetail?id=${id}" target="_blank">
-        <img src="${imageUrl}" alt="${name}" class="product-image">
-                                    </a>
-                                    <div class="product-details">
-                                        <strong>${name}</strong> <span>(${category})</span>
-                                        <span>${description}</span>
-                                        <span><strong>Giá:</strong> ${price}</span>
-                                    </div>
-                                </div>
-                            `;
-                    });
-                    botDiv.innerHTML = productResponse;
-                } else {
-                    botDiv.textContent = responseData.response || "Không có sản phẩm nào khớp với tìm kiếm.";
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                botDiv.textContent = "Đã xảy ra lỗi khi xử lý yêu cầu. Vui lòng thử lại.";
-            }
-
-            chatMessages.appendChild(botDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-
-    </script>
-
-
+    <script src="~/js/home.js"></script>
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>

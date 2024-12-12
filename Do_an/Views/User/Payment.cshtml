@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -11,7 +12,8 @@
     <link rel="stylesheet" href="~/User/css/payment.css">
     <link rel="stylesheet" href="~/css/Stripe Element.css">
     <link rel="stylesheet" href="~/User/css/navbar.css">
-      <style>
+    <link rel="stylesheet" href="~/css/paymentmodal.css">
+    <style>
         /* Main container */
         .container.wrapper {
             margin-top: 20px;
@@ -25,14 +27,15 @@
 
         /* Left side for address and payment */
         .left-column {
-            width: 48%;  /* Adjust to 48% for two equal columns */
+            width: 48%; /* Adjust to 48% for two equal columns */
         }
 
         /* Right side for review order and shipping */
         .right-column {
             width: 48%;
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
         }
+
         .panel-body {
             padding: 15px;
         }
@@ -54,6 +57,12 @@
         .left-column,
         .right-column {
             width: 100%;
+        }
+
+        .btn-primary.disabled, .btn-primary:disabled {
+            color: #fff;
+            background-color: #aab7c4;
+            border-color: #aab7c4;
         }
 
         }</style>
@@ -80,70 +89,50 @@
         <div class="cart-body">
             <form class="address-payment-section form-horizontal" method="post" action="">
                 <div class="panel">
-                    <div class="panel-heading">Address</div>
+                    <div class="panel-heading">Địa chỉ của bạn </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label>Country:</label>
-                            <input type="text" class="form-control" name="country" />
-                        </div>
-                        <div class="form-group">
-                            <label>First Name:</label>
+                            <label>Tên của bạn là:</label>
                             <input type="text" name="first_name" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label>Last Name:</label>
-                            <input type="text" name="last_name" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>Address:</label>
+                            <label>Địa chỉ của bạn là:</label>
                             <input type="text" name="address" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label>City:</label>
-                            <input type="text" name="city" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>State:</label>
-                            <input type="text" name="state" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>Zip / Postal Code:</label>
-                            <input type="text" name="zip_code" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label>Phone Number:</label>
+                            <label>Số điện thoại của bạn:</label>
                             <input type="text" name="phone_number" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label>Email Address:</label>
+                            <label>Địa chỉ Email của bạn:</label>
                             <input type="text" name="email_address" class="form-control" />
                         </div>
                     </div>
                 </div>
 
                 <div class="panel">
-                    <div class="panel-heading">Payment</div>
+                    <div class="panel-heading">Phương thức thanh toán</div>
                     <div class="panel-body">
                         <div class="payment-method">
-                            <div class="payment-option" onclick="selectMethod('card')">
+                            <div class="payment-option" onclick="selectMethod('card')" data-method="Thẻ ngân hàng">
                                 <img src="~/User/img/creditCard.png" alt="Credit Card">
                             </div>
-                            <div class="payment-option" onclick="selectMethod('paypal')">
-                                <img src="~/User/img/Paypal_2014_logo.png" alt="PayPal">
+                            <div class="payment-option" onclick="selectMethod('cash')" data-method="Tiền mặt">
+                                <img src="~/User/img/Thanhtoan.jpg" alt="Tiền Mặt">
                             </div>
-                            <div class="payment-option" onclick="selectMethod('momo')">
+                            <div class="payment-option" onclick="selectMethod('momo')" data-method="momo">
                                 <img src="~/User/img/MoMo_Logo.png" alt="MoMo">
                             </div>
                         </div>
 
                         <div id="card" class="payment-detail">
-                            <label for="card-holder-name">Card Holder Name:</label>
+                            <label for="card-holder-name">Tên chủ thẻ:</label>
                             <input type="text" id="card-holder-name" placeholder="Cardholder Name" class="form-control">
 
-                            <label for="card-number">Card Number:</label>
+                            <label for="card-number">Số thẻ:</label>
                             <div id="card-number" class="form-control" style="padding: 10px; border-radius: 5px; border: 1px solid #ced4da;"></div>
 
-                            <label for="card-expiry">Expiration Date (MM/YY):</label>
+                            <label for="card-expiry">Ngày hết hạn (MM/YY):</label>
                             <div id="card-expiry" class="form-control" style="padding: 10px; border-radius: 5px; border: 1px solid #ced4da;"></div>
 
                             <label for="card-cvc">CVV:</label>
@@ -152,12 +141,13 @@
                             <div id="card-errors" role="alert" style="color: red; margin-top: 10px;"></div>
                         </div>
 
-                        <div id="paypal" class="payment-detail" style="display: none;">
-                            <button type="submit" class="btn btn-primary">Pay With PayPal</button>
+                        <div id="cash" class="payment-detail" style="display: none;">
+                            <p class="payment-info">Bạn sẽ thanh toán đơn hàng khi nhận được hàng.</p>
+                            <button id="confirm-payment-btn" type="submit" class="btn btn-primary">Thanh toán khi nhận hàng</button>
                         </div>
 
                         <div id="momo" class="payment-detail" style="display: none;">
-                            <img src="#" alt="MoMo QR Code" style="width: 100%;">
+                            <img src="~/User/img/images.png" alt="MoMo QR Code" style="width: 100%;">
                         </div>
                     </div>
                 </div>
@@ -168,79 +158,80 @@
                 <!-- Review Order Section -->
                 <form class="review-order-section form-horizontal" method="post" action="">
                     <div class="panel">
-                        <div class="panel-heading">Review Order</div>
+                        <div class="panel-heading">Đơn hàng của bạn</div>
                         <div id="review-order-body">
                             <!-- Dynamic product items will be inserted here from the script -->
                         </div>
                     </div>
                 </form>
 
-            <!-- Shipping Method Section Form (Separate Form) -->
-            <form class="ship-method-form form-horizontal" method="post" action="">
-                <div class="panel">
-                    <div class="panel-heading">Shipping Method</div>
-                    <div class="ship-method-container">
-                        <div class="ship-method standard" id="standard">
+                <!-- Shipping Method Section Form (Separate Form) -->
+                <form class="ship-method-form form-horizontal" method="post" action="">
+                    <div class="panel">
+                        <div class="panel-heading">Phương thức giao hàng</div>
+                        <div class="ship-method-container">
+                            <div class="ship-method standard" id="standard">
                                 <button type="button" onclick="handleShippingMethodSelection('Standard', 35000, this)">
-                                <div class="ship-box" style="display: inline-flex;">
-                                    <div class="ship-img">
+                                    <div class="ship-box" style="display: inline-flex;">
+                                        <div class="ship-img">
                                             <img src="~/User/img/truck.png" alt="" style="width: 40%;">
+                                        </div>
+                                        <div class="ship-name">
+                                            <span>Tích kiệm</span>
+                                        </div>
+                                        <div class="ship-day">
+                                            <span>5 - 10 Ngày</span>
+                                        </div>
+                                        <div class="ship-price">
+                                            <span>35.000đ</span>
+                                        </div>
                                     </div>
-                                    <div class="ship-name">
-                                        <span>Tích kiệm</span>
-                                    </div>
-                                    <div class="ship-day">
-                                        <span>5 - 10 Ngày</span>
-                                    </div>
-                                    <div class="ship-price">
-                                        <span>35.000đ</span>
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                        <div class="ship-method priority" id="priority">
+                                </button>
+                            </div>
+                            <div class="ship-method priority" id="priority">
                                 <button type="button" onclick="handleShippingMethodSelection('Priority', '87000', this)">
-                                <div class="ship-box" style="display: inline-flex;">
-                                    <div class="ship-img">
+                                    <div class="ship-box" style="display: inline-flex;">
+                                        <div class="ship-img">
                                             <img src="~/User/img/delivery-truck.png" alt="" style="width: 40%;">
+                                        </div>
+                                        <div class="ship-name">
+                                            <span>Chuyển phát nhanh</span>
+                                        </div>
+                                        <div class="ship-day">
+                                            <span>3 - 4 Ngày</span>
+                                        </div>
+                                        <div class="ship-price">
+                                            <span>87.000đ</span>
+                                        </div>
                                     </div>
-                                    <div class="ship-name">
-                                        <span>Chuyển phát nhanh</span>
-                                    </div>
-                                    <div class="ship-day">
-                                        <span>3 - 4 Ngày</span>
-                                    </div>
-                                    <div class="ship-price">
-                                        <span>87.000đ</span>
-                                    </div>
-                                </div>
-                            </button>
-                        </div>
-                        <div class="ship-method overnight" id="overnight">
+                                </button>
+                            </div>
+                            <div class="ship-method overnight" id="overnight">
                                 <button type="button" onclick="handleShippingMethodSelection('Overnight', '110000', this)">
-                                <div class="ship-box" style="display: inline-flex;">
-                                    <div class="ship-img">
+                                    <div class="ship-box" style="display: inline-flex;">
+                                        <div class="ship-img">
                                             <img src="~/User/img/fast-delivery.png" alt="" style="width: 40%;">
+                                        </div>
+                                        <div class="ship-name">
+                                            <span>Hỏa tốc</span>
+                                        </div>
+                                        <div class="ship-day">
+                                            <span>1 - 2 Ngày</span>
+                                        </div>
+                                        <div class="ship-price">
+                                            <span>110.000đ</span>
+                                        </div>
                                     </div>
-                                    <div class="ship-name">
-                                        <span>Hỏa tốc</span>
-                                    </div>
-                                    <div class="ship-day">
-                                        <span>1 - 2 Ngày</span>
-                                    </div>
-                                    <div class="ship-price">
-                                        <span>110.000đ</span>
-                                    </div>
-                                </div>
-                            </button>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
+        <div id="payment-success-container"></div>
 
-    <script>
+        <script>
             function selectMethod(method) {
                 // Ẩn tất cả các chi tiết thanh toán
                 document.querySelectorAll('.payment-detail').forEach(el => el.style.display = 'none');
@@ -257,13 +248,13 @@
                 const selectedOption = document.querySelector(`.payment-option[onclick="selectMethod('${method}')"]`);
                 selectedOption.classList.add('selected');
             }
-    </script>
+        </script>
 
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
-    <script src="~/js/payment.js"></script>
-    <script src="~/js/cart.js"></script>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" defer></script>
+        <script src="~/js/payment.js"></script>
+        <script src="~/js/cart.js"></script>
 </body>
 </html>

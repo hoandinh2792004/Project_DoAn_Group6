@@ -1,6 +1,5 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+﻿﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap'); /* Thêm font Noto Sans hỗ trợ tiếng Việt */
-
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +9,7 @@
 
 body {
     background-color: #c9d6ff;
-    background: linear-gradient(to right, #8bc34a54, #8BC34A);
+    background: linear-gradient(to right, #8bc34a54, #28a74533);
     display: flex;
     align-items: center;
     justify-content: center;

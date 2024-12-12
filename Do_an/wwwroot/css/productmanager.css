@@ -1,5 +1,4 @@
-﻿/* CSS for the Product Manager page */
-
+﻿﻿ /* CSS for the Product Manager page */
 /* General styling for the table */
 .productmanager table {
     width: 100%;
@@ -27,10 +26,10 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.productmanager button.btn-edit:hover {
-    background-color: #e0a800; /* Vàng đậm hơn khi hover */
-    transform: scale(1.1); /* Phóng to nhẹ khi hover */
-}
+    .productmanager button.btn-edit:hover {
+        background-color: #e0a800; /* Vàng đậm hơn khi hover */
+        transform: scale(1.1); /* Phóng to nhẹ khi hover */
+    }
 
 /* Styling for other buttons (secondary or primary actions) */
 .productmanager button.btn-secondary {

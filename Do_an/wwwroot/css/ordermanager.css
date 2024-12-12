@@ -1,19 +1,18 @@
-﻿/* CSS for the Order Manager page */
-
+﻿﻿ /* CSS for the Order Manager page */
 /* General styling for the table */
 .ordermanager table {
     width: 100%;
     border-collapse: collapse;
-    border: 2px solid #000; /* Đặt viền cho bảng với màu đen */
+    border: 2px solid #ddd; /* Đặt viền cho bảng với màu đen */
 }
 
-    /* Styling for table headers */
-    .ordermanager table th, .ordermanager table td {
-        text-align: center;
-        vertical-align: middle;
-        border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
-        padding: 10px; /* Thêm khoảng cách cho các ô */
-    }
+/* Styling for table headers */
+.ordermanager table th, .ordermanager table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
+    padding: 10px; /* Thêm khoảng cách cho các ô */
+}
 
 /* Styling for the Edit button */
 .ordermanager button.btn-edit {
@@ -69,6 +68,23 @@
     --bs-btn-disabled-color: #fff; /* Đặt màu chữ khi disabled là trắng */
     --bs-btn-disabled-bg: #ffc107;
     --bs-btn-disabled-border-color: #ffc107;
+}
+
+.ordermanager .btn-detail {
+    --bs-btn-color: #fff; /* Màu chữ là trắng */
+    --bs-btn-bg: #007bff; /* Màu nền nút là xanh nước biển */
+    --bs-btn-border-color: #007bff; /* Màu viền nút là xanh nước biển */
+    --bs-btn-hover-color: #fff; /* Màu chữ khi hover là trắng */
+    --bs-btn-hover-bg: #0056b3; /* Màu nền khi hover là màu xanh nước biển tối hơn */
+    --bs-btn-hover-border-color: #0056b3; /* Màu viền khi hover là xanh nước biển tối hơn */
+    --bs-btn-focus-shadow-rgb: 0, 123, 255; /* Màu bóng khi focus là xanh nước biển */
+    --bs-btn-active-color: #fff; /* Màu chữ khi active là trắng */
+    --bs-btn-active-bg: #004085; /* Màu nền khi active là màu xanh nước biển tối */
+    --bs-btn-active-border-color: #003366; /* Màu viền khi active là xanh nước biển tối */
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); /* Bóng khi active */
+    --bs-btn-disabled-color: #fff; /* Màu chữ khi disabled là trắng */
+    --bs-btn-disabled-bg: #007bff; /* Màu nền khi disabled là xanh nước biển */
+    --bs-btn-disabled-border-color: #007bff; /* Màu viền khi disabled là xanh nước biển */
 }
 /* Thanh cuộn cho bảng danh sách sản phẩm */
 .ordermanager .table-responsive {

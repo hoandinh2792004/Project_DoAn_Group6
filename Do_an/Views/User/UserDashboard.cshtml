@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -37,6 +37,19 @@
     <link href="~/User/css/style.css" rel="stylesheet">
     <link href="~/User/css/navbar.css" rel="stylesheet">
 </head>
+
+<script>
+    window.embeddedChatbotConfig = {
+        chatbotId: "n3JewmzzIIl2SLEscgci0",
+        domain: "www.chatbase.co"
+    }
+</script>
+<script src="https://www.chatbase.co/embed.min.js"
+        chatbotId="n3JewmzzIIl2SLEscgci0"
+        domain="www.chatbase.co"
+        defer>
+</script>
+
 <style>
     .chat-bubble {
         position: fixed;
@@ -185,6 +198,11 @@
         overflow-y: auto;
     }
 
+    .dropdown-menu {
+        position: absolute;
+        left: -25px; /* Điều chỉnh giá trị âm để menu lệch trái thêm */
+    }
+
 </style>
 
 <body>
@@ -193,7 +211,6 @@
         <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
     </div>
     <!-- Spinner End -->
-
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
         <div class="main-logo">
@@ -227,23 +244,23 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
                         <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
                     </a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Profile</a>
-                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Logout</a>
+                    <div class="dropdown-menu bg-light m-0" style="position: absolute; left: -25px;">
+                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Trang cá nhân</a>
+                        <a asp-action="Order" asp-controller="User" class="dropdown-item">Đơn hàng của tôi</a>
+                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
     <!-- Navbar End -->
-
     <!-- View Cart Start -->
     <div id="backdrop" class="backdrop"></div>
     <div class="side-cart-container">
         <div id="sidecart" class="sidecart">
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
+                <h3 class="cart-title">Giỏ Hàng</h3>
                 <div class="cart-count">
                     <span id="cart-count">0</span>
                 </div>
@@ -261,17 +278,16 @@
             </div>
             <div class="side-cart-bottom">
                 <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
+                    <span class="total-title float-left">Tổng:</span>
                     <span class="total-price float-right" id="total-price">đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Check Out</a>
+                    <a asp-action="Payment" asp-controller="User" class="button-checkout">Thanh toán</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- View Cart End -->
-
     <!-- Carousel Start -->
     <div class="container-fluid px-0 mb-5">
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
@@ -318,7 +334,6 @@
         </div>
     </div>
     <!-- Carousel End -->
-  
     <!-- Service Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -446,8 +461,6 @@
         </div>
     </div>
     <!-- Testimonial End -->
-
-
     <!-- Footer Start -->
     <div class="container-fluid bg-dark footer mt-5 py-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
@@ -490,9 +503,10 @@
         </div>
     </div>
     <!-- Footer End -->
-   @*  <!-- Back to Top -->
+    @*  <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top"><i class="bi bi-arrow-up"></i></a> *@
 
+@* 
     <!-- Nút Chatbot -->
     <div class="chat-bubble" onclick="toggleChat()">
         <i class="bi bi-chat-dots"></i>
@@ -502,13 +516,15 @@
     <div class="chat-container" id="chatContainer" style="display: none;">
         <div class="chat-header">Chat Hỗ Trợ Chọn Cây Trồng</div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot"> Heart & Garden xin chào! Tôi có thể cung cấp cho bạn loại cây trồng phù hợp. Bạn cần cây như thế nào ?</div>
+            <div class="message bot">Heart & Garden xin chào! Tôi có thể cung cấp cho bạn loại cây trồng phù hợp. Bạn cần cây như thế nào ?</div>
         </div>
         <div class="chat-input">
             <input type="text" id="userMessage" placeholder="Nhập tin nhắn...">
             <button onclick="sendMessage()">Gửi</button>
         </div>
     </div>
+
+    <script src="~/User/js/home.js"></script>  *@
 
     <script>
         // Định nghĩa hàm toggleChat toàn cục
@@ -553,17 +569,17 @@
                         const imageUrl = product.imageUrl || "/images/default.png";
 
                         productResponse += `
-                                        <div class="product-item1">
-                                            <a href="http://localhost:5135/Home/ProductDetail?id=${id}" target="_blank">
-                <img src="${imageUrl}" alt="${name}" class="product-image">
-                                            </a>
-                                            <div class="product-details">
-                                                <strong>${name}</strong> <span>(${category})</span>
-                                                <span>${description}</span>
-                                                <span><strong>Giá:</strong> ${price}</span>
-                                            </div>
-                                        </div>
-                                    `;
+                                                <div class="product-item1">
+                                                    <a href="http://localhost:5135/Home/ProductDetail?id=${id}" target="_blank">
+                        <img src="${imageUrl}" alt="${name}" class="product-image">
+                                                    </a>
+                                                    <div class="product-details">
+                                                        <strong>${name}</strong> <span>(${category})</span>
+                                                        <span>${description}</span>
+                                                        <span><strong>Giá:</strong> ${price}</span>
+                                                    </div>
+                                                </div>
+                                            `;
                     });
                     botDiv.innerHTML = productResponse;
                 } else {

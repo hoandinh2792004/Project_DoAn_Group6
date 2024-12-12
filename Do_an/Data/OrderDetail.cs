@@ -17,7 +17,11 @@ namespace Do_an.Data
 
         public decimal? Total { get; set; }
 
-        public string? ProductName { get; set; } 
+        public string? ProductName { get; set; }
+
+        public string? ShippingAddress { get; set; }
+
+        public string? PaymentMethod { get; set; }
 
         public virtual Order? Order { get; set; }
 

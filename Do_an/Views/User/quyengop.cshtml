@@ -131,8 +131,10 @@
                 font-weight: bold;
             }
 
-
-
+        .dropdown-menu {
+            position: absolute;
+            left: -25px; /* Điều chỉnh giá trị âm để menu lệch trái thêm */
+        }
 
     </style>
 </head>
@@ -176,9 +178,10 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" id="user-icon">
                         <img src="~/User/img/defaultuserimg.jpg" alt="User Icon" style="width: 30px; height: 30px; border-radius: 50%;" />
                     </a>
-                    <div class="dropdown-menu bg-light m-0">
-                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Profile</a>
-                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Logout</a>
+                    <div class="dropdown-menu bg-light m-0" style="position: absolute; left: -25px;">
+                        <a asp-action="Profile" asp-controller="User" class="dropdown-item">Trang cá nhân</a>
+                        <a asp-action="Order" asp-controller="User" class="dropdown-item">Đơn hàng của tôi</a>
+                        <a asp-action="Index" asp-controller="Home" class="dropdown-item">Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -191,7 +194,7 @@
         <div id="sidecart" class="sidecart">
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
-                <h3 class="cart-title">Shopping Cart</h3>
+                <h3 class="cart-title">Giỏ Hàng</h3>
                 <div class="cart-count">
                     <span id="cart-count">0</span>
                 </div>
@@ -209,11 +212,11 @@
             </div>
             <div class="side-cart-bottom">
                 <div class="sub-total">
-                    <span class="total-title float-left">Total:</span>
+                    <span class="total-title float-left">Tổng:</span>
                     <span class="total-price float-right" id="total-price">đ</span>
                 </div>
                 <div class="cart-actions">
-                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Check Out</a>
+                    <a href="#" class="button-checkoutt" onclick="showCheckoutPrompt(event)">Thanh toán</a>
                 </div>
             </div>
         </div>

@@ -1,5 +1,4 @@
-﻿/* CSS for the Customer Manager page */
-
+﻿﻿ /* CSS for the Customer Manager page */
 /* General styling for the table */
 .customermanager table {
     width: 100%;
@@ -7,13 +6,13 @@
     border: 2px solid #000; /* Đặt viền cho bảng với màu đen */
 }
 
-    /* Styling for table headers */
-    .customermanager table th, .customermanager table td {
-        text-align: center;
-        vertical-align: middle;
-        border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
-        padding: 10px; /* Thêm khoảng cách cho các ô */
-    }
+/* Styling for table headers */
+.customermanager table th, .customermanager table td {
+    text-align: center;
+    vertical-align: middle;
+    border: 2px solid #000; /* Đặt viền phân cách giữa các ô với màu đen */
+    padding: 10px; /* Thêm khoảng cách cho các ô */
+}
 
 /* Styling for the Edit button */
 .customermanager button.btn-edit {

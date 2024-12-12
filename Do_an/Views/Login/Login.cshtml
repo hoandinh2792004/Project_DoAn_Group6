@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,7 +26,7 @@
 
     <link rel="stylesheet" href="~/css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
+
 </head>
 <body>
 
@@ -49,7 +50,7 @@
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                
+
                 <input type="text" id="name" name="name" placeholder="Tên" required>
                 <input type="email" id="email" name="email" placeholder="Email" required>
                 <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
@@ -68,12 +69,12 @@
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                
+
                 <input type="email" id="emails" placeholder="Email" required>
                 <input type="password" id="passwords" placeholder="Mật khẩu" required>
                 <a href="SendOtp">Bạn quên mật khẩu ?</a>
                 <button id="sign-in-button">Đăng nhập</button>
-                <p id="mật khẩu sai"></p>
+                <p id="Mật khẩu sai" class="text-danger" style="display: none;"></p>
             </form>
         </div>
         <div class="toggle-container">
@@ -93,9 +94,9 @@
     </div>
 
     <script>
-    var userDashboardUrl = '@Url.Action("UserDashboard", "User")';
-    var adminDashboardUrl = '@Url.Action("Index", "Home", new { area = "Admin" })';
-    var loginUrl ='@Url.Action("Login","Login")'
+        var userDashboardUrl = '@Url.Action("UserDashboard", "User")';
+        var adminDashboardUrl = '@Url.Action("Index", "Home", new { area = "Admin" })';
+        var loginUrl = '@Url.Action("Login", "Login")'
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="~/js/login.js"></script>

@@ -42,6 +42,13 @@ namespace Do_an.Areas.Admin.Controllers
             var userId = userIdClaim.Value;
             ViewBag.UserId = userId; // Lưu UserId vào ViewBag
 
+            // Kiểm tra nếu UserId không phải là 1
+            if (userId != "1")
+            {
+                ViewBag.ErrorMessage = "Bạn không có quyền truy cập trang này.";
+                return RedirectToAction("Login", "Login");
+            }
+
             return null; // Nếu token hợp lệ, trả về null
         }
 
@@ -49,6 +56,9 @@ namespace Do_an.Areas.Admin.Controllers
         {
             var authResult = CheckAuthToken();
             if (authResult != null) return authResult; // Nếu token không hợp lệ, chuyển hướng
+
+            var accessResult = CheckAccess();
+            if (accessResult != null) return accessResult; // Nếu không có quyền truy cập, chuyển hướng
 
             try
             {
@@ -62,6 +72,16 @@ namespace Do_an.Areas.Admin.Controllers
             }
         }
 
+        private IActionResult CheckAccess()
+        {
+            var userId = ViewBag.UserId;
+            if (userId != "1")
+            {
+                ViewBag.ErrorMessage = "Bạn không có quyền truy cập trang này.";
+                return RedirectToAction("Login", "Login");
+            }
+            return null;
+        }
         // Action cho trang Products
         public IActionResult ProductsManager()
         {

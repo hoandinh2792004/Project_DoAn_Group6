@@ -32,6 +32,7 @@ public class ChatBotController : ControllerBase
             var synonyms = new Dictionary<string, string[]>
             {
                 { "giá rẻ", new[] { "giá rẻ", "giảm giá", "dưới 100k", "rẻ tiền", "rẻ nhất" } },
+                { "giá đắt", new[] { "giá đắt", "giá cao", "đắt tiền", "mắc", "cao cấp", "sang trọng", "siêu đắt", "đắt đỏ", "đắt nhất","đắt" } },
                 { "cây cảnh", new[] { "cây cảnh", "cây xanh", "chậu cây" } },
                 { "để bàn", new[] { "để bàn", "bàn làm việc", "trang trí bàn" } },
                 { "giàu sang", new[] { "giàu có", "phú quý", "sung túc", "thịnh vượng", "giàu có vật chất", "phong lưu", "tài lộc", "cơ đồ", "đầy đủ" } },
@@ -41,8 +42,9 @@ public class ChatBotController : ControllerBase
             // Kiểm tra từ khóa liên quan đến giá
             if (synonyms["giá rẻ"].Any(word => normalizedKeyword.Contains(word)))
             {
-                var cheapProducts = await _context.Products
+                var cheapProduct = await _context.Products
                     .Where(p => p.Price <= 90000)
+                    .OrderBy(p => p.Price)  // Sắp xếp sản phẩm theo giá tăng dần
                     .Select(p => new
                     {
                         p.ProductId,
@@ -53,18 +55,51 @@ public class ChatBotController : ControllerBase
                         p.ImageUrl,
                         p.CategoryName
                     })
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();  // Lấy sản phẩm có giá rẻ nhất (sản phẩm đầu tiên)
 
-                if (!cheapProducts.Any())
+                if (cheapProduct == null)
                 {
                     return Ok(new { response = "Không có sản phẩm nào phù hợp với mức giá rẻ.", data = new List<object>() });
                 }
 
-                return Ok(new { response = "Thành công", data = cheapProducts });
+                return Ok(new { response = "Thành công", data = new List<object> { cheapProduct } });
+            }
+
+            if (synonyms["giá đắt"].Any(word => normalizedKeyword.Contains(word)))
+            {
+                var expensiveProduct = await _context.Products
+                    .Where(p => p.Price > 29000000)  // Giới hạn mức giá sản phẩm
+                    .OrderByDescending(p => p.Price) // Sắp xếp giảm dần theo giá
+                    .Select(p => new
+                    {
+                        p.ProductId,
+                        p.Name,
+                        p.Description,
+                        p.Price,
+                        p.Quantity,
+                        p.ImageUrl,
+                        p.CategoryName
+                    })
+                    .FirstOrDefaultAsync();  // Lấy sản phẩm đầu tiên (giá cao nhất)
+
+                if (expensiveProduct == null)
+                {
+                    return Ok(new
+                    {
+                        response = "Không có sản phẩm nào phù hợp với mức giá cao.",
+                        data = (object)null
+                    });
+                }
+
+                return Ok(new
+                {
+                    response = "Thành công",
+                    data = expensiveProduct
+                });
             }
 
             // Danh sách từ không quan trọng (stop words)
-            var stopWords = new HashSet<string> { "cây" };
+            var stopWords = new HashSet<string> { "cây", "tôi", "tao", "tớ", "mày", "tao", "cần", "cho", "muốn", "giúp", "trong", "ngoài", "có" };
 
             // Chia nhỏ câu và loại bỏ từ không quan trọng
             var inputWords = normalizedKeyword.Split(' ', StringSplitOptions.RemoveEmptyEntries)
@@ -129,21 +164,21 @@ public class ChatBotController : ControllerBase
                         (p.CategoryName != null && EF.Functions.Like(p.CategoryName.ToLower(), "%" + word + "%"))
                     )
                 )
-.Select(p => new
-{
-    p.ProductId,
-    p.Name,
-    p.Description,
-    p.Price,
-    p.Quantity,
-    p.ImageUrl,
-    p.CategoryName
-})
+                .Select(p => new
+                {
+                    p.ProductId,
+                    p.Name,
+                    p.Description,
+                    p.Price,
+                    p.Quantity,
+                    p.ImageUrl,
+                    p.CategoryName
+                })
                 .ToListAsync();
 
             if (!products.Any())
             {
-                return Ok(new { response = "Chúng tôi rất lấy làm tiếc vì cây mà bạn yêu cầu chưa có trong danh sách cây của chúng tôi Nếu bạn có nhu cầu nào khác cụ thể , hãy nói cho tôi biết.", data = new List<object>() });
+                return Ok(new { response = "Chúng tôi rất lấy làm tiếc vì tôi chưa hiểu ý câu trả lời của bạn. Nếu bạn có nhu cầu nào khác cụ thể, hãy nói cho tôi biết.", data = new List<object>() });
             }
 
             return Ok(new { response = "Thành công", data = products });

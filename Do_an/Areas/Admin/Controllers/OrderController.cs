@@ -1,5 +1,5 @@
 ﻿using Do_an.Areas.Admin.Dtos;
-using Do_an.Data; 
+using Do_an.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Google;
+using Do_an.Models;
 
 
 namespace Do_an.Areas.Admin.Controllers
@@ -18,7 +19,7 @@ namespace Do_an.Areas.Admin.Controllers
         private readonly DoAnContext _context;
         private readonly ILogger<OrderController> _logger;
 
-   
+
         public OrderController(DoAnContext context, ILogger<OrderController> logger)
         {
             _context = context;
@@ -32,12 +33,16 @@ namespace Do_an.Areas.Admin.Controllers
             try
             {
                 var orders = await _context.Orders
+
                     .Select(o => new OrderDto
                     {
                         OrderId = o.OrderId,
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
                         Status = o.Status,
+                        UserId = o.UserId,
+                        CancelReason = o.CancelReason,
+                        Img = o.Img,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -63,6 +68,7 @@ namespace Do_an.Areas.Admin.Controllers
                 return StatusCode(500, "An error occurred while retrieving order customer data."); // Trả về lỗi server
             }
         }
+
 
         [HttpDelete("Delete/{id}")]
         public async Task<ActionResult> DeleteOrder(int id)
@@ -113,6 +119,11 @@ namespace Do_an.Areas.Admin.Controllers
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
                         Status = o.Status,
+                        UserId = o.UserId,
+                        ShippingAddress = o.ShippingAddress,
+                        PaymentMethod = o.PaymentMethod,
+                        CancelReason = o.CancelReason,
+                        Img = o.Img,
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             OrderDetailId = od.OrderDetailId,
@@ -143,7 +154,7 @@ namespace Do_an.Areas.Admin.Controllers
             }
         }
 
-    [HttpPut("EditOrder/{id}")]
+        [HttpPut("EditOrder/{id}")]
         public async Task<IActionResult> EditOrder(int id, [FromBody] UpdateOrderDto updateOrderDto)
         {
             try
@@ -219,6 +230,36 @@ namespace Do_an.Areas.Admin.Controllers
                 return StatusCode(500, "Đã xảy ra lỗi khi chỉnh sửa thông tin đơn hàng.");
             }
         }
+
+        [HttpPut("UpdateStatus/{orderId}")]
+        public async Task<IActionResult> UpdateOrderStatus(int orderId, [FromBody] UpdateStatusRequest request)
+        {
+            // Kiểm tra đầu vào
+            if (request == null || string.IsNullOrWhiteSpace(request.Status))
+            {
+                return BadRequest("Dữ liệu cập nhật không hợp lệ.");
+            }
+
+            // Tìm đơn hàng dựa trên orderId
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                return NotFound($"Không tìm thấy đơn hàng với ID: {orderId}.");
+            }
+
+            // Cập nhật trạng thái đơn hàng
+            order.Status = request.Status;
+
+            // Kiểm tra nếu trạng thái là "Đơn hàng đã bị từ chối", cập nhật lý do hủy
+            if (request.Status == "Đơn hàng đã bị từ chối" && !string.IsNullOrWhiteSpace(request.CancelReason))
+            {
+                order.CancelReason = request.CancelReason; // Cập nhật lý do hủy
+            }
+
+            // Lưu thay đổi vào cơ sở dữ liệu
+            await _context.SaveChangesAsync();
+
+            return Ok($"Trạng thái của đơn hàng ID: {orderId} đã được cập nhật thành '{request.Status}' và lý do hủy (nếu có) đã được lưu.");
+        }
     }
 }
-

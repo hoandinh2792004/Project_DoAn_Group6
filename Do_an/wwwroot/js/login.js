@@ -102,63 +102,73 @@ signUpForm.addEventListener('submit', function (event) {
             showError(emailInput, error.response.data.Errors ? error.response.data.Errors.join(", ") : "Đăng ký thất bại,vui lòng thử lại.");
         });
 });
+
 // Sign In Form Submission
-signInForm.addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent form submission
+document.getElementById('sign-in-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Ngăn chặn việc submit form mặc định
 
     const emailInput = document.getElementById("emails");
     const passwordInput = document.getElementById("passwords");
 
-    // Validate inputs
+    // Lấy phần tử thông báo lỗi
+    const errorMsg = document.getElementById("Mật khẩu sai");
+
+    // Ẩn thông báo lỗi trước khi thực hiện kiểm tra
+    if (errorMsg) {
+        errorMsg.style.display = 'none';
+    }
+
     const isEmailValid = validateEmail(emailInput.value);
     const isPasswordValid = validatePassword(passwordInput.value);
 
     if (!isEmailValid) {
         showError(emailInput, 'Địa chỉ email sai');
-        console.log("Invalid email address entered:", emailInput.value); // Log invalid email
         return;
     }
     if (!isPasswordValid) {
         showError(passwordInput, 'Mật khẩu phải có ít nhất 8 chữ');
-        console.log("Invalid password entered:", passwordInput.value); // Log invalid password
         return;
     }
 
-    // Attempt to log in using axios
+    // Tiến hành đăng nhập với axios
     axios.post("http://localhost:5135/api/Auth/login", {
         email: emailInput.value,
         password: passwordInput.value
     }, {
-        withCredentials: true  // Ensure cookies are sent with the request
+        withCredentials: true  // Đảm bảo gửi cookies với yêu cầu
     })
         .then(response => {
             const token = response.data.token;
             const role = response.data.role;
 
-            console.log("Role returned from API:", role); // Check role value
-            console.log("Token received:", token); // Check token
+            console.log("Role returned from API:", role);
+            console.log("Token received:", token);
 
-            setCookie('authToken', token); // Store the token in a cookie
-            console.log("Cookie Set:", document.cookie); // Log the cookies
+            setCookie('authToken', token); // Lưu token vào cookie
+            console.log("Cookie Set:", document.cookie);
 
-            clearCart(); // Call function to clear the cart
-            console.log("Cart cleared."); // Log cart clearing
+            clearCart(); // Xóa giỏ hàng
+            console.log("Cart cleared.");
 
-            if (role && role === "1") { // Assuming role '1' is for Admin
+            if (role && role === "1") { // Giả sử role '1' là Admin
                 console.log("Redirecting to admin dashboard");
-                window.location.href = adminDashboardUrl;  // Redirect to Admin dashboard
+                window.location.href = adminDashboardUrl;  // Điều hướng tới Dashboard Admin
             } else {
                 console.log("Redirecting to user dashboard");
-                window.location.href = userDashboardUrl;  // Redirect to User dashboard
+                window.location.href = userDashboardUrl;  // Điều hướng tới Dashboard User
             }
         })
         .catch(error => {
-            if (error.response && error.response.status === 403) {
-                console.log("Access denied: 403 error");
-                document.getElementById("wrongpassword").innerText = "Bạn không có quyền truy cập vào tài nguyên này.";
-            } else {
-                console.error("Login error:", error); // Log the full error for debugging
-                document.getElementById("wrongpassword").innerText = "Mật khẩu hoặc email sai";
+            // Kiểm tra phần tử thông báo lỗi và hiển thị thông báo lỗi
+            if (errorMsg) {
+                if (error.response && error.response.status === 401) {
+                    console.log("Login failed with status 401");
+                    errorMsg.innerText = "Mật khẩu hoặc email sai.";
+                } else {
+                    console.error("Login error:", error);
+                    errorMsg.innerText = "Đã xảy ra lỗi khi đăng nhập. Vui lòng thử lại.";
+                }
+                errorMsg.style.display = 'block';  // Hiển thị thông báo lỗi
             }
         });
 });

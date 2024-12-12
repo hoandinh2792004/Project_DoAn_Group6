@@ -52,7 +52,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\js\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
